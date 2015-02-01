@@ -53,7 +53,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mCameraHeight    = 5.0f;
 
     // repleace or add to the following object creation
-    m_Objects.push_back( new BaseObject3D );
+    m_Objects.push_back( new BaseObject3D() );
     m_Objects[0]->Create( gd3dDevice );
 
 	onResetDevice();
@@ -100,6 +100,12 @@ void SkeletonClass::updateScene(float dt)
 
 	// Get snapshot of input devices.
 	gDInput->poll();
+
+	// Closes the Program when Escape is hit
+	if (gDInput->keyDown(DIK_ESCAPE))
+	{
+		PostQuitMessage(0);
+	}
 
 	// Check input.
 	if( gDInput->keyDown(DIK_W) )	 

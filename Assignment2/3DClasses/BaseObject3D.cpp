@@ -28,8 +28,10 @@ BaseObject3D::~BaseObject3D(void)
 //-----------------------------------------------------------------------------
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
-    buildDemoCubeVertexBuffer( gd3dDevice );
-    buildDemoCubeIndexBuffer( gd3dDevice );
+	m_Vertices = 8;
+	m_Triangles = 12;
+    buildVertexBuffer( gd3dDevice );
+    buildIndexBuffer( gd3dDevice );
 }
 
 //-----------------------------------------------------------------------------
@@ -37,8 +39,8 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
     D3DXMATRIX& view, D3DXMATRIX& projection )
 {
     // Update the statistics singlton class
-    GfxStats::GetInstance()->addVertices(8);
-    GfxStats::GetInstance()->addTriangles(12);
+    GfxStats::GetInstance()->addVertices(m_Vertices);
+    GfxStats::GetInstance()->addTriangles(m_Triangles);
 
     // Set the buffers and format
     HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(VertexPos)));
@@ -51,14 +53,14 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
 	HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));	
     
     // Send to render
-    HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, 8, 0, 12));
+    HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_Vertices, 0, m_Triangles));
 }
 
 //-----------------------------------------------------------------------------
-void BaseObject3D::buildDemoCubeVertexBuffer( IDirect3DDevice9* gd3dDevice )
+void BaseObject3D::buildVertexBuffer( IDirect3DDevice9* gd3dDevice )
 {
 	// Obtain a pointer to a new vertex buffer.
-	HR(gd3dDevice->CreateVertexBuffer(8 * sizeof(VertexPos), D3DUSAGE_WRITEONLY,
+	HR(gd3dDevice->CreateVertexBuffer(m_Vertices * sizeof(VertexPos), D3DUSAGE_WRITEONLY,
 		0, D3DPOOL_MANAGED, &m_VertexBuffer, 0));
 
 	// Now lock it to obtain a pointer to its internal data, and write the
@@ -80,10 +82,10 @@ void BaseObject3D::buildDemoCubeVertexBuffer( IDirect3DDevice9* gd3dDevice )
 }
 
 //-----------------------------------------------------------------------------
-void BaseObject3D::buildDemoCubeIndexBuffer( IDirect3DDevice9* gd3dDevice )
+void BaseObject3D::buildIndexBuffer( IDirect3DDevice9* gd3dDevice )
 {
 	// Obtain a pointer to a new index buffer.
-	HR(gd3dDevice->CreateIndexBuffer(36 * sizeof(WORD), D3DUSAGE_WRITEONLY,
+	HR(gd3dDevice->CreateIndexBuffer((m_Triangles * 3) * sizeof(WORD), D3DUSAGE_WRITEONLY,
 		D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_IndexBuffer, 0));
 
 	// Now lock it to obtain a pointer to its internal data, and write the

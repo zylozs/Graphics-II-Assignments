@@ -26,11 +26,14 @@ protected:
 	IDirect3DVertexBuffer9*     m_VertexBuffer;
 	IDirect3DIndexBuffer9*      m_IndexBuffer;
 
+	int m_Triangles;
+	int m_Vertices;
+
 
 protected:
     // Replace the code in the following methods
-    virtual void buildDemoCubeVertexBuffer( IDirect3DDevice9* gd3dDevice );
-    virtual void buildDemoCubeIndexBuffer( IDirect3DDevice9* gd3dDevice );
+    virtual void buildVertexBuffer( IDirect3DDevice9* gd3dDevice );
+    virtual void buildIndexBuffer( IDirect3DDevice9* gd3dDevice );
 
 public:
     BaseObject3D(void);
@@ -39,6 +42,7 @@ public:
     // Replace or add to the following code as you progress with the material
     virtual void Create( IDirect3DDevice9* gd3dDevice );
     virtual void Render( IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection );
+	virtual void Update(float dt) {}
 };
 //=============================================================================
 #endif // _BASE_OBJECT_3D_H
