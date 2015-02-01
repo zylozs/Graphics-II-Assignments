@@ -21,6 +21,7 @@
 #include "SkeletonClass.h"
 #include "3DClasses\BaseObject3D.h"
 #include "3DClasses\Vertex.h"
+#include "Sphere.h"
 //=============================================================================
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
@@ -53,7 +54,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mCameraHeight    = 5.0f;
 
     // repleace or add to the following object creation
-    m_Objects.push_back( new BaseObject3D() );
+    //m_Objects.push_back( new BaseObject3D() );
+	m_Objects.push_back(new Sphere(1.0f, 20));
     m_Objects[0]->Create( gd3dDevice );
 
 	onResetDevice();

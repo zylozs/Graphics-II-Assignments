@@ -14,9 +14,11 @@
 #include <d3dx9.h>
 
 #include "../d3dUtil.h"
+#include <vector>
 //=============================================================================
 struct IDirect3DVertexBuffer9;
 struct IDirect3DIndexBuffer9;
+struct VertexPos;
 //=============================================================================
 class BaseObject3D
 {
@@ -34,6 +36,9 @@ protected:
     // Replace the code in the following methods
     virtual void buildVertexBuffer( IDirect3DDevice9* gd3dDevice );
     virtual void buildIndexBuffer( IDirect3DDevice9* gd3dDevice );
+
+	virtual void calculateVertexBuffer(std::vector<VertexPos>& vertices);
+	virtual void calculateIndexBuffer(std::vector<WORD>& indices);
 
 public:
     BaseObject3D(void);

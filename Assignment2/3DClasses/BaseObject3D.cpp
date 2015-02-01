@@ -28,8 +28,6 @@ BaseObject3D::~BaseObject3D(void)
 //-----------------------------------------------------------------------------
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
-	m_Vertices = 8;
-	m_Triangles = 12;
     buildVertexBuffer( gd3dDevice );
     buildIndexBuffer( gd3dDevice );
 }
@@ -59,66 +57,114 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
 //-----------------------------------------------------------------------------
 void BaseObject3D::buildVertexBuffer( IDirect3DDevice9* gd3dDevice )
 {
-	// Obtain a pointer to a new vertex buffer.
-	HR(gd3dDevice->CreateVertexBuffer(m_Vertices * sizeof(VertexPos), D3DUSAGE_WRITEONLY,
-		0, D3DPOOL_MANAGED, &m_VertexBuffer, 0));
+	std::vector<VertexPos> vertices;
 
-	// Now lock it to obtain a pointer to its internal data, and write the
-	// cube's vertex data.
+	calculateVertexBuffer(vertices);
 
+	m_Vertices = vertices.size();
+
+	// Obtain our pointer to the Vertex Buffer
+	HR(gd3dDevice->CreateVertexBuffer(m_Vertices * sizeof(VertexPos), D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &m_VertexBuffer, 0));
 	VertexPos* v = 0;
+
+	// Lock the Vertex Buffer and write to it
 	HR(m_VertexBuffer->Lock(0, 0, (void**)&v, 0));
 
-	v[0] = VertexPos(-1.0f, -1.0f, -1.0f);
-	v[1] = VertexPos(-1.0f,  1.0f, -1.0f);
-	v[2] = VertexPos( 1.0f,  1.0f, -1.0f);
-	v[3] = VertexPos( 1.0f, -1.0f, -1.0f);
-	v[4] = VertexPos(-1.0f, -1.0f,  1.0f);
-	v[5] = VertexPos(-1.0f,  1.0f,  1.0f);
-	v[6] = VertexPos( 1.0f,  1.0f,  1.0f);
-	v[7] = VertexPos( 1.0f, -1.0f,  1.0f);
+	for (UINT i = 0; i < vertices.size(); i++)
+	{
+		v[i] = vertices[i];
+	}
 
+	// Unlock when we are done
 	HR(m_VertexBuffer->Unlock());
 }
 
 //-----------------------------------------------------------------------------
 void BaseObject3D::buildIndexBuffer( IDirect3DDevice9* gd3dDevice )
 {
-	// Obtain a pointer to a new index buffer.
-	HR(gd3dDevice->CreateIndexBuffer((m_Triangles * 3) * sizeof(WORD), D3DUSAGE_WRITEONLY,
-		D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_IndexBuffer, 0));
+	std::vector<WORD> indices;
 
-	// Now lock it to obtain a pointer to its internal data, and write the
-	// cube's index data.
+	calculateIndexBuffer(indices);
 
+	m_Triangles = indices.size() / 3;
+
+	// Obtain our Pointer to the Index Buffer
+	HR(gd3dDevice->CreateIndexBuffer(indices.size() * sizeof(WORD), D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, &m_IndexBuffer, 0));
 	WORD* k = 0;
 
+	// Lock the Index Buffer and Write to it
 	HR(m_IndexBuffer->Lock(0, 0, (void**)&k, 0));
 
-	// Front face.
-	k[0] = 0; k[1] = 1; k[2] = 2;
-	k[3] = 0; k[4] = 2; k[5] = 3;
+	for (UINT i = 0; i < indices.size(); i++)
+	{
+		k[i] = indices[i];
+	}
 
-	// Back face.
-	k[6] = 4; k[7]  = 6; k[8]  = 5;
-	k[9] = 4; k[10] = 7; k[11] = 6;
-
-	// Left face.
-	k[12] = 4; k[13] = 5; k[14] = 1;
-	k[15] = 4; k[16] = 1; k[17] = 0;
-
-	// Right face.
-	k[18] = 3; k[19] = 2; k[20] = 6;
-	k[21] = 3; k[22] = 6; k[23] = 7;
-
-	// Top face.
-	k[24] = 1; k[25] = 5; k[26] = 6;
-	k[27] = 1; k[28] = 6; k[29] = 2;
-
-	// Bottom face.
-	k[30] = 4; k[31] = 0; k[32] = 3;
-	k[33] = 4; k[34] = 3; k[35] = 7;
-
+	// Unlock when we are done
 	HR(m_IndexBuffer->Unlock());
 }
 //=============================================================================
+
+void BaseObject3D::calculateVertexBuffer(std::vector<VertexPos>& vertices)
+{
+	vertices.push_back(VertexPos(-1.0f, -1.0f, -1.0f));
+	vertices.push_back(VertexPos(-1.0f, 1.0f, -1.0f));
+	vertices.push_back(VertexPos(1.0f, 1.0f, -1.0f));
+	vertices.push_back(VertexPos(1.0f, -1.0f, -1.0f));
+	vertices.push_back(VertexPos(-1.0f, -1.0f, 1.0f));
+	vertices.push_back(VertexPos(-1.0f, 1.0f, 1.0f));
+	vertices.push_back(VertexPos(1.0f, 1.0f, 1.0f));
+	vertices.push_back(VertexPos(1.0f, -1.0f, 1.0f));
+}
+
+void BaseObject3D::calculateIndexBuffer(std::vector<WORD>& indices)
+{
+
+	// Front face.
+	indices.push_back(0); 
+	indices.push_back(1); 
+	indices.push_back(2);
+	indices.push_back(0); 
+	indices.push_back(2); 
+	indices.push_back(3);
+
+	// Back face.
+	indices.push_back(4); 
+	indices.push_back(6); 
+	indices.push_back(5);
+	indices.push_back(4); 
+	indices.push_back(7); 
+	indices.push_back(6);
+
+	// Left face.
+	indices.push_back(4); 
+	indices.push_back(5); 
+	indices.push_back(1);
+	indices.push_back(4); 
+	indices.push_back(1); 
+	indices.push_back(0);
+
+	// Right face.
+	indices.push_back(3); 
+	indices.push_back(2); 
+	indices.push_back(6);
+	indices.push_back(3); 
+	indices.push_back(6); 
+	indices.push_back(7);
+
+	// Top face.
+	indices.push_back(1); 
+	indices.push_back(5); 
+	indices.push_back(6);
+	indices.push_back(1); 
+	indices.push_back(6); 
+	indices.push_back(2);
+
+	// Bottom face.
+	indices.push_back(4);
+	indices.push_back(0);
+	indices.push_back(3);
+	indices.push_back(4);
+	indices.push_back(3);
+	indices.push_back(7);
+}

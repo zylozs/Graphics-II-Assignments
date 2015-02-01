@@ -3,14 +3,16 @@
 
 #include "3DClasses/BaseObject3D.h"
 
+#define PI 3.14159265358979323846
+
 class Sphere : public BaseObject3D
 {
 protected:
 	float m_Radius;
 	int m_SideFacetsNum;
 
-	virtual void buildVertexBuffer(IDirect3DDevice9* gd3dDevice);
-	virtual void buildIndexBuffer(IDirect3DDevice9* gd3dDevice);
+	virtual void calculateVertexBuffer(std::vector<VertexPos>& vertices);
+	virtual void calculateIndexBuffer(std::vector<WORD>& indices);
 
 public:
 	Sphere(float radius, int sideFacetsNum);
