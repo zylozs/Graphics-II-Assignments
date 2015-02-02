@@ -89,6 +89,7 @@
   <ItemGroup>
     <ClCompile Include="3DClasses\BaseObject3D.cpp" />
     <ClCompile Include="3DClasses\Vertex.cpp" />
+    <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="d3dApp.cpp" />
     <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="GfxStats.cpp" />
@@ -98,6 +99,7 @@
   <ItemGroup>
     <ClInclude Include="3DClasses\BaseObject3D.h" />
     <ClInclude Include="3DClasses\Vertex.h" />
+    <ClInclude Include="Cylinder.h" />
     <ClInclude Include="d3dApp.h" />
     <ClInclude Include="d3dUtil.h" />
     <ClInclude Include="DirectInput.h" />

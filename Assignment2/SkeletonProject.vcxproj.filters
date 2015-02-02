@@ -10,6 +10,9 @@
     <ClCompile Include="Sphere.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DClasses\BaseObject3D.h" />
@@ -20,6 +23,9 @@
     <ClInclude Include="GfxStats.h" />
     <ClInclude Include="SkeletonClass.h" />
     <ClInclude Include="Sphere.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
       <Filter>Primitives</Filter>
     </ClInclude>
   </ItemGroup>
