@@ -1,8 +1,9 @@
 #include "Cylinder.h"
 #include "3DClasses\Vertex.h"
 
-Cylinder::Cylinder(float radius1, float radius2, float length)
-	: m_Radius1(radius1), m_Radius2(radius2), m_Length(length)
+Cylinder::Cylinder(float radius1, float radius2, float length, int numFacets)
+	: m_Radius1(radius1), m_Radius2(radius2),
+	m_Length(length), m_SideFacetsNum(numFacets)
 {
 }
 

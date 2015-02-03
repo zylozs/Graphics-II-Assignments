@@ -20,6 +20,9 @@ struct IDirect3DVertexBuffer9;
 struct IDirect3DIndexBuffer9;
 struct VertexPos;
 //=============================================================================
+
+#define PI 3.14159265358979323846
+
 class BaseObject3D
 {
 protected:	

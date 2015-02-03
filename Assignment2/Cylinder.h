@@ -17,12 +17,13 @@ protected:
 	float m_Radius1;
 	float m_Radius2;
 	float m_Length;
+	int m_SideFacetsNum;
 
 	virtual void calculateVertexBuffer(std::vector<VertexPos>& vertices);
 	virtual void calculateIndexBuffer(std::vector<WORD>& indices);
 
 public:
-	Cylinder(float radius1, float radius2, float length);
+	Cylinder(float radius1, float radius2, float length, int numFacets);
 	~Cylinder();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);

@@ -3,8 +3,6 @@
 
 #include "3DClasses/BaseObject3D.h"
 
-#define PI 3.14159265358979323846
-
 class Sphere : public BaseObject3D
 {
 protected:
