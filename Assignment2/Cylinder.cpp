@@ -1,10 +1,16 @@
 #include "Cylinder.h"
 #include "3DClasses\Vertex.h"
 
-Cylinder::Cylinder(float radius1, float radius2, float length, int numFacets)
+Cylinder::Cylinder(float radius1, float radius2, float height, uint slices, uint stacks)
 	: m_Radius1(radius1), m_Radius2(radius2),
-	m_Length(length), m_SideFacetsNum(numFacets)
+	m_Height(height), m_SliceCount(slices),
+	m_StackCount(stacks)
 {
+	m_StackHeight = m_Height / m_StackCount;
+
+	//calculate radius step per stack level
+	m_RadiusStep = (m_Radius1 - m_Radius2) / m_StackCount;
+	
 }
 
 Cylinder::~Cylinder()
@@ -34,85 +40,130 @@ void Cylinder::Update(float dt)
 // Credit goes to him for most of this.
 void Cylinder::calculateVertexBuffer(std::vector<VertexPos>& vertices)
 {
-	// Create our vertex list before locking the buffer
+	float theta = 2.0f * PI / m_SliceCount;
 
-	float phiStep = (float)PI / m_SideFacetsNum;
-	float thetaStep = 2.0f * (float)PI / m_SideFacetsNum;
-
-	// Add our Top Pole
-	vertices.push_back(VertexPos(0.0f, m_Radius1, 0.0f));
-
-	// Compute vertices for each stack ring (do not count the poles as rings)
-	for (int i = 1; i <= m_SideFacetsNum - 1; i++)
+	for  (uint i = 0; i < m_StackCount + 1; i++)
 	{
-		float phi = i * phiStep;
 
-		// Vertices of ring
-		for (int j = 0; j <= m_SideFacetsNum; j++)
+		//calculate radius and height values
+		float y = -0.5f * m_Height + i * m_StackHeight;
+		float r = m_Radius2 + i * m_RadiusStep;
+
+		//create vertices of ring
+		for (uint j = 0; j < m_SliceCount; j++)
 		{
-			float theta = j * thetaStep;
+			VertexPos vertex;
 
-			VertexPos v;
+			//Sin and Cos values
+			float c = cosf(j * theta);
+			float s = sinf(j * theta);
 
-			// spherical to cartesian
-			v.pos.x = m_Radius * sinf(phi) * cosf(theta);
-			v.pos.y = m_Radius * cosf(phi);
-			v.pos.z = m_Radius * sinf(phi) * sinf(theta);
+			//place vertex position
+			vertex.pos.x = r * c;
+			vertex.pos.y = y;
+			vertex.pos.z = r * s;
 
-			vertices.push_back(v);
+			//?
+			//vertex.TexC.x = (float)j / sliceCount;
+			//vertex.TexC.y = 1.0f - (float)i / stackCount;
+
+			//vertex.TangentU = XMFLOAT3(-s, 0.0f, c);
+
+			float dr = m_Radius2 - m_Radius1;
+
+			//?
+			//XMFLOAT3 bitangent(dr*c, -height, dr*s);
+
+			//XMVECTOR T = XMLoadFloat3(&vertex.TangentU);
+			//XMVECTOR B = XMLoadFloat3(&bitangent);
+			//XMVECTOR N = XMVector3Normalize(XMVector3Cross(T, B));
+			//XMStoreFloat3(&vertex.Normal, N);
+
+			vertices.push_back(vertex);
 		}
 	}
+	
+	//Build top and bottom caps
+	float y = -0.5f * m_Height;
 
-	// Add our Bottom Pole
-	vertices.push_back(VertexPos(0.0f, m_Radius2, 0.0f));
+	// ring vertices
+	//duplicated due to normals differ and texture coordinates
+	for (uint i = 0; i < m_SliceCount; i++)
+	{
+		//top cap
+		float xt = m_Radius1 * cosf(i * theta);
+		float zt = m_Radius1 * sinf(i * theta);
+
+		//scalars
+		float ut = xt / m_Height + 0.5f;
+		float vt = zt / m_Height + 0.5f;
+
+		//DX11 line
+		//meshData.Vertices.push_back( Vertex(x, y, z, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, u, v) );
+		vertices.push_back(VertexPos(xt, y, zt));
+
+		//bottom cap
+		float xb = m_Radius2 / m_Height + 0.5f;
+		float zb = m_Radius2 / m_Height + 0.5f;
+
+		//scalars
+		float ub = xb / m_Height + 0.5f;
+		float vb = zb / m_Height + 0.5f;
+
+		//DX11 line
+		//meshData.Vertices.push_back( Vertex(x, y, z, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, u, v) );
+		vertices.push_back(VertexPos(xb, y, zb));
+	}
+
+	// cap center top vertex
+	// meshData.Vertices.push_back( Vertex(0.0f, y, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.5f) );
+	vertices.push_back(VertexPos(0.0f, y, 0.0f));
+
+	//cap center bottom vertex
+	//meshData.Vertices.push_back( Vertex(0.0f, y, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.5f) );
+	vertices.push_back(VertexPos(0.0f, y, 0.0f));
+
+	//cache base
+	m_BaseIndex = (uint)vertices.size();
+
+	//cache center
+	m_CenterIndex = (uint)vertices.size() - 1;
 }
 
 // A large chunk of this function was taken and adapted from Frank Luna's DirectX 11 Shapes Demo
 // Credit goes to him for most of this.
 void Cylinder::calculateIndexBuffer(std::vector<WORD>& indices)
 {
-	// Calculate the Indices before writing to the buffer
+	//calculate vertex count for ring, it has one more  because of different coordinates
+	uint ringVertexCount = m_StackCount + 1;
 
-	// Add our Top Pole
-	for (int i = 1; i < m_Length; i++)
+	//generate indicies
+	for (uint i = 0; i < m_StackCount; i++)
 	{
-		indices.push_back(0);
-		indices.push_back(i + 1);
-		indices.push_back(i);
-	}
-
-	// Compute Indices for the rings
-
-	// Offset the indices to the index of the first vertex in the first ring
-	// This is just skipping the top pole vertex
-	UINT baseIndex = 1;
-	UINT ringVertexCount = m_SideFacetsNum + 1;
-	for (int i = 0; i < m_SideFacetsNum - 2; i++)
-	{
-		for (int j = 0; j < m_SideFacetsNum; ++j)
+		for (uint j = 0; j < m_SliceCount; j++)
 		{
-			indices.push_back(baseIndex + i * ringVertexCount + j);
-			indices.push_back(baseIndex + i * ringVertexCount + j + 1);
-			indices.push_back(baseIndex + (i + 1) * ringVertexCount + j);
+			indices.push_back(i * ringVertexCount + j);
+			indices.push_back((i + 1) * ringVertexCount + j);
+			indices.push_back((i + 1) * ringVertexCount + (j + 1));
 
-			indices.push_back(baseIndex + (i + 1) * ringVertexCount + j);
-			indices.push_back(baseIndex + i * ringVertexCount + j + 1);
-			indices.push_back(baseIndex + (i + 1) * ringVertexCount + j + 1);
+			indices.push_back(i * ringVertexCount + j);
+			indices.push_back((i + 1) * ringVertexCount + (j + 1));
+			indices.push_back(i * ringVertexCount + (j + 1));
 		}
 	}
 
-	// Add our Bottom Pole
-
-	// South pole vertex was added last
-	UINT southPoleIndex = (UINT)m_Vertices - 1;
-
-	// Offset the indices to the index of the first vertex in the last ring.
-	baseIndex = southPoleIndex - ringVertexCount;
-
-	for (int i = 0; i < m_SideFacetsNum; i++)
+	//create indicies for caps
+	for (uint i = 0; i < m_SliceCount; i++)
 	{
-		indices.push_back(southPoleIndex);
-		indices.push_back(baseIndex + i);
-		indices.push_back(baseIndex + i + 1);
+		//top
+		indices.push_back(m_CenterIndex);
+		indices.push_back(m_BaseIndex + (i + 1));
+		indices.push_back(m_BaseIndex + i);
+
+		//bottom
+		indices.push_back(m_CenterIndex);
+		indices.push_back(m_BaseIndex + i);
+		indices.push_back(m_BaseIndex + (i + 1));
 	}
+
 }
