@@ -22,6 +22,7 @@
 #include "3DClasses\BaseObject3D.h"
 #include "3DClasses\Vertex.h"
 #include "Sphere.h"
+#include "Cylinder.h"
 //=============================================================================
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
@@ -55,8 +56,13 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
     // repleace or add to the following object creation
     //m_Objects.push_back( new BaseObject3D() );
-	m_Objects.push_back(new Sphere(1.0f, 20));
-    m_Objects[0]->Create( gd3dDevice );
+	//m_Objects.push_back(new Sphere(1.0f, 20));
+	m_Objects.push_back(new Cylinder(1.0f, 2.0f, 10));
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->Create(gd3dDevice);
+	}
 
 	onResetDevice();
 

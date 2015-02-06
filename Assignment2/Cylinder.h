@@ -11,7 +11,6 @@
 #define _CYLINDER_H
 
 #include "3DClasses\BaseObject3D.h"
-typedef unsigned int uint;
 
 class Cylinder : public BaseObject3D
 {
@@ -19,18 +18,20 @@ protected:
 	float m_Radius1;
 	float m_Radius2;
 	float m_Height;
-	uint m_SliceCount;
-	uint m_StackCount;
+	UINT m_SideFacetsNum;
 	float m_StackHeight;
 	float m_RadiusStep;
-	uint m_BaseIndex;
-	uint m_CenterIndex;
+
+	UINT m_BaseIndex1;
+	UINT m_CenterIndex1;
+	UINT m_BaseIndex2;
+	UINT m_CenterIndex2;
 
 	virtual void calculateVertexBuffer(std::vector<VertexPos>& vertices);
 	virtual void calculateIndexBuffer(std::vector<WORD>& indices);
 
 public:
-	Cylinder(float radius1, float radius2, float height, uint slices, uint stacks);
+	Cylinder(float radius, float height, UINT sideFacetsNum);
 	~Cylinder();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);
