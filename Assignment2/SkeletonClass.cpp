@@ -57,7 +57,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
     // repleace or add to the following object creation
     //m_Objects.push_back( new BaseObject3D() );
 	//m_Objects.push_back(new Sphere(1.0f, 20));
-	m_Objects.push_back(new Cylinder(1.0f, 2.0f, 10));
+	m_Objects.push_back(new Cylinder(1.0f, 2.0f, 20));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{

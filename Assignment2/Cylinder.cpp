@@ -39,33 +39,7 @@ void Cylinder::Update(float dt)
 // Credit goes to him for most of this.
 void Cylinder::calculateVertexBuffer(std::vector<VertexPos>& vertices)
 {
-	float theta = 2.0f * PI / m_SideFacetsNum;
-
-	// Create the rings
-	for (UINT i = 0; i < m_SideFacetsNum + 1; i++)
-	{
-
-		//calculate radius and height values
-		float y = -0.5f * m_Height + i * m_StackHeight;
-		float r = m_Radius2 + i * m_RadiusStep;
-
-		//create vertices of ring
-		for (UINT j = 0; j < m_SideFacetsNum; j++)
-		{
-			VertexPos vertex;
-
-			//Sin and Cos values
-			float c = cosf(j * theta);
-			float s = sinf(j * theta);
-
-			//place vertex position
-			vertex.pos.x = r * c;
-			vertex.pos.y = y;
-			vertex.pos.z = r * s;
-
-			vertices.push_back(vertex);
-		}
-	}
+ 	float theta = 2.0f * PI / m_SideFacetsNum;
 
 	//cache base
 	m_BaseIndex1 = (UINT)vertices.size();
@@ -114,24 +88,6 @@ void Cylinder::calculateVertexBuffer(std::vector<VertexPos>& vertices)
 // Credit goes to him for most of this.
 void Cylinder::calculateIndexBuffer(std::vector<WORD>& indices)
 {
-	//calculate vertex count for ring, it has one more  because of different coordinates
-	UINT ringVertexCount = m_SideFacetsNum + 1;
-
-	//generate indicies
-	for (UINT i = 0; i < m_SideFacetsNum; i++)
-	{
-		for (UINT j = 0; j < m_SideFacetsNum; j++)
-		{
-			indices.push_back(i * ringVertexCount + j);
-			indices.push_back((i + 1) * ringVertexCount + j);
-			indices.push_back((i + 1) * ringVertexCount + (j + 1));
-
-			indices.push_back(i * ringVertexCount + j);
-			indices.push_back((i + 1) * ringVertexCount + (j + 1));
-			indices.push_back(i * ringVertexCount + (j + 1));
-		}
-	}
-
 	//create indicies for caps
 
 	// Top Cap
@@ -140,12 +96,54 @@ void Cylinder::calculateIndexBuffer(std::vector<WORD>& indices)
 		indices.push_back(m_CenterIndex1);
 		indices.push_back(m_BaseIndex1 + i + 1);
 		indices.push_back(m_BaseIndex1 + i);
+
+		if (i == m_SideFacetsNum - 1)
+		{
+			// Draw the last line
+			indices.push_back(m_CenterIndex1);
+			indices.push_back(m_BaseIndex1);
+			indices.push_back(m_CenterIndex1 - 1);
+		}
 	}
 
 	// Bottom Cap
 	for (UINT i = 0; i < m_SideFacetsNum; i++)
 	{
 		indices.push_back(m_CenterIndex2);
+		indices.push_back(m_BaseIndex2 + i);
+		indices.push_back(m_BaseIndex2 + i + 1);
+
+		if (i == m_SideFacetsNum - 1)
+		{
+			// Draw the last line
+			indices.push_back(m_CenterIndex2);
+			indices.push_back(m_CenterIndex2 - 1);
+			indices.push_back(m_BaseIndex2);
+		}
+	}
+
+	// Calculate indices for center
+	for (UINT i = 0; i < m_SideFacetsNum; i++)
+	{
+		if (i == m_SideFacetsNum - 1)
+		{
+			// Draw the last tris
+			indices.push_back(m_BaseIndex1 + i);
+			indices.push_back(m_BaseIndex1);
+			indices.push_back(m_BaseIndex2 + i);
+
+			indices.push_back(m_BaseIndex1);
+			indices.push_back(m_BaseIndex2);
+			indices.push_back(m_BaseIndex2 + i);
+
+			break;
+		}
+
+		indices.push_back(m_BaseIndex1 + i);
+		indices.push_back(m_BaseIndex1 + i + 1);
+		indices.push_back(m_BaseIndex2 + i);
+
+		indices.push_back(m_BaseIndex1 + i + 1);
 		indices.push_back(m_BaseIndex2 + i + 1);
 		indices.push_back(m_BaseIndex2 + i);
 	}
