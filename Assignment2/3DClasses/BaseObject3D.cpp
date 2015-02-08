@@ -14,6 +14,7 @@ BaseObject3D::BaseObject3D(void)
 {
     m_VertexBuffer = NULL;
     m_IndexBuffer = NULL;
+	m_CenterPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
     D3DXMatrixIdentity(&m_World);
 }
@@ -167,4 +168,15 @@ void BaseObject3D::calculateIndexBuffer(std::vector<WORD>& indices)
 	indices.push_back(4);
 	indices.push_back(3);
 	indices.push_back(7);
+}
+
+void BaseObject3D::setCenterPos(FLOAT x, FLOAT y, FLOAT z)
+{
+	// Translate the object using its world matrix to the center position indicated
+	D3DXMatrixTranslation(&m_World, x, y, z);
+
+	// Set m_CenterPos to new values
+	m_CenterPos.x = x;
+	m_CenterPos.y = y;
+	m_CenterPos.z = z;
 }

@@ -34,6 +34,8 @@ protected:
 	int m_Triangles;
 	int m_Vertices;
 
+	D3DXVECTOR3 m_CenterPos;
+
 
 protected:
     // Replace the code in the following methods
@@ -51,6 +53,9 @@ public:
     virtual void Create( IDirect3DDevice9* gd3dDevice );
     virtual void Render( IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection );
 	virtual void Update(float dt) {}
+
+	const D3DXVECTOR3& getCenterPos() { return m_CenterPos; }
+	void setCenterPos(FLOAT x, FLOAT y, FLOAT z);
 };
 //=============================================================================
 #endif // _BASE_OBJECT_3D_H

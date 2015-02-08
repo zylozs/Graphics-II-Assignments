@@ -56,15 +56,19 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mCameraHeight    = 5.0f;
 
     // repleace or add to the following object creation
-    //m_Objects.push_back( new BaseObject3D() );
-	//m_Objects.push_back(new Sphere(1.0f, 20));
-	//m_Objects.push_back(new Cylinder(1.0f, 2.0f, 20));
+    m_Objects.push_back(new BaseObject3D());
+	m_Objects.push_back(new Sphere(1.0f, 20));
+	m_Objects.push_back(new Cylinder(1.0f, 2.0f, 20));
 	m_Objects.push_back(new Cone(1.0f, 2.0f, 20));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
 		m_Objects[i]->Create(gd3dDevice);
 	}
+
+	m_Objects[0]->setCenterPos(-3.0f, 0.0f, 0.0f);
+	m_Objects[1]->setCenterPos(0.0f, 3.0f, 0.0f);
+	m_Objects[2]->setCenterPos(3.0f, 0.0f, 0.0f);
 
 	onResetDevice();
 
@@ -122,10 +126,10 @@ void SkeletonClass::updateScene(float dt)
 		mCameraHeight   += 25.0f * dt;
 	if( gDInput->keyDown(DIK_S) )	 
 		mCameraHeight   -= 25.0f * dt;
-
-	// Divide by 50 to make mouse less sensitive. 
-	mCameraRotationY += gDInput->mouseDX() / 100.0f;
-	mCameraRadius    += gDInput->mouseDY() / 25.0f;
+	if (gDInput->keyDown(DIK_A))
+		mCameraRotationY += 5.0f * dt;
+	if (gDInput->keyDown(DIK_D))
+		mCameraRotationY -= 5.0f * dt;
 
 	// If we rotate over 360 degrees, just roll back to 0
 	if( fabsf(mCameraRotationY) >= 2.0f * D3DX_PI ) 
