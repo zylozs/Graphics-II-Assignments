@@ -1,3 +1,12 @@
+/*
+*	Vince Loignon
+*	Assignment 2
+*	2/1/15
+*	Sphere.h
+*	I certify that this assignment is entirely our own work
+* Heavy influences from Frank Luna's DX11 code
+*/
+
 #ifndef _SPHERE_H
 #define _SPHERE_H
 
