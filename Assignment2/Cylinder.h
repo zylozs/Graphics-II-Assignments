@@ -3,7 +3,7 @@
 *	Assignment 2
 *	2/1/15
 *	Cylinder.h
-*	I certify that this assignment is entirely my own work
+*	I certify that this assignment is entirely our own work
 * Heavy influences from Frank Luna's DX11 code
 */
 
