@@ -33,10 +33,7 @@ void Cone::Update(float dt)
 
 void Cone::calculateVertexBuffer(std::vector<VertexPos>& vertices)
 {
-	float theta = 2.0f * PI / m_SideFacetsNum;
-
-	//cache base
-	m_BaseIndex1 = (UINT)vertices.size();
+	float theta = 2.0f * (float)PI / m_SideFacetsNum;
 
 	//build bottom cap with top center index
 	float y = 0.5f * m_Height;
@@ -47,7 +44,7 @@ void Cone::calculateVertexBuffer(std::vector<VertexPos>& vertices)
 	//cache center
 	m_CenterIndex1 = (UINT)vertices.size() - 1;
 
-	//cache second base
+	//cache base
 	m_BaseIndex2 = (UINT)vertices.size();
 
 	//invert y
@@ -72,19 +69,18 @@ void Cone::calculateVertexBuffer(std::vector<VertexPos>& vertices)
 
 void Cone::calculateIndexBuffer(std::vector<WORD>& indices)
 {
-	// Top Cap
-	for (UINT i = 0; i < m_SideFacetsNum; i++)
+	// Pointy part
+	for (UINT i = 0; i < m_SideFacetsNum - 1; i++)
 	{
 		indices.push_back(m_CenterIndex1);
-		indices.push_back(m_BaseIndex1 + i + 1);
-		indices.push_back(m_BaseIndex1 + i);
+		indices.push_back(m_BaseIndex2 + i + 1);
+		indices.push_back(m_BaseIndex2 + i);
 
-		if (i == m_SideFacetsNum - 1)
+		if (i == m_SideFacetsNum - 2)
 		{
-			// Draw the last line
 			indices.push_back(m_CenterIndex1);
-			indices.push_back(m_BaseIndex1);
-			indices.push_back(m_CenterIndex1 - 1);
+			indices.push_back(m_BaseIndex2);
+			indices.push_back(m_CenterIndex2 - 1);
 		}
 	}
 
@@ -102,31 +98,5 @@ void Cone::calculateIndexBuffer(std::vector<WORD>& indices)
 			indices.push_back(m_CenterIndex2 - 1);
 			indices.push_back(m_BaseIndex2);
 		}
-	}
-
-	// Calculate indices for center
-	for (UINT i = 0; i < m_SideFacetsNum; i++)
-	{
-		if (i == m_SideFacetsNum - 1)
-		{
-			// Draw the last tris
-			indices.push_back(m_BaseIndex1 + i);
-			indices.push_back(m_BaseIndex1);
-			indices.push_back(m_BaseIndex2 + i);
-
-			indices.push_back(m_BaseIndex1);
-			indices.push_back(m_BaseIndex2);
-			indices.push_back(m_BaseIndex2 + i);
-
-			break;
-		}
-
-		indices.push_back(m_BaseIndex1 + i);
-		indices.push_back(m_BaseIndex1 + i + 1);
-		indices.push_back(m_BaseIndex2 + i);
-
-		indices.push_back(m_BaseIndex1 + i + 1);
-		indices.push_back(m_BaseIndex2 + i + 1);
-		indices.push_back(m_BaseIndex2 + i);
 	}
 }

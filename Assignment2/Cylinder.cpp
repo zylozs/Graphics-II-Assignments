@@ -39,7 +39,7 @@ void Cylinder::Update(float dt)
 // Credit goes to him for most of this.
 void Cylinder::calculateVertexBuffer(std::vector<VertexPos>& vertices)
 {
- 	float theta = 2.0f * PI / m_SideFacetsNum;
+ 	float theta = 2.0f * (float)PI / m_SideFacetsNum;
 
 	//cache base
 	m_BaseIndex1 = (UINT)vertices.size();
