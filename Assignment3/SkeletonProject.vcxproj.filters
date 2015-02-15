@@ -24,9 +24,6 @@
     <ClCompile Include="d3dApp.cpp">
       <Filter>D3D</Filter>
     </ClCompile>
-    <ClCompile Include="DirectInput.cpp">
-      <Filter>D3D</Filter>
-    </ClCompile>
     <ClCompile Include="3DClasses\Vertex.cpp">
       <Filter>D3D</Filter>
     </ClCompile>
@@ -45,9 +42,15 @@
     <ClCompile Include="MouseEvent.cpp">
       <Filter>D3D\Input\Events</Filter>
     </ClCompile>
-    <ClCompile Include="Trackable.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="MemoryTracker.cpp" />
+    <ClCompile Include="MemoryTracker.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Trackable.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GfxStats.h" />
@@ -74,9 +77,6 @@
       <Filter>D3D</Filter>
     </ClInclude>
     <ClInclude Include="d3dUtil.h">
-      <Filter>D3D</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectInput.h">
       <Filter>D3D</Filter>
     </ClInclude>
     <ClInclude Include="3DClasses\Vertex.h">
@@ -106,13 +106,21 @@
     <ClInclude Include="MouseEvent.h">
       <Filter>D3D\Input\Events</Filter>
     </ClInclude>
-    <ClInclude Include="IObject.h" />
-    <ClInclude Include="Trackable.h" />
     <ClInclude Include="Delegate.h">
       <Filter>Event System</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="MemoryTracker.h" />
+    <ClInclude Include="MemoryTracker.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Trackable.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="IObject.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Primitives">
@@ -132,6 +140,12 @@
     </Filter>
     <Filter Include="D3D\Input\Events">
       <UniqueIdentifier>{143722c3-69d9-4d9a-a4ca-8df3f36c500d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{27aa7ff4-ceb5-4792-a0bc-208e9458a7f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{4257927d-fb7f-4310-84a4-f89be454a564}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

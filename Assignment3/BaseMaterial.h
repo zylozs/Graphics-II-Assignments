@@ -9,8 +9,9 @@
 //=============================================================================
 #pragma once
 #include "d3dApp.h"
+#include "Trackable.h"
 //=============================================================================
-class BaseMaterial
+class BaseMaterial : public Trackable
 {
 protected:
     ID3DXEffect*        m_Effect;               // the shader associate effect file

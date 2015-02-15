@@ -94,7 +94,6 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="d3dApp.cpp" />
-    <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="GfxStats.cpp" />
@@ -117,7 +116,6 @@
     <ClInclude Include="d3dApp.h" />
     <ClInclude Include="d3dUtil.h" />
     <ClInclude Include="Delegate.h" />
-    <ClInclude Include="DirectInput.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="EventType.h" />

@@ -37,8 +37,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 
 	g_EventDispatcher = New EventDispatcher();
 
-	SkeletonClass app(hInstance, "Exercise Skeleton Project", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
-	gd3dApp = &app;
+	gd3dApp = new SkeletonClass(hInstance, "Exercise Skeleton Project", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
 
 	g_Input = New InputSystem(true, false);
 	g_Input->initialize(hInstance, gd3dApp->getMainWnd());
@@ -53,6 +52,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	g_Input->dispose();
 	delete g_Input;
 	g_Input = NULL;
+
+	delete gd3dApp;
+	gd3dApp = NULL;
 
 	g_MemoryTracker.reportAllocations(std::cout);
 
@@ -74,10 +76,10 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mCameraHeight    = 5.0f;
 
     // repleace or add to the following object creation
-	m_Objects.push_back(new Cube(1.0f, 1.0f, 1.0f));
-	m_Objects.push_back(new Sphere(1.0f, 20));
-	m_Objects.push_back(new Cylinder(1.0f, 2.0f, 20));
-	m_Objects.push_back(new Cone(1.0f, 2.0f, 20));
+	m_Objects.push_back(New Cube(1.0f, 1.0f, 1.0f));
+	m_Objects.push_back(New Sphere(1.0f, 20));
+	m_Objects.push_back(New Cylinder(1.0f, 2.0f, 20));
+	m_Objects.push_back(New Cone(1.0f, 2.0f, 20));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{

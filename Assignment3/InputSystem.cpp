@@ -148,7 +148,7 @@ void InputSystem::dispose()
 	}
 	catch (...)
 	{
-		MessageBox(m_HWND, "An Unhandled Exception has occurred while initializing the Input System.", "Unhandled Exception", MB_OK);
+		MessageBox(m_HWND, "An Unhandled Exception has occurred while Disposing the Input System.", "Unhandled Exception", MB_OK);
 		return;
 	}
 

@@ -17,6 +17,7 @@
 #include <d3dx9.h>
 
 #include "../d3dUtil.h"
+#include "../Trackable.h"
 #include <vector>
 //=============================================================================
 struct IDirect3DVertexBuffer9;
@@ -24,7 +25,7 @@ struct IDirect3DIndexBuffer9;
 struct Vertex;
 //=============================================================================
 
-class BaseObject3D
+class BaseObject3D : public Trackable
 {
 protected:	
     D3DXMATRIX                  m_World;
