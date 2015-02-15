@@ -41,6 +41,8 @@ public:
 	virtual int run();
 	virtual LRESULT msgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
+	void initDebugConsole();
+
 	void enableFullScreenMode(bool enable);
 	bool isDeviceLost();
 

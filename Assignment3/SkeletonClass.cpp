@@ -13,10 +13,11 @@
 // Controls: Use mouse to orbit and zoom; use the 'W' and 'S' keys to 
 //           alter the height of the camera.
 //=============================================================================
-#include "DirectInput.h"
+#include "InputSystem.h"
 #include <crtdbg.h>
 #include "GfxStats.h"
 #include <list>
+#include "MemoryTracker.h"
 
 #include "SkeletonClass.h"
 #include "3DClasses\BaseObject3D.h"
@@ -34,13 +35,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 	#endif
 
+	g_EventDispatcher = New EventDispatcher();
+
 	SkeletonClass app(hInstance, "Exercise Skeleton Project", D3DDEVTYPE_HAL, D3DCREATE_HARDWARE_VERTEXPROCESSING);
 	gd3dApp = &app;
 
-	DirectInput di(DISCL_NONEXCLUSIVE|DISCL_FOREGROUND, DISCL_NONEXCLUSIVE|DISCL_FOREGROUND);
-	gDInput = &di;
+	g_Input = New InputSystem(true, false);
+	g_Input->initialize(hInstance, gd3dApp->getMainWnd());
+	g_Input->disableEvents(InputEventType::KEY_DOWN);
 
-	return gd3dApp->run();
+	int returnVal = gd3dApp->run();
+
+	g_EventDispatcher->dispose();
+	delete g_EventDispatcher;
+	g_EventDispatcher = NULL;
+
+	g_Input->dispose();
+	delete g_Input;
+	g_Input = NULL;
+
+	g_MemoryTracker.reportAllocations(std::cout);
+
+	system("pause");
+	return returnVal;
 }
 
 SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWORD requestedVP)
@@ -114,23 +131,23 @@ void SkeletonClass::updateScene(float dt)
 	GfxStats::GetInstance()->update(dt);
 
 	// Get snapshot of input devices.
-	gDInput->poll();
+	g_Input->update();
 
 	// Closes the Program when Escape is hit
-	if (gDInput->keyDown(DIK_ESCAPE))
+	if (g_Input->isKeyDown(Keys::ESCAPE))
 	{
 		PostQuitMessage(0);
 	}
 
 	// Check input.
-	if( gDInput->keyDown(DIK_W) )	 
+	if (g_Input->isKeyDown(Keys::W))	 
 		mCameraHeight   += 25.0f * dt;
-	if( gDInput->keyDown(DIK_S) )	 
+	if (g_Input->isKeyDown(Keys::S))
 		mCameraHeight   -= 25.0f * dt;
 
 	// Divide by 50 to make mouse less sensitive. 
-	mCameraRotationY += gDInput->mouseDX() / 100.0f;
-	mCameraRadius    += -gDInput->mouseDZ() / 50.0f;
+	mCameraRotationY += g_Input->getMouseDX() / 100.0f;
+	mCameraRadius    += -g_Input->getMouseDZ() / 50.0f;
 
 	// If we rotate over 360 degrees, just roll back to 0
 	if( fabsf(mCameraRotationY) >= 2.0f * D3DX_PI ) 

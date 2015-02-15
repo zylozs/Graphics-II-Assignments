@@ -95,9 +95,17 @@
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="d3dApp.cpp" />
     <ClCompile Include="DirectInput.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventDispatcher.cpp" />
     <ClCompile Include="GfxStats.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="KeyEvent.cpp" />
+    <ClCompile Include="MemoryTracker.cpp" />
+    <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Trackable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3DClasses\BaseObject3D.h" />
@@ -108,10 +116,23 @@
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="d3dApp.h" />
     <ClInclude Include="d3dUtil.h" />
+    <ClInclude Include="Delegate.h" />
     <ClInclude Include="DirectInput.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventDispatcher.h" />
+    <ClInclude Include="EventType.h" />
     <ClInclude Include="GfxStats.h" />
+    <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="IObject.h" />
+    <ClInclude Include="KeyEvent.h" />
+    <ClInclude Include="Keys.h" />
+    <ClInclude Include="MemoryTracker.h" />
+    <ClInclude Include="MouseEvent.h" />
+    <ClInclude Include="MouseKeys.h" />
     <ClInclude Include="SkeletonClass.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Trackable.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

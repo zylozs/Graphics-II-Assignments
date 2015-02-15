@@ -1,11 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="3DClasses\BaseObject3D.cpp" />
-    <ClCompile Include="3DClasses\Vertex.cpp" />
-    <ClCompile Include="BaseMaterial.cpp" />
-    <ClCompile Include="d3dApp.cpp" />
-    <ClCompile Include="DirectInput.cpp" />
     <ClCompile Include="GfxStats.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
     <ClCompile Include="Cone.cpp">
@@ -20,14 +15,41 @@
     <ClCompile Include="Cube.cpp">
       <Filter>Primitives</Filter>
     </ClCompile>
+    <ClCompile Include="3DClasses\BaseObject3D.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMaterial.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dApp.cpp">
+      <Filter>D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectInput.cpp">
+      <Filter>D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="3DClasses\Vertex.cpp">
+      <Filter>D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>D3D\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Event System</Filter>
+    </ClCompile>
+    <ClCompile Include="EventDispatcher.cpp">
+      <Filter>Event System</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyEvent.cpp">
+      <Filter>D3D\Input\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseEvent.cpp">
+      <Filter>D3D\Input\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Trackable.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="MemoryTracker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="3DClasses\BaseObject3D.h" />
-    <ClInclude Include="3DClasses\Vertex.h" />
-    <ClInclude Include="BaseMaterial.h" />
-    <ClInclude Include="d3dApp.h" />
-    <ClInclude Include="d3dUtil.h" />
-    <ClInclude Include="DirectInput.h" />
     <ClInclude Include="GfxStats.h" />
     <ClInclude Include="SkeletonClass.h" />
     <ClInclude Include="Cone.h">
@@ -42,10 +64,74 @@
     <ClInclude Include="Sphere.h">
       <Filter>Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="3DClasses\BaseObject3D.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMaterial.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dApp.h">
+      <Filter>D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dUtil.h">
+      <Filter>D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectInput.h">
+      <Filter>D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3DClasses\Vertex.h">
+      <Filter>D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>D3D\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Keys.h">
+      <Filter>D3D\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseKeys.h">
+      <Filter>D3D\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Event System</Filter>
+    </ClInclude>
+    <ClInclude Include="EventDispatcher.h">
+      <Filter>Event System</Filter>
+    </ClInclude>
+    <ClInclude Include="EventType.h">
+      <Filter>Event System</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>D3D\Input\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseEvent.h">
+      <Filter>D3D\Input\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="IObject.h" />
+    <ClInclude Include="Trackable.h" />
+    <ClInclude Include="Delegate.h">
+      <Filter>Event System</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="MemoryTracker.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Primitives">
       <UniqueIdentifier>{b094a912-d852-4dcc-b62e-45ddb748b802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{3ed99417-856f-4e9f-8fa2-d0c24774b6a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D">
+      <UniqueIdentifier>{988c68d2-4db8-4c59-a093-831bc584d647}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D\Input">
+      <UniqueIdentifier>{22eed777-cc1c-4fbd-9de9-f072f0f8fd4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event System">
+      <UniqueIdentifier>{dc474d63-d99d-46ff-9fd7-d6ea500e6855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D\Input\Events">
+      <UniqueIdentifier>{143722c3-69d9-4d9a-a4ca-8df3f36c500d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

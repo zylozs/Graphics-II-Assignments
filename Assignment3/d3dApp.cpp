@@ -3,6 +3,13 @@
 //=============================================================================
 
 #include "d3dApp.h"
+#include <windows.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <io.h>
+#include <iostream>
+#include <fstream>
+using namespace std;
 
 D3DApp* gd3dApp              = 0;
 IDirect3DDevice9* gd3dDevice = 0;
@@ -29,6 +36,7 @@ D3DApp::D3DApp(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, 
 	mAppPaused  = false;
 	ZeroMemory(&md3dPP, sizeof(md3dPP));
 
+	initDebugConsole();
 	initMainWindow();
 	initDirect3D();
 }
@@ -392,4 +400,49 @@ bool D3DApp::isDeviceLost()
 	}
 	else
 		return false;
+}
+
+void D3DApp::initDebugConsole()
+{
+	int hConHandle;
+	long lStdHandle;
+
+	const WORD MAX_CONSOLE_LINES = 500;
+
+	CONSOLE_SCREEN_BUFFER_INFO coninfo;
+	FILE *fp;
+
+	// allocate a console for this app
+	AllocConsole();
+
+	// set the screen buffer to be big enough to let us scroll text
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
+	coninfo.dwSize.Y = MAX_CONSOLE_LINES;
+	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), coninfo.dwSize);
+
+	// redirect unbuffered STDOUT to the console
+	lStdHandle = (long)GetStdHandle(STD_OUTPUT_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+	fp = _fdopen(hConHandle, "w");
+	*stdout = *fp;
+	setvbuf(stdout, NULL, _IONBF, 0);
+
+	// redirect unbuffered STDIN to the console
+	lStdHandle = (long)GetStdHandle(STD_INPUT_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+	fp = _fdopen(hConHandle, "r");
+	*stdin = *fp;
+	setvbuf(stdin, NULL, _IONBF, 0);
+
+	// redirect unbuffered STDERR to the console
+	lStdHandle = (long)GetStdHandle(STD_ERROR_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+	fp = _fdopen(hConHandle, "w");
+	*stderr = *fp;
+	setvbuf(stderr, NULL, _IONBF, 0);
+
+	// make cout, wcout, cin, wcin, wcerr, cerr, wclog and clog
+	// point to console as well
+	ios::sync_with_stdio();
+
 }
