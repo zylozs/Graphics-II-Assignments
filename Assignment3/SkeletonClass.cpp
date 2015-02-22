@@ -18,6 +18,8 @@
 #include "GfxStats.h"
 #include <list>
 #include "MemoryTracker.h"
+#include "KeyEvent.h"
+#include "Delegate.h"
 
 #include "SkeletonClass.h"
 #include "3DClasses\BaseObject3D.h"
@@ -43,7 +45,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	g_Input->initialize(hInstance, gd3dApp->getMainWnd());
 	g_Input->disableEvents(InputEventType::KEY_DOWN);
 
+	gd3dApp->initialize();
+
 	int returnVal = gd3dApp->run();
+	
+	delete gd3dApp;
+	gd3dApp = NULL;
 
 	g_EventDispatcher->dispose();
 	delete g_EventDispatcher;
@@ -53,12 +60,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	delete g_Input;
 	g_Input = NULL;
 
-	delete gd3dApp;
-	gd3dApp = NULL;
+	// Do this only in debug mode!
+	#ifdef _DEBUG
+		g_MemoryTracker.reportAllocations(std::cout);
 
-	g_MemoryTracker.reportAllocations(std::cout);
+		system("pause");
+	#endif
 
-	system("pause");
 	return returnVal;
 }
 
@@ -74,6 +82,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	mCameraRadius    = 10.0f;
 	mCameraRotationY = 1.2 * D3DX_PI;
 	mCameraHeight    = 5.0f;
+
+	m_RenderType = D3DFILL_WIREFRAME;
 
     // repleace or add to the following object creation
 	m_Objects.push_back(New Cube(1.0f, 1.0f, 1.0f));
@@ -99,11 +109,19 @@ SkeletonClass::~SkeletonClass()
 {
     GfxStats::DeleteInstance();
 
+	g_Input->removeEventListener(KEY_UP, m_KeyUpDelegate);
+	
     for ( unsigned int obj=0 ; obj<m_Objects.size() ; obj++ )
         delete m_Objects[obj];
     m_Objects.clear();
 
 	DestroyAllVertexDeclarations();
+}
+
+void SkeletonClass::initialize()
+{
+	m_KeyUpDelegate = Delegate::create<SkeletonClass, &SkeletonClass::onKeyUp>(this);
+	g_Input->addEventListener(KEY_UP, m_KeyUpDelegate);
 }
 
 bool SkeletonClass::checkDeviceCaps()
@@ -123,6 +141,18 @@ void SkeletonClass::onResetDevice()
 	// The aspect ratio depends on the backbuffer dimensions, which can 
 	// possibly change after a reset.  So rebuild the projection matrix.
 	buildProjMtx();
+}
+
+void SkeletonClass::onKeyUp(Event* ev)
+{
+	KeyEvent* key = (KeyEvent*)ev;
+
+	switch (key->getKey())
+	{
+		case Keys::W:
+			swapRenderType();
+			break;
+	}
 }
 
 void SkeletonClass::updateScene(float dt)
@@ -173,9 +203,8 @@ void SkeletonClass::drawScene()
 
 	HR(gd3dDevice->BeginScene());
 
-    // Set render statws for the entire scene here:
-//	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID));
-	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME));
+    // Set render states for the entire scene here:
+	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
 
     // Render all the objects
     for ( unsigned int obj=0 ; obj<m_Objects.size() ; obj++ )
@@ -207,4 +236,12 @@ void SkeletonClass::buildProjMtx()
 	float w = (float)md3dPP.BackBufferWidth;
 	float h = (float)md3dPP.BackBufferHeight;
 	D3DXMatrixPerspectiveFovLH(&mProj, D3DX_PI * 0.25f, w/h, 1.0f, 5000.0f);
+}
+
+void SkeletonClass::swapRenderType()
+{
+	if (m_RenderType == D3DFILL_WIREFRAME)
+		m_RenderType = D3DFILL_SOLID;
+	else if (m_RenderType == D3DFILL_SOLID)
+		m_RenderType = D3DFILL_WIREFRAME;
 }

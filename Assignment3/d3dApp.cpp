@@ -36,7 +36,10 @@ D3DApp::D3DApp(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, 
 	mAppPaused  = false;
 	ZeroMemory(&md3dPP, sizeof(md3dPP));
 
-	initDebugConsole();
+	#ifdef _DEBUG
+		initDebugConsole();
+	#endif
+
 	initMainWindow();
 	initDirect3D();
 }
@@ -444,5 +447,9 @@ void D3DApp::initDebugConsole()
 	// make cout, wcout, cin, wcin, wcerr, cerr, wclog and clog
 	// point to console as well
 	ios::sync_with_stdio();
+}
+
+void D3DApp::initialize()
+{
 
 }

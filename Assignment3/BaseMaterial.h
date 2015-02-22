@@ -34,7 +34,7 @@ protected:
     D3DXHANDLE          m_ViewerPosWHandle;
 
     // Material specific shader handles
-    D3DXHANDLE          m_DIffuseColHandle;    
+    D3DXHANDLE          m_DiffuseColHandle;    
     D3DXHANDLE          m_SpecularColHandle;       
     D3DXHANDLE          m_ShininessHandle;   
 

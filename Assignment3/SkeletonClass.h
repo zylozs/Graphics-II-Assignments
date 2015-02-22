@@ -31,15 +31,20 @@ public:
 	SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEVTYPE devType, DWORD requestedVP);
 	~SkeletonClass();
 
-	bool checkDeviceCaps();
-	void onLostDevice();
-	void onResetDevice();
-	void updateScene(float dt);
-	void drawScene();
+	virtual void initialize();
+	virtual bool checkDeviceCaps();
+	virtual void onLostDevice();
+	virtual void onResetDevice();
+	virtual void updateScene(float dt);
+	virtual void drawScene();
 
 	// Helper methods
 	void buildViewMtx();
 	void buildProjMtx();
+
+private:
+	void onKeyUp(Event* ev);
+	void swapRenderType();
 
 private:
 	float mCameraRotationY;
@@ -48,6 +53,10 @@ private:
 
 	D3DXMATRIX mView;
 	D3DXMATRIX mProj;
+
+	DWORD m_RenderType; // D3DFILL_SOLID, D3DFILL_WIREFRAME
+
+	Delegate* m_KeyUpDelegate; // For Key Up events
 
     std::vector<BaseObject3D*>      m_Objects;
 };

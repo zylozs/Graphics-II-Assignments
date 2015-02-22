@@ -36,6 +36,7 @@ public:
 	// Override these methods only if you do not like the default window creation,
 	// direct3D device creation, window procedure, or message loop.  In general,
 	// for the sample programs of this book, we will not need to modify these.
+	virtual void initialize(); // Secondary initialization for things that need it
 	virtual void initMainWindow();
 	virtual void initDirect3D();
 	virtual int run();
