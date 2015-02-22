@@ -45,11 +45,12 @@ public:
 private:
 	void onKeyUp(Event* ev);
 	void swapRenderType();
+	void changeSelectedObject();
 
 private:
-	float mCameraRotationY;
-	float mCameraRadius;
-	float mCameraHeight;
+	float m_CameraRotationY;
+	float m_CameraRadius;
+	float m_CameraRotationX;
 
 	D3DXMATRIX mView;
 	D3DXMATRIX mProj;
@@ -58,7 +59,8 @@ private:
 
 	Delegate* m_KeyUpDelegate; // For Key Up events
 
-    std::vector<BaseObject3D*>      m_Objects;
+    std::vector<BaseObject3D*> m_Objects;
+	int m_ObjectIndex;
 };
 //=============================================================================
 #endif // _SKELETON_CLASS_H_

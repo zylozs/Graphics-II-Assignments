@@ -79,9 +79,9 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 		PostQuitMessage(0);
 	}
 
-	mCameraRadius    = 10.0f;
-	mCameraRotationY = 1.2 * D3DX_PI;
-	mCameraHeight    = 5.0f;
+	m_CameraRadius    = 10.0f;
+	m_CameraRotationY = 1.2 * D3DX_PI;
+	m_CameraRotationX    = 5.0f;
 
 	m_RenderType = D3DFILL_WIREFRAME;
 
@@ -96,9 +96,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 		m_Objects[i]->Create(gd3dDevice);
 	}
 
-	m_Objects[0]->setCenterPos(-3.0f, 0.0f, 0.0f);
-	m_Objects[1]->setCenterPos(0.0f, 3.0f, 0.0f);
-	m_Objects[2]->setCenterPos(3.0f, 0.0f, 0.0f);
+	m_ObjectIndex = 0;
 
 	onResetDevice();
 
@@ -152,6 +150,9 @@ void SkeletonClass::onKeyUp(Event* ev)
 		case Keys::W:
 			swapRenderType();
 			break;
+		case Keys::O:
+			changeSelectedObject();
+			break;
 	}
 }
 
@@ -171,23 +172,18 @@ void SkeletonClass::updateScene(float dt)
 		PostQuitMessage(0);
 	}
 
-	// Check input.
-	if (g_Input->isKeyDown(Keys::W))	 
-		mCameraHeight   += 25.0f * dt;
-	if (g_Input->isKeyDown(Keys::S))
-		mCameraHeight   -= 25.0f * dt;
-
 	// Divide by 50 to make mouse less sensitive. 
-	mCameraRotationY += g_Input->getMouseDX() / 100.0f;
-	mCameraRadius    += -g_Input->getMouseDZ() / 50.0f;
+	m_CameraRotationY += g_Input->getMouseDX() / 100.0f;
+	m_CameraRadius    += -g_Input->getMouseDZ() / 50.0f;
+	m_CameraRotationX += g_Input->getMouseDY() / 50.0f;
 
 	// If we rotate over 360 degrees, just roll back to 0
-	if( fabsf(mCameraRotationY) >= 2.0f * D3DX_PI ) 
-		mCameraRotationY = 0.0f;
+	if( fabsf(m_CameraRotationY) >= 2.0f * D3DX_PI ) 
+		m_CameraRotationY = 0.0f;
 
 	// Don't let radius get too small.
-	if( mCameraRadius < 5.0f )
-		mCameraRadius = 5.0f;
+	if( m_CameraRadius < 5.0f )
+		m_CameraRadius = 5.0f;
 
 	// The camera position/orientation relative to world space can 
 	// change every frame based on input, so we need to rebuild the
@@ -206,11 +202,8 @@ void SkeletonClass::drawScene()
     // Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
 
-    // Render all the objects
-    for ( unsigned int obj=0 ; obj<m_Objects.size() ; obj++ )
-    {
-        m_Objects[obj]->Render( gd3dDevice, mView, mProj );
-    }
+    // Render the specific object
+    m_Objects[m_ObjectIndex]->Render( gd3dDevice, mView, mProj );
 
     // display the render statistics
     GfxStats::GetInstance()->display();
@@ -223,12 +216,27 @@ void SkeletonClass::drawScene()
 
 void SkeletonClass::buildViewMtx()
 {
-	float x = mCameraRadius * cosf(mCameraRotationY);
-	float z = mCameraRadius * sinf(mCameraRotationY);
-	D3DXVECTOR3 pos(x, mCameraHeight, z);
-	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
-	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-	D3DXMatrixLookAtLH(&mView, &pos, &target, &up);
+	// Bad way
+// 	float x = mCameraRadius * cosf(mCameraRotationY);
+// 	float z = mCameraRadius * sinf(mCameraRotationY);
+// 	D3DXVECTOR3 pos(x, mCameraHeight, z);
+// 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
+// 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
+// 	D3DXMatrixLookAtLH(&mView, &pos, &target, &up);
+
+	// Good way
+	D3DXMATRIX move;
+	D3DXMATRIX upDownRotate;
+	D3DXMATRIX leftRightRotate;
+
+	D3DXMatrixTranslation(&move, 0, 0, -m_CameraRadius); // -Z axis using camera radius
+	D3DXMatrixRotationX(&upDownRotate, m_CameraRotationX); // Up Down Rotation
+	D3DXMatrixRotationY(&leftRightRotate, m_CameraRotationY); // left right rotation
+
+	D3DXMatrixMultiply(&mView, &move, &upDownRotate);
+	D3DXMatrixMultiply(&mView, &mView, &leftRightRotate);
+
+	D3DXMatrixInverse(&mView, NULL, &mView); // Invert
 }
 
 void SkeletonClass::buildProjMtx()
@@ -244,4 +252,12 @@ void SkeletonClass::swapRenderType()
 		m_RenderType = D3DFILL_SOLID;
 	else if (m_RenderType == D3DFILL_SOLID)
 		m_RenderType = D3DFILL_WIREFRAME;
+}
+
+void SkeletonClass::changeSelectedObject()
+{
+	m_ObjectIndex++;
+
+	if (m_ObjectIndex >= (int)m_Objects.size())
+		m_ObjectIndex = 0;
 }
