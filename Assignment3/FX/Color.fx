@@ -1,0 +1,51 @@
+uniform extern float4x4 WorldViewProjectMatrix;
+
+struct InputVS
+{
+	float3 Position : POSITION0;
+	float3 Normal : NORMAL0;
+	float4 Color : COLOR0;
+	float2 TexCoord : TEXCOORD0;
+};
+
+struct OutputVS
+{
+	float4 Position : POSITION0;
+	float4 Color : COLOR0;
+};
+
+// Vertex shader
+OutputVS ColorVS(InputVS input)
+{
+	// Zero out our output.
+	OutputVS outVS = (OutputVS)0;
+
+	// Transform to homogeneous clip space.
+	outVS.Position = mul(float4(input.Position, 1.0f), WorldViewProjectMatrix);
+
+	outVS.Color = input.Color;
+	
+	// Done--return the output.
+	return outVS;
+}
+
+// Pixel shader
+float4 ColorPS(OutputVS input) : COLOR
+{
+	return input.Color;
+}
+
+technique ColorTech
+{
+	pass P0
+	{
+		// Specify the vertex and pixel shader associated
+		// with this pass.
+		VertexShader = compile vs_2_0 ColorVS();
+		PixelShader = compile ps_2_0 ColorPS();
+
+		// Specify the render/device states associated with
+		// this pass.
+		FillMode = Solid;
+	}
+}

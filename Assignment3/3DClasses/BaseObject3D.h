@@ -23,6 +23,7 @@
 struct IDirect3DVertexBuffer9;
 struct IDirect3DIndexBuffer9;
 struct Vertex;
+class BaseMaterial;
 //=============================================================================
 
 class BaseObject3D : public Trackable
@@ -38,6 +39,7 @@ protected:
 
 	D3DXVECTOR3 m_CenterPos;
 
+	BaseMaterial* m_Material;
 
 protected:
     // Can be over-written, but isn't necessary for sub classes
@@ -49,8 +51,12 @@ protected:
 	virtual void calculateVertexBuffer(std::vector<Vertex>& vertices) = 0;
 	virtual void calculateIndexBuffer(std::vector<WORD>& indices) = 0;
 
+private:
+	void RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection);
+	void RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection);
+
 public:
-    BaseObject3D(void);
+	BaseObject3D(BaseMaterial* material = NULL);
     ~BaseObject3D(void);
 
     // Replace or add to the following code as you progress with the material
@@ -60,6 +66,9 @@ public:
 
 	const D3DXVECTOR3& getCenterPos() { return m_CenterPos; }
 	void setCenterPos(FLOAT x, FLOAT y, FLOAT z); // Used to move a BaseObject3D to a position in World space by translating its World Matrix
+	void setMaterial(BaseMaterial* material);
+	
+	BaseMaterial* getMaterial() { return m_Material; }
 };
 //=============================================================================
 #endif // _BASE_OBJECT_3D_H

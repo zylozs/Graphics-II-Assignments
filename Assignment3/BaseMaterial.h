@@ -22,13 +22,13 @@ protected:
 
     D3DXVECTOR3         m_DiffuseColor;
     D3DXVECTOR3         m_SpecularColor;
-    float               m_Shininess;            // specualr power
+    float               m_Shininess;            // specular power
 
 
     //---------- Shader Handles ----------
     // Generic shader handles
     D3DXHANDLE          m_WorldMatHandle;    
-    D3DXHANDLE          m_ViewProjectionMatHandel;
+    D3DXHANDLE          m_ViewProjectionMatHandle;
 
     D3DXHANDLE          m_LightPosWHandle;       // Position (spot/point) / Direction (directional)
     D3DXHANDLE          m_ViewerPosWHandle;
@@ -38,13 +38,23 @@ protected:
     D3DXHANDLE          m_SpecularColHandle;       
     D3DXHANDLE          m_ShininessHandle;   
 
+	D3DXHANDLE			m_TechniqueHandle; // The technique to use for the shader
 
 public:
     BaseMaterial(void);
     virtual ~BaseMaterial(void);
 
-    void ConnectToEffect( ID3DXEffect* effect );
-    void Render( D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat ); 
+	void LoadEffectFromFile(IDirect3DDevice9* gd3dDevice, std::string filename);
+	virtual void ConnectToEffect(ID3DXEffect* effect) = 0;
+	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat) = 0;
+
+	// For starting/ending the rendering of this material
+	UINT Begin();
+	void End();
+
+	// For starting/ending the passes
+	void BeginPass(int i);
+	void EndPass();
 };
 //=============================================================================
 

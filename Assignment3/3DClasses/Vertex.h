@@ -12,28 +12,21 @@
 void InitAllVertexDeclarations();
 void DestroyAllVertexDeclarations();
 //=============================================================================
-// struct VertexPos
-// {
-// 	VertexPos():pos(0.0f, 0.0f, 0.0f){}
-// 	VertexPos(float x, float y, float z):pos(x,y,z){}
-// 	VertexPos(const D3DXVECTOR3& v):pos(v){}
-// 
-// 	D3DXVECTOR3 pos;
-// 	static IDirect3DVertexDeclaration9* Decl;
-// };
 
 struct Vertex
 {
 	Vertex(){}
-	Vertex(const D3DXVECTOR3& p, const D3DXVECTOR3& n, const D3DXVECTOR3& uv)
-		   : Position(p), Normal(n), TexC(uv){}
+	Vertex(const D3DXVECTOR3& p, const D3DXVECTOR3& n, const D3DXVECTOR3& uv, const D3DXCOLOR& c)
+		   : Position(p), Normal(n), TexC(uv), Color(c){}
 	Vertex(float px, float py, float pz,
 		   float nx, float ny, float nz,
-		   float u, float v)
-		   : Position(px, py, pz), Normal(nx, ny, nz), TexC(u, v){}
+		   float u, float v,
+		   float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f)
+		   : Position(px, py, pz), Normal(nx, ny, nz), TexC(u, v), Color(r, g, b, a){}
 
 	D3DXVECTOR3 Position;
 	D3DXVECTOR3 Normal;
+	D3DXCOLOR Color;
 	D3DXVECTOR2 TexC;
 
 	static IDirect3DVertexDeclaration9* Decl;

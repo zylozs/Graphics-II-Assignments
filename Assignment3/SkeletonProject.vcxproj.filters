@@ -51,6 +51,9 @@
     <ClCompile Include="Trackable.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="ColorMaterial.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GfxStats.h" />
@@ -121,6 +124,9 @@
     <ClInclude Include="IObject.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
+    <ClInclude Include="ColorMaterial.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Primitives">
@@ -147,5 +153,13 @@
     <Filter Include="Interfaces">
       <UniqueIdentifier>{4257927d-fb7f-4310-84a4-f89be454a564}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FX">
+      <UniqueIdentifier>{6fd9c7c9-69f2-4afa-af11-f02ee787cb91}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="FX\Color.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

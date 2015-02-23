@@ -8,9 +8,11 @@
 //=============================================================================
 #include "BaseObject3D.h"
 #include "Vertex.h"
+#include "../BaseMaterial.h"
 #include "../GfxStats.h"
 //=============================================================================
-BaseObject3D::BaseObject3D(void)
+BaseObject3D::BaseObject3D(BaseMaterial* material)
+	: m_Material(material)
 {
     m_VertexBuffer = NULL;
     m_IndexBuffer = NULL;
@@ -24,6 +26,12 @@ BaseObject3D::~BaseObject3D(void)
 {
     ReleaseCOM(m_VertexBuffer);
 	ReleaseCOM(m_IndexBuffer);
+
+	if (m_Material != NULL)
+	{
+		delete m_Material;
+		m_Material = NULL;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -50,9 +58,36 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
 	HR(gd3dDevice->SetTransform(D3DTS_WORLD, &m_World));
 	HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
 	HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));	
-    
-    // Send to render
-    HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_Vertices, 0, m_Triangles));
+
+	if (m_Material != NULL)
+		RenderWithMaterial(gd3dDevice, view, projection);
+	else
+		RenderWithoutMaterial(gd3dDevice, view, projection);
+}
+
+void BaseObject3D::RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
+{
+	m_Material->PreRender(m_World, view * projection);
+
+	UINT passes = m_Material->Begin();
+
+	for (int i = 0; i < (int)passes; i++)
+	{
+		m_Material->BeginPass(i);
+
+		// Send to render
+		HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_Vertices, 0, m_Triangles));
+
+		m_Material->EndPass();
+	}
+
+	m_Material->End();
+}
+
+void BaseObject3D::RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
+{
+	// Send to render
+	HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_Vertices, 0, m_Triangles));
 }
 
 //-----------------------------------------------------------------------------
@@ -115,4 +150,15 @@ void BaseObject3D::setCenterPos(FLOAT x, FLOAT y, FLOAT z)
 	m_CenterPos.x = x;
 	m_CenterPos.y = y;
 	m_CenterPos.z = z;
+}
+
+void BaseObject3D::setMaterial(BaseMaterial* material)
+{
+	if (m_Material != NULL)
+	{
+		delete m_Material;
+		m_Material = NULL;
+	}
+
+	m_Material = material;
 }
