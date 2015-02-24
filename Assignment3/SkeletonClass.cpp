@@ -95,7 +95,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
-		BaseMaterial* material = New ColorMaterial(0.0f, 1.0f, 0.0f, 1.0f);
+		BaseMaterial* material = New ColorMaterial(1.0f, 1.0f, 0.0f, 1.0f);
 		material->LoadEffectFromFile(gd3dDevice, "FX/Color.fx");
 
 		m_Objects[i]->Create(gd3dDevice);
