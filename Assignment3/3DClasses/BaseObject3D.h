@@ -72,6 +72,7 @@ public:
 	void setMaterial(BaseMaterial* material);
 	
 	BaseMaterial* getMaterial() { return m_Material; }
+	D3DXMATRIX getWorldMatrix() { return m_World;  }
 };
 //=============================================================================
 #endif // _BASE_OBJECT_3D_H

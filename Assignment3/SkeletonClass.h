@@ -42,12 +42,12 @@ public:
 	void buildViewMtx();
 	void buildProjMtx();
 
-private:
+private: //functions
 	void onKeyUp(Event* ev);
 	void swapRenderType();
 	void changeSelectedObject();
 
-private:
+private: //variables
 	float m_CameraRotationY;
 	float m_CameraRadius;
 	float m_CameraRotationX;
@@ -61,6 +61,7 @@ private:
 
     std::vector<BaseObject3D*> m_Objects;
 	int m_ObjectIndex;
+
 };
 //=============================================================================
 #endif // _SKELETON_CLASS_H_

@@ -36,6 +36,11 @@ void BaseMaterial::LoadEffectFromFile(IDirect3DDevice9* gd3dDevice, std::string 
 	ConnectToEffect(fx);
 }
 
+void BaseMaterial::ConnectToEffect(ID3DXEffect* effect)
+{
+
+}
+
 UINT BaseMaterial::Begin()
 {
 	UINT passes = 0;

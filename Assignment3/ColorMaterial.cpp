@@ -19,7 +19,8 @@ ColorMaterial::~ColorMaterial()
 
 void ColorMaterial::ConnectToEffect(ID3DXEffect* effect)
 {
-	m_Effect = effect;
+	//m_Effect = effect;
+	BaseMaterial::ConnectToEffect(effect);
 
 	m_ColorHandle = m_Effect->GetParameterByName(0, "gColor");
 	m_WorldMatHandle = m_Effect->GetParameterByName(0, "gWorldViewProjectMatrix");
@@ -28,6 +29,8 @@ void ColorMaterial::ConnectToEffect(ID3DXEffect* effect)
 
 void ColorMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat)
 {
+	BaseMaterial::PreRender(worldMat, viewProjMat);
+
 	m_WorldMat = worldMat * viewProjMat;
 
 	HR(m_Effect->SetTechnique(m_TechniqueHandle));
