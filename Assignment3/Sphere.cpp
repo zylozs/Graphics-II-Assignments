@@ -15,7 +15,8 @@ Sphere::~Sphere()
 void Sphere::Create(IDirect3DDevice9* gd3dDevice)
 {
 	// We aren't changing anything, so just use the base create function
-	BaseObject3D::Create(gd3dDevice);
+	//BaseObject3D::Create(gd3dDevice);
+	D3DXCreateSphere(gd3dDevice, m_Radius, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
 }
 
 void Sphere::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
@@ -32,6 +33,7 @@ void Sphere::Update(float dt)
 
 // A large chunk of this function was taken and adapted from Frank Luna's DirectX 11 Shapes Demo
 // Credit goes to him for most of this.
+/*
 void Sphere::calculateVertexBuffer(std::vector<Vertex>& vertices)
 {
 	// Create our vertex list before locking the buffer
@@ -123,3 +125,4 @@ void Sphere::calculateIndexBuffer(std::vector<WORD>& indices)
 		indices.push_back(baseIndex + i + 1);
 	}
 }
+*/

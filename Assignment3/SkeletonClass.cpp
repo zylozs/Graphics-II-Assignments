@@ -90,8 +90,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
     // repleace or add to the following object creation
 	m_Objects.push_back(New Cube(1.0f, 1.0f, 1.0f));
 	m_Objects.push_back(New Sphere(1.0f, 20));
-	m_Objects.push_back(New Cylinder(1.0f, 2.0f, 20));
-	m_Objects.push_back(New Cone(1.0f, 2.0f, 20));
+	m_Objects.push_back(New Cylinder(1.0f, 2, 20));
+	m_Objects.push_back(New Cone(1.0f, 2, 20));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{

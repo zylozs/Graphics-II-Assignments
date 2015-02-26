@@ -19,7 +19,7 @@ protected:
 	float m_Radius2;
 	float m_Height;
 	UINT m_SideFacetsNum;
-	float m_StackHeight;
+	UINT m_StackHeight;
 	float m_RadiusStep;
 
 	UINT m_BaseIndex1;
@@ -27,11 +27,11 @@ protected:
 	UINT m_BaseIndex2;
 	UINT m_CenterIndex2;
 
-	virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
-	virtual void calculateIndexBuffer(std::vector<WORD>& indices);
+	//virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
+	//virtual void calculateIndexBuffer(std::vector<WORD>& indices);
 
 public:
-	Cylinder(float radius, float height, UINT sideFacetsNum);
+	Cylinder(float radius, UINT height, UINT sideFacetsNum);
 	~Cylinder();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);

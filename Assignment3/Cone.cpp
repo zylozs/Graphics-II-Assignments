@@ -16,7 +16,8 @@ Cone::~Cone()
 void Cone::Create(IDirect3DDevice9* gd3dDevice)
 {
 	// We aren't changing anything, so just use the base create function
-	BaseObject3D::Create(gd3dDevice);
+	//BaseObject3D::Create(gd3dDevice);
+	D3DXCreateCylinder(gd3dDevice, 0, m_Radius2, m_Height, m_SideFacetsNum, m_StackHeight, &m_Mesh, mp_Buffer);
 }
 
 void Cone::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
@@ -31,6 +32,7 @@ void Cone::Update(float dt)
 	BaseObject3D::Update(dt);
 }
 
+/*
 void Cone::calculateVertexBuffer(std::vector<Vertex>& vertices)
 {
 	float theta = 2.0f * D3DX_PI / m_SideFacetsNum;
@@ -103,3 +105,4 @@ void Cone::calculateIndexBuffer(std::vector<WORD>& indices)
 		}
 	}
 }
+*/

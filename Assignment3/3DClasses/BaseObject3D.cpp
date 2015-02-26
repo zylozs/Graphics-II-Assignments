@@ -14,18 +14,19 @@
 BaseObject3D::BaseObject3D(BaseMaterial* material)
 	: m_Material(material)
 {
-    m_VertexBuffer = NULL;
-    m_IndexBuffer = NULL;
+    //m_VertexBuffer = NULL;
+    //m_IndexBuffer = NULL;
 	m_CenterPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
     D3DXMatrixIdentity(&m_World);
+	mp_Buffer = NULL;
 }
 
 //-----------------------------------------------------------------------------
 BaseObject3D::~BaseObject3D(void)
 {
-    ReleaseCOM(m_VertexBuffer);
-	ReleaseCOM(m_IndexBuffer);
+    //ReleaseCOM(m_VertexBuffer);
+	//ReleaseCOM(m_IndexBuffer);
 
 	if (m_Material != NULL)
 	{
@@ -37,8 +38,8 @@ BaseObject3D::~BaseObject3D(void)
 //-----------------------------------------------------------------------------
 void BaseObject3D::Create( IDirect3DDevice9* gd3dDevice )
 {
-    buildVertexBuffer( gd3dDevice );
-    buildIndexBuffer( gd3dDevice );
+    //buildVertexBuffer( gd3dDevice );
+    //buildIndexBuffer( gd3dDevice );
 }
 
 //-----------------------------------------------------------------------------
@@ -46,13 +47,14 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
     D3DXMATRIX& view, D3DXMATRIX& projection )
 {
     // Update the statistics singlton class
-    GfxStats::GetInstance()->addVertices(m_Vertices);
-    GfxStats::GetInstance()->addTriangles(m_Triangles);
+    GfxStats::GetInstance()->addVertices(m_Mesh->GetNumVertices());
+	//this might not work
+    GfxStats::GetInstance()->addTriangles(m_Mesh->GetNumFaces());
 
     // Set the buffers and format
-    HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(Vertex)));
-	HR(gd3dDevice->SetIndices(m_IndexBuffer));
-	HR(gd3dDevice->SetVertexDeclaration(Vertex::Decl));
+    //HR(gd3dDevice->SetStreamSource(0, m_VertexBuffer, 0, sizeof(Vertex)));
+	//HR(gd3dDevice->SetIndices(m_IndexBuffer));
+	//HR(gd3dDevice->SetVertexDeclaration(Vertex::Decl));
 
     // Set matrices and model relevant render date
 	HR(gd3dDevice->SetTransform(D3DTS_WORLD, &m_World));
@@ -76,7 +78,8 @@ void BaseObject3D::RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& 
 		m_Material->BeginPass(i);
 
 		// Send to render
-		HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_Vertices, 0, m_Triangles));
+		//HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_Vertices, 0, m_Triangles));
+		m_Mesh->DrawSubset(0);
 
 		m_Material->EndPass();
 	}
@@ -87,10 +90,12 @@ void BaseObject3D::RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& 
 void BaseObject3D::RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
 {
 	// Send to render
-	HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_Vertices, 0, m_Triangles));
+	//HR(gd3dDevice->DrawIndexedPrimitive(D3DPT_TRIANGLELIST, 0, 0, m_Vertices, 0, m_Triangles));
+	m_Mesh->DrawSubset(0);
 }
 
 //-----------------------------------------------------------------------------
+/*
 void BaseObject3D::buildVertexBuffer( IDirect3DDevice9* gd3dDevice )
 {
 	std::vector<Vertex> vertices;
@@ -114,8 +119,9 @@ void BaseObject3D::buildVertexBuffer( IDirect3DDevice9* gd3dDevice )
 	// Unlock when we are done
 	HR(m_VertexBuffer->Unlock());
 }
-
+*/
 //-----------------------------------------------------------------------------
+/*
 void BaseObject3D::buildIndexBuffer( IDirect3DDevice9* gd3dDevice )
 {
 	std::vector<WORD> indices;
@@ -139,6 +145,7 @@ void BaseObject3D::buildIndexBuffer( IDirect3DDevice9* gd3dDevice )
 	// Unlock when we are done
 	HR(m_IndexBuffer->Unlock());
 }
+*/
 //=============================================================================
 
 void BaseObject3D::setCenterPos(FLOAT x, FLOAT y, FLOAT z)
