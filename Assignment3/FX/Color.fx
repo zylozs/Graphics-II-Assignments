@@ -47,6 +47,6 @@ technique ColorTech
 
 		// Specify the render/device states associated with
 		// this pass.
-		FillMode = Solid;
+		//FillMode = Solid;
 	}
 }

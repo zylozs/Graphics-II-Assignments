@@ -22,6 +22,7 @@
 #include "Delegate.h"
 #include "BaseMaterial.h"
 #include "ColorMaterial.h"
+#include "TextureMaterial.h"
 
 #include "SkeletonClass.h"
 #include "3DClasses\BaseObject3D.h"
@@ -95,8 +96,9 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
-		BaseMaterial* material = New ColorMaterial(1.0f, 1.0f, 0.0f, 1.0f);
-		material->LoadEffectFromFile(gd3dDevice, "FX/Color.fx");
+		//BaseMaterial* material = New ColorMaterial(1.0f, 1.0f, 0.0f, 1.0f);
+		BaseMaterial* material = New TextureMaterial("Assets/crate.jpg");
+		material->LoadEffectFromFile(gd3dDevice, "FX/TextureMap.fx");
 
 		m_Objects[i]->Create(gd3dDevice);
 		m_Objects[i]->setMaterial(material);

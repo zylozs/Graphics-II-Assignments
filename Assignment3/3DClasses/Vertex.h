@@ -17,15 +17,15 @@ struct Vertex
 {
 	Vertex(){}
 	Vertex(const D3DXVECTOR3& p, const D3DXVECTOR3& n, const D3DXVECTOR3& uv)
-		   : Position(p), Normal(n), TexC(uv){}
+		   : Position(p), Normal(n), TexCoord(uv){}
 	Vertex(float px, float py, float pz,
 		   float nx, float ny, float nz,
 		   float u, float v)
-		   : Position(px, py, pz), Normal(nx, ny, nz), TexC(u, v){}
+		   : Position(px, py, pz), Normal(nx, ny, nz), TexCoord(u, v){}
 
 	D3DXVECTOR3 Position;
 	D3DXVECTOR3 Normal;
-	D3DXVECTOR2 TexC;
+	D3DXVECTOR2 TexCoord;
 
 	static IDirect3DVertexDeclaration9* Decl;
 };

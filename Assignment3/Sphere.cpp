@@ -63,8 +63,8 @@ void Sphere::calculateVertexBuffer(std::vector<Vertex>& vertices)
 			D3DXVec3Normalize(&v.Normal, &v.Position);
 
 			// Get our texture coordinates (UV)
-			v.TexC.x = theta / D3DX_PI;
-			v.TexC.y = phi / D3DX_PI;
+			v.TexCoord.x = theta / D3DX_PI;
+			v.TexCoord.y = phi / D3DX_PI;
 
 			vertices.push_back(v);
 		}

@@ -54,6 +54,9 @@
     <ClCompile Include="ColorMaterial.cpp">
       <Filter>Materials</Filter>
     </ClCompile>
+    <ClCompile Include="TextureMaterial.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GfxStats.h" />
@@ -127,6 +130,9 @@
     <ClInclude Include="ColorMaterial.h">
       <Filter>Materials</Filter>
     </ClInclude>
+    <ClInclude Include="TextureMaterial.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Primitives">
@@ -159,6 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FX\Color.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+    <FxCompile Include="FX\TextureMap.fx">
       <Filter>FX</Filter>
     </FxCompile>
   </ItemGroup>

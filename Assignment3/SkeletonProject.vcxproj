@@ -105,6 +105,7 @@
     <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="TextureMaterial.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Trackable.cpp" />
   </ItemGroup>
@@ -132,6 +133,7 @@
     <ClInclude Include="MouseKeys.h" />
     <ClInclude Include="SkeletonClass.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="TextureMaterial.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Trackable.h" />
   </ItemGroup>
@@ -140,6 +142,10 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">main</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="FX\TextureMap.fx">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
