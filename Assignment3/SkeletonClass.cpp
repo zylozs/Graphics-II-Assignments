@@ -153,11 +153,17 @@ void SkeletonClass::onKeyUp(Event* ev)
 
 	switch (key->getKey())
 	{
-		case Keys::W:
+		case Keys::W:	//Wireframe/Not Wireframe
 			swapRenderType();
 			break;
-		case Keys::O:
+		case Keys::O:	//Object Swap
 			changeSelectedObject();
+			break;
+		case Keys::S:	//Specular component swap
+			break;
+		case Keys::D:	//Diffuse component swap
+			break;
+		case Keys::T:	//Texture/No Texture
 			break;
 	}
 }
