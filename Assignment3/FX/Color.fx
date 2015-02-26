@@ -44,9 +44,5 @@ technique ColorTech
 		// with this pass.
 		VertexShader = compile vs_2_0 ColorVS();
 		PixelShader = compile ps_2_0 ColorPS();
-
-		// Specify the render/device states associated with
-		// this pass.
-		FillMode = Solid;
 	}
 }

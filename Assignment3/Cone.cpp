@@ -17,7 +17,7 @@ void Cone::Create(IDirect3DDevice9* gd3dDevice)
 {
 	// We aren't changing anything, so just use the base create function
 	//BaseObject3D::Create(gd3dDevice);
-	D3DXCreateCylinder(gd3dDevice, 0, m_Radius2, m_Height, m_SideFacetsNum, m_StackHeight, &m_Mesh, mp_Buffer);
+	D3DXCreateCylinder(gd3dDevice, m_Radius1, 0, m_Height, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
 }
 
 void Cone::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
