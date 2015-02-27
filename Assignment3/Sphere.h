@@ -16,10 +16,10 @@ class Sphere : public BaseObject3D
 {
 protected:
 	float m_Radius;
-	int m_SideFacetsNum;
+	UINT m_SideFacetsNum;
 
-	virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
-	virtual void calculateIndexBuffer(std::vector<WORD>& indices);
+	//virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
+	//virtual void calculateIndexBuffer(std::vector<WORD>& indices);
 
 public:
 	Sphere(float radius, int sideFacetsNum);

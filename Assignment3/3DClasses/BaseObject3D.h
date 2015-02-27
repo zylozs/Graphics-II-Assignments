@@ -31,8 +31,8 @@ class BaseObject3D : public Trackable
 protected:	
     D3DXMATRIX                  m_World;
 
-	IDirect3DVertexBuffer9*     m_VertexBuffer;
-	IDirect3DIndexBuffer9*      m_IndexBuffer;
+	//IDirect3DVertexBuffer9*     m_VertexBuffer;
+	//IDirect3DIndexBuffer9*      m_IndexBuffer;
 
 	int m_Triangles;
 	int m_Vertices;
@@ -41,15 +41,18 @@ protected:
 
 	BaseMaterial* m_Material;
 
+	LPD3DXMESH m_Mesh;
+	LPD3DXBUFFER *mp_Buffer;
+
 protected:
     // Can be over-written, but isn't necessary for sub classes
-    virtual void buildVertexBuffer( IDirect3DDevice9* gd3dDevice );
-    virtual void buildIndexBuffer( IDirect3DDevice9* gd3dDevice );
+    //virtual void buildVertexBuffer( IDirect3DDevice9* gd3dDevice );
+    //virtual void buildIndexBuffer( IDirect3DDevice9* gd3dDevice );
 
 	// You should override these functions for each sub class!
 	// Add your vertices/indices to the vector passed to the function and it will draw the object for you
-	virtual void calculateVertexBuffer(std::vector<Vertex>& vertices) = 0;
-	virtual void calculateIndexBuffer(std::vector<WORD>& indices) = 0;
+	//virtual void calculateVertexBuffer(std::vector<Vertex>& vertices) = 0;
+	//virtual void calculateIndexBuffer(std::vector<WORD>& indices) = 0;
 
 private:
 	void RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection);

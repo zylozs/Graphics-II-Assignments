@@ -88,15 +88,20 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	m_RenderType = D3DFILL_WIREFRAME;
 
-    // repleace or add to the following object creation
+	onResetDevice();
+
+	InitAllVertexDeclarations();
+
+	// repleace or add to the following object creation
 	m_Objects.push_back(New Cube(1.0f, 1.0f, 1.0f));
 	m_Objects.push_back(New Sphere(1.0f, 20));
-	m_Objects.push_back(New Cylinder(1.0f, 2.0f, 20));
-	m_Objects.push_back(New Cone(1.0f, 2.0f, 20));
+	m_Objects.push_back(New Cylinder(1.0f, 2, 20));
+	m_Objects.push_back(New Cone(1.0f, 2, 20));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
-		//BaseMaterial* material = New ColorMaterial(1.0f, 1.0f, 0.0f, 1.0f);
+// 		BaseMaterial* material = New ColorMaterial(1.0f, 1.0f, 0.0f, 1.0f);
+// 		material->LoadEffectFromFile(gd3dDevice, "FX/Color.fx");
 		BaseMaterial* material = New TextureMaterial("Assets/crate.jpg");
 		material->LoadEffectFromFile(gd3dDevice, "FX/TextureMap.fx");
 
@@ -105,10 +110,6 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	}
 
 	m_ObjectIndex = 0;
-
-	onResetDevice();
-
-	InitAllVertexDeclarations();
 }
 
 SkeletonClass::~SkeletonClass()
@@ -155,11 +156,17 @@ void SkeletonClass::onKeyUp(Event* ev)
 
 	switch (key->getKey())
 	{
-		case Keys::W:
+		case Keys::W:	//Wireframe/Not Wireframe
 			swapRenderType();
 			break;
-		case Keys::O:
+		case Keys::O:	//Object Swap
 			changeSelectedObject();
+			break;
+		case Keys::S:	//Specular component swap
+			break;
+		case Keys::D:	//Diffuse component swap
+			break;
+		case Keys::T:	//Texture/No Texture
 			break;
 	}
 }

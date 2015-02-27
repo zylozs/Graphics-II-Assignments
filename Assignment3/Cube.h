@@ -19,9 +19,6 @@ protected:
 	float m_Width;
 	float m_Height;
 
-	virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
-	virtual void calculateIndexBuffer(std::vector<WORD>& indices);
-
 public:
 	Cube(float length, float width, float height);
 	~Cube();
