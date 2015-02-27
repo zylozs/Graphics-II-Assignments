@@ -214,6 +214,12 @@ void SkeletonClass::drawScene()
 
 	HR(gd3dDevice->BeginScene());
 
+	// Lighting
+
+	//multiple passes
+
+	// End Lighting
+
     // Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
 
