@@ -19,7 +19,6 @@ ColorMaterial::~ColorMaterial()
 
 void ColorMaterial::ConnectToEffect(ID3DXEffect* effect)
 {
-	//m_Effect = effect;
 	BaseMaterial::ConnectToEffect(effect);
 
 	m_ColorHandle = m_Effect->GetParameterByName(0, "gColor");

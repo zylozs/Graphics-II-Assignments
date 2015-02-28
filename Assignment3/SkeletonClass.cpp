@@ -86,13 +86,20 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_CameraRotationY = 1.2 * D3DX_PI;
 	m_CameraRotationX    = 5.0f;
 
+	m_LightPoint = D3DXVECTOR3(0.0f, 3.0f, 0.0f);
+
 	m_RenderType = D3DFILL_WIREFRAME;
+	m_ObjectColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+	m_UseTexture = true;
+	m_Texture = "Assets/crate.jpg";
+	m_TextureMaterialFX = "FX/TextureMap.fx";
+	m_ColorMaterialFX = "FX/Color.fx";
 
 	onResetDevice();
 
 	InitAllVertexDeclarations();
 
-	// repleace or add to the following object creation
+	// replace or add to the following object creation
 	m_Objects.push_back(New Cube(1.0f, 1.0f, 1.0f));
 	m_Objects.push_back(New Sphere(1.0f, 20));
 	m_Objects.push_back(New Cylinder(1.0f, 2, 20));
@@ -100,13 +107,14 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
-// 		BaseMaterial* material = New ColorMaterial(1.0f, 1.0f, 0.0f, 1.0f);
-// 		material->LoadEffectFromFile(gd3dDevice, "FX/Color.fx");
-		BaseMaterial* material = New TextureMaterial("Assets/crate.jpg");
-		material->LoadEffectFromFile(gd3dDevice, "FX/TextureMap.fx");
+ 		BaseMaterial* colorMaterial = New ColorMaterial(m_ObjectColor.r, m_ObjectColor.g, m_ObjectColor.b, m_ObjectColor.a);
+		colorMaterial->LoadEffectFromFile(gd3dDevice, m_ColorMaterialFX);
+		BaseMaterial* textureMaterial = New TextureMaterial(m_Texture);
+		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
 
 		m_Objects[i]->Create(gd3dDevice);
-		m_Objects[i]->setMaterial(material);
+		m_Objects[i]->addMaterial("Color", colorMaterial, false);
+		m_Objects[i]->addMaterial("Texture", textureMaterial, true);
 	}
 
 	m_ObjectIndex = 0;
@@ -167,6 +175,7 @@ void SkeletonClass::onKeyUp(Event* ev)
 		case Keys::D:	//Diffuse component swap
 			break;
 		case Keys::T:	//Texture/No Texture
+			toggleTexture();
 			break;
 	}
 }
@@ -214,17 +223,11 @@ void SkeletonClass::drawScene()
 
 	HR(gd3dDevice->BeginScene());
 
-	// Lighting
-
-	//multiple passes
-
-	// End Lighting
-
     // Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
 
     // Render the specific object
-    m_Objects[m_ObjectIndex]->Render( gd3dDevice, mView, mProj );
+    m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj );
 
     // display the render statistics
     GfxStats::GetInstance()->display();
@@ -254,17 +257,17 @@ void SkeletonClass::buildViewMtx()
 	D3DXMatrixRotationX(&upDownRotate, m_CameraRotationX); // Up Down Rotation
 	D3DXMatrixRotationY(&leftRightRotate, m_CameraRotationY); // left right rotation
 
-	D3DXMatrixMultiply(&mView, &move, &upDownRotate);
-	D3DXMatrixMultiply(&mView, &mView, &leftRightRotate);
+	D3DXMatrixMultiply(&m_View, &move, &upDownRotate);
+	D3DXMatrixMultiply(&m_View, &m_View, &leftRightRotate);
 
-	D3DXMatrixInverse(&mView, NULL, &mView); // Invert
+	D3DXMatrixInverse(&m_View, NULL, &m_View); // Invert
 }
 
 void SkeletonClass::buildProjMtx()
 {
 	float w = (float)md3dPP.BackBufferWidth;
 	float h = (float)md3dPP.BackBufferHeight;
-	D3DXMatrixPerspectiveFovLH(&mProj, D3DX_PI * 0.25f, w/h, 1.0f, 5000.0f);
+	D3DXMatrixPerspectiveFovLH(&m_Proj, D3DX_PI * 0.25f, w/h, 1.0f, 5000.0f);
 }
 
 void SkeletonClass::swapRenderType()
@@ -281,4 +284,20 @@ void SkeletonClass::changeSelectedObject()
 
 	if (m_ObjectIndex >= (int)m_Objects.size())
 		m_ObjectIndex = 0;
+}
+
+void SkeletonClass::toggleTexture()
+{
+	m_UseTexture = !m_UseTexture;
+	std::string active = "";
+
+	if (m_UseTexture)
+		active = "Texture";
+	else
+		active = "Color";
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->setActiveMaterial(active);
+	}
 }

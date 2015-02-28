@@ -15,7 +15,7 @@ BaseMaterial::BaseMaterial(void)
 }
 
 //-----------------------------------------------------------------------------
-// Relase shader, blah...
+// Release shader, blah...
 BaseMaterial::~BaseMaterial(void)
 {
 	ReleaseCOM(m_Effect);
@@ -37,6 +37,11 @@ void BaseMaterial::LoadEffectFromFile(IDirect3DDevice9* gd3dDevice, std::string 
 }
 
 void BaseMaterial::ConnectToEffect(ID3DXEffect* effect)
+{
+	m_Effect = effect;
+}
+
+void BaseMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat)
 {
 
 }

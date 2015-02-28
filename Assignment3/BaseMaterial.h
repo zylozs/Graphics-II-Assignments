@@ -46,7 +46,7 @@ public:
 
 	void LoadEffectFromFile(IDirect3DDevice9* gd3dDevice, std::string filename);
 	virtual void ConnectToEffect(ID3DXEffect* effect);
-	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat) = 0;
+	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat);
 
 	// For starting/ending the rendering of this material
 	UINT Begin();

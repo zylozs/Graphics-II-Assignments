@@ -46,14 +46,22 @@ private: //functions
 	void onKeyUp(Event* ev);
 	void swapRenderType();
 	void changeSelectedObject();
+	void toggleTexture();
 
 private: //variables
 	float m_CameraRotationY;
 	float m_CameraRadius;
 	float m_CameraRotationX;
 
-	D3DXMATRIX mView;
-	D3DXMATRIX mProj;
+	D3DXVECTOR3 m_LightPoint;
+	D3DXMATRIX m_View;
+	D3DXMATRIX m_Proj;
+
+	D3DXCOLOR m_ObjectColor;
+	bool m_UseTexture;
+	std::string m_ColorMaterialFX;
+	std::string m_TextureMaterialFX;
+	std::string m_Texture;
 
 	DWORD m_RenderType; // D3DFILL_SOLID, D3DFILL_WIREFRAME
 
