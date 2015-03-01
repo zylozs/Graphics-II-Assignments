@@ -10,6 +10,8 @@
 #pragma once
 #include "d3dApp.h"
 #include "Trackable.h"
+#include <map>
+
 //=============================================================================
 class BaseMaterial : public Trackable
 {
@@ -20,15 +22,16 @@ protected:
     D3DXMATRIX          m_WorldMat;
     D3DXMATRIX          m_ViewProjectionMat;
 
-    D3DXVECTOR3         m_DiffuseColor;
-    D3DXVECTOR3         m_SpecularColor;
-    float               m_Shininess;            // specular power
+    D3DXCOLOR			m_DiffuseColor;
+    D3DXCOLOR			m_SpecularColor;
+    FLOAT               m_Shininess;            // specular power
 
 
     //---------- Shader Handles ----------
     // Generic shader handles
     D3DXHANDLE          m_WorldMatHandle;    
-    D3DXHANDLE          m_ViewProjectionMatHandle;
+    D3DXHANDLE          m_WVPMatHandle;
+	D3DXHANDLE			m_WorldInvTransMatHandle;
 
     D3DXHANDLE          m_LightPosWHandle;       // Position (spot/point) / Direction (directional)
     D3DXHANDLE          m_ViewerPosWHandle;
@@ -38,7 +41,8 @@ protected:
     D3DXHANDLE          m_SpecularColHandle;       
     D3DXHANDLE          m_ShininessHandle;   
 
-	D3DXHANDLE			m_TechniqueHandle; // The technique to use for the shader
+	std::map<std::string, D3DXHANDLE> m_TechniqueHandles; // All the techniques we should know about for this shader
+	std::string m_ActiveTechnique;
 
 public:
     BaseMaterial(void);
@@ -46,7 +50,16 @@ public:
 
 	void LoadEffectFromFile(IDirect3DDevice9* gd3dDevice, std::string filename);
 	virtual void ConnectToEffect(ID3DXEffect* effect);
-	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat);
+	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);
+
+	std::string getActiveTechnique() { return m_ActiveTechnique; }
+	void setActiveTechnique(std::string key) { m_ActiveTechnique = key; }
+
+	D3DXHANDLE getTechniqueHandle(std::string key);
+	void addTechnique(std::string name, std::string key = "", bool setToActive = false);
+
+	void onLostDevice();
+	void onResetDevice();
 
 	// For starting/ending the rendering of this material
 	UINT Begin();

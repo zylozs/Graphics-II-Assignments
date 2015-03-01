@@ -38,8 +38,7 @@ BaseObject3D::~BaseObject3D(void)
 }
 
 //-----------------------------------------------------------------------------
-void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
-    D3DXMATRIX& view, D3DXMATRIX& projection )
+void BaseObject3D::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos)
 {
     // Update the statistics singleton class
     GfxStats::GetInstance()->addVertices(m_Mesh->GetNumVertices());
@@ -52,24 +51,24 @@ void BaseObject3D::Render( IDirect3DDevice9* gd3dDevice,
 	HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));	
 
 	if (m_UseMaterial && m_Materials.size() > 0)
-		RenderWithMaterial(gd3dDevice, view, projection);
+		RenderWithMaterial(gd3dDevice, view, projection, lightPos, viewPos);
 	else
-		RenderWithoutMaterial(gd3dDevice, view, projection);
+		RenderWithoutMaterial(gd3dDevice, view, projection, lightPos, viewPos);
 }
 
-void BaseObject3D::RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
+void BaseObject3D::RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos)
 {
 	BaseMaterial* material = getMaterial(m_ActiveMaterial);
 
 	if (material == NULL)
 	{
 		std::cerr << "Warning: You have no Active Material but are trying to one. Assign a material or disable their use.\n";
-		RenderWithoutMaterial(gd3dDevice, view, projection);
+		RenderWithoutMaterial(gd3dDevice, view, projection, lightPos, viewPos);
 
 		return;
 	}
 
-	material->PreRender(m_World, view * projection);
+	material->PreRender(m_World, view * projection, lightPos, viewPos);
 
 	UINT passes = material->Begin();
 
@@ -85,7 +84,7 @@ void BaseObject3D::RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& 
 	material->End();
 }
 
-void BaseObject3D::RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
+void BaseObject3D::RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos)
 {
 	// Send to render
 	m_Mesh->DrawSubset(0);
@@ -123,4 +122,24 @@ BaseMaterial* BaseObject3D::getMaterial(std::string key)
 		return NULL;
 	else
 		return it->second;
+}
+
+void BaseObject3D::onLostDevice()
+{
+	std::map<std::string, BaseMaterial*>::iterator it = m_Materials.begin();
+
+	for (it; it != m_Materials.end(); it++)
+	{
+		it->second->onLostDevice();
+	}
+}
+
+void BaseObject3D::onResetDevice()
+{
+	std::map<std::string, BaseMaterial*>::iterator it = m_Materials.begin();
+
+	for (it; it != m_Materials.end(); it++)
+	{
+		it->second->onResetDevice();
+	}
 }

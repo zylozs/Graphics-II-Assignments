@@ -54,6 +54,7 @@ private: //variables
 	float m_CameraRotationX;
 
 	D3DXVECTOR3 m_LightPoint;
+	D3DXVECTOR3 m_ViewPos;
 	D3DXMATRIX m_View;
 	D3DXMATRIX m_Proj;
 
@@ -64,6 +65,7 @@ private: //variables
 	std::string m_Texture;
 
 	DWORD m_RenderType; // D3DFILL_SOLID, D3DFILL_WIREFRAME
+	bool m_IsWireframe;
 
 	Delegate* m_KeyUpDelegate; // For Key Up events
 

@@ -17,7 +17,7 @@ public:
 	void LoadTextureFromFile(std::string filename);
 
 	virtual void ConnectToEffect(ID3DXEffect* effect);
-	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat);
+	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);
 };
 
 #endif

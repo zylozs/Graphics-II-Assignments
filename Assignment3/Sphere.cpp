@@ -19,12 +19,6 @@ void Sphere::Create(IDirect3DDevice9* gd3dDevice)
 	D3DXCreateSphere(gd3dDevice, m_Radius, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
 }
 
-void Sphere::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
-{
-	// We aren't changing anything, so just use the base render function
-	BaseObject3D::Render(gd3dDevice, view, projection);
-}
-
 void Sphere::Update(float dt)
 {
 	// We aren't changing anything, so just use the base update function

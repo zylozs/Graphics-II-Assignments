@@ -24,12 +24,6 @@ void Cylinder::Create(IDirect3DDevice9* gd3dDevice)
 	D3DXCreateCylinder(gd3dDevice, m_Radius1, m_Radius2, m_Height, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
 }
 
-void Cylinder::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection)
-{
-	// We aren't changing anything, so just use the base render function
-	BaseObject3D::Render(gd3dDevice, view, projection);
-}
-
 void Cylinder::Update(float dt)
 {
 	// We aren't changing anything, so just use the base update function

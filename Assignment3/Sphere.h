@@ -26,7 +26,6 @@ public:
 	~Sphere();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);
-	virtual void Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection);
 	virtual void Update(float dt);
 };
 

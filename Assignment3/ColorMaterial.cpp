@@ -21,29 +21,31 @@ void ColorMaterial::ConnectToEffect(ID3DXEffect* effect)
 {
 	BaseMaterial::ConnectToEffect(effect);
 
+	addTechnique("ColorTech", "Color", true);
+	addTechnique("ColorPhongTech", "Phong");
+	addTechnique("ColorGouraudTech", "Gouraud");
+
 	m_ColorHandle = m_Effect->GetParameterByName(0, "gColor");
-	m_WorldMatHandle = m_Effect->GetParameterByName(0, "gWorldViewProjectMatrix");
-	m_TechniqueHandle = m_Effect->GetTechniqueByName("ColorTech");
 }
 
-void ColorMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat)
+void ColorMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos)
 {
-	BaseMaterial::PreRender(worldMat, viewProjMat);
+	BaseMaterial::PreRender(worldMat, viewProjMat, lightPos, viewPos);
 
-	m_WorldMat = worldMat * viewProjMat;
-
-	HR(m_Effect->SetTechnique(m_TechniqueHandle));
-
-	HR(m_Effect->SetMatrix(m_WorldMatHandle, &m_WorldMat));
+	HR(m_Effect->SetTechnique(getTechniqueHandle(m_ActiveTechnique)));
 	HR(m_Effect->SetValue(m_ColorHandle, &m_Color, sizeof(D3DXCOLOR)));
 }
 
 void ColorMaterial::setColor(FLOAT r, FLOAT g, FLOAT b, FLOAT a)
 {
 	m_Color = D3DXCOLOR(r, g, b, a);
+
+	m_DiffuseColor = m_Color;
+	m_SpecularColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Shininess = 0.5f;
 }
 
 void ColorMaterial::setColor(const D3DXCOLOR& color)
 {
-	m_Color = D3DXCOLOR(color.r, color.g, color.b, color.a);
+	setColor(color.r, color.g, color.b, color.a);
 }

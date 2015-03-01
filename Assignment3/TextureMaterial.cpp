@@ -20,19 +20,18 @@ TextureMaterial::~TextureMaterial()
 
 void TextureMaterial::ConnectToEffect(ID3DXEffect* effect)
 {
-	m_Effect = effect;
+	BaseMaterial::ConnectToEffect(effect);
+
+	addTechnique("TextureMapTech", "TextureMap", true);
 
 	m_TextureHandle = m_Effect->GetParameterByName(0, "gTexture");
-	m_WorldMatHandle = m_Effect->GetParameterByName(0, "gWorldViewProjectMatrix");
-	m_TechniqueHandle = m_Effect->GetTechniqueByName("TextureMapTech");
 }
 
-void TextureMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat)
+void TextureMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos)
 {
-	m_WorldMat = worldMat * viewProjMat;
+	BaseMaterial::PreRender(worldMat, viewProjMat, lightPos, viewPos);
 
-	HR(m_Effect->SetTechnique(m_TechniqueHandle));
-	HR(m_Effect->SetMatrix(m_WorldMatHandle, &m_WorldMat));
+	HR(m_Effect->SetTechnique(getTechniqueHandle(m_ActiveTechnique)));
 	HR(m_Effect->SetTexture(m_TextureHandle, m_Texture));
 }
 

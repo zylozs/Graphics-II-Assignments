@@ -1,6 +1,20 @@
-uniform extern float4x4 gWorldViewProjectMatrix;
-uniform extern texture gTexture;
+uniform extern float4x4 gWorld;
+uniform extern float4x4 gWorldInvTrans;
+uniform extern float4x4 gWVP;
 
+uniform extern float3 gEyePosW;
+uniform extern float3 gLightPosition;
+
+uniform extern float4 gDiffuseColor;
+uniform extern float4 gSpecularColor;
+uniform extern float gSpecularPower;
+
+float4 gAmbientLight = float4(0.4f, 0.4f, 0.4f, 0.4f);
+float4 gDiffuseLight = float4(1.0f, 1.0f, 1.0f, 1.0f);
+float4 gSpecularLight = float4(1.0f, 1.0f, 1.0f, 1.0f);
+float3 gAttenuation = float3(1.0f, 0.0f, 0.0f);
+
+uniform extern texture gTexture;
 sampler TextureSampler = sampler_state
 {
       Texture = <gTexture>;
@@ -25,7 +39,7 @@ OutputVS TextureMapVS(InputVS input)
 {
 	OutputVS outVS = (OutputVS)0;
 
-	outVS.Position = mul(float4(input.Position, 1.0f), gWorldViewProjectMatrix);
+	outVS.Position = mul(float4(input.Position, 1.0f), gWVP);
 
 	outVS.TexCoord = input.TexCoord;
 

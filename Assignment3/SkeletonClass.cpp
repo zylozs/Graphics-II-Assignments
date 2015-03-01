@@ -86,14 +86,15 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_CameraRotationY = 1.2 * D3DX_PI;
 	m_CameraRotationX    = 5.0f;
 
-	m_LightPoint = D3DXVECTOR3(0.0f, 3.0f, 0.0f);
+	m_LightPoint = D3DXVECTOR3(5.0f, 5.0f, 0.0f);
 
-	m_RenderType = D3DFILL_WIREFRAME;
+	m_RenderType = D3DFILL_SOLID;
 	m_ObjectColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 	m_UseTexture = true;
 	m_Texture = "Assets/crate.jpg";
 	m_TextureMaterialFX = "FX/TextureMap.fx";
 	m_ColorMaterialFX = "FX/Color.fx";
+	m_IsWireframe = true;
 
 	onResetDevice();
 
@@ -111,6 +112,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 		colorMaterial->LoadEffectFromFile(gd3dDevice, m_ColorMaterialFX);
 		BaseMaterial* textureMaterial = New TextureMaterial(m_Texture);
 		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
+
+		colorMaterial->setActiveTechnique("Gouraud");
 
 		m_Objects[i]->Create(gd3dDevice);
 		m_Objects[i]->addMaterial("Color", colorMaterial, false);
@@ -147,11 +150,21 @@ bool SkeletonClass::checkDeviceCaps()
 void SkeletonClass::onLostDevice()
 {
 	GfxStats::GetInstance()->onLostDevice();
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->onLostDevice();
+	}
 }
 
 void SkeletonClass::onResetDevice()
 {
 	GfxStats::GetInstance()->onResetDevice();
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->onResetDevice();
+	}
 
 	// The aspect ratio depends on the backbuffer dimensions, which can 
 	// possibly change after a reset.  So rebuild the projection matrix.
@@ -227,7 +240,7 @@ void SkeletonClass::drawScene()
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
 
     // Render the specific object
-    m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj );
+    m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj, m_LightPoint, m_ViewPos);
 
     // display the render statistics
     GfxStats::GetInstance()->display();
@@ -241,26 +254,37 @@ void SkeletonClass::drawScene()
 void SkeletonClass::buildViewMtx()
 {
 	// Bad way
-// 	float x = mCameraRadius * cosf(mCameraRotationY);
-// 	float z = mCameraRadius * sinf(mCameraRotationY);
-// 	D3DXVECTOR3 pos(x, mCameraHeight, z);
+// 	float x = m_CameraRadius * cosf(m_CameraRotationY);
+// 	float z = m_CameraRadius * sinf(m_CameraRotationY);
+// 
+// 	float y = m_CameraRadius * cosf(m_CameraRotationX);
+// 	float z2 = m_CameraRadius * sinf(m_CameraRotationX);
+// 	D3DXVECTOR3 posxz(x, 0, z);
+// 	D3DXVECTOR3 posyz(0, y, z2);
+// 	m_ViewPos = D3DXVECTOR3(posxz.x, posyz.y, (posxz.z + posyz.z) / 2);
 // 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
 // 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-// 	D3DXMatrixLookAtLH(&mView, &pos, &target, &up);
+// 	D3DXMatrixLookAtLH(&m_View, &m_ViewPos, &target, &up);
 
 	// Good way
-	D3DXMATRIX move;
-	D3DXMATRIX upDownRotate;
-	D3DXMATRIX leftRightRotate;
+ 	D3DXMATRIX move;
+ 	D3DXMATRIX upDownRotate;
+ 	D3DXMATRIX leftRightRotate;
+ 
+ 	D3DXMatrixTranslation(&move, 0, 0, -m_CameraRadius); // -Z axis using camera radius
+ 	D3DXMatrixRotationX(&upDownRotate, m_CameraRotationX); // Up Down Rotation
+ 	D3DXMatrixRotationY(&leftRightRotate, m_CameraRotationY); // left right rotation
+ 
+ 	D3DXMatrixMultiply(&m_View, &move, &upDownRotate);
+ 	D3DXMatrixMultiply(&m_View, &m_View, &leftRightRotate);
+ 
+ 	D3DXMatrixInverse(&m_View, NULL, &m_View); // Invert
 
-	D3DXMatrixTranslation(&move, 0, 0, -m_CameraRadius); // -Z axis using camera radius
-	D3DXMatrixRotationX(&upDownRotate, m_CameraRotationX); // Up Down Rotation
-	D3DXMatrixRotationY(&leftRightRotate, m_CameraRotationY); // left right rotation
+	D3DXVECTOR3 temp;
+	D3DXQUATERNION temp2;
 
-	D3DXMatrixMultiply(&m_View, &move, &upDownRotate);
-	D3DXMatrixMultiply(&m_View, &m_View, &leftRightRotate);
-
-	D3DXMatrixInverse(&m_View, NULL, &m_View); // Invert
+	// Get our view position
+	D3DXMatrixDecompose(&temp, &temp2, &m_ViewPos, &m_View);
 }
 
 void SkeletonClass::buildProjMtx()
@@ -272,10 +296,17 @@ void SkeletonClass::buildProjMtx()
 
 void SkeletonClass::swapRenderType()
 {
+	m_IsWireframe = !m_IsWireframe;
+
 	if (m_RenderType == D3DFILL_WIREFRAME)
 		m_RenderType = D3DFILL_SOLID;
 	else if (m_RenderType == D3DFILL_SOLID)
 		m_RenderType = D3DFILL_WIREFRAME;
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->setUseMaterial(m_IsWireframe);
+	}
 }
 
 void SkeletonClass::changeSelectedObject()
