@@ -64,8 +64,8 @@ public:
 	D3DXHANDLE getTechniqueHandle(std::string key);
 	void addTechnique(std::string name, std::string key = "", bool setToActive = false);
 
-	bool getUseDiffuse() { return m_UseDiffuse; }
-	bool getUseSpecular() { return m_UseSpecular; }
+	BOOL getUseDiffuse() { return m_UseDiffuse; }
+	BOOL getUseSpecular() { return m_UseSpecular; }
 
 	void setUseDiffuse(BOOL value) { m_UseDiffuse = value; }
 	void setUseSpecular(BOOL value) { m_UseSpecular = value; }

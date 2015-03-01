@@ -20,6 +20,8 @@ protected:
 
 	//virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
 	//virtual void calculateIndexBuffer(std::vector<WORD>& indices);
+	// 
+	virtual void generateUVs();
 
 public:
 	Sphere(float radius, int sideFacetsNum);

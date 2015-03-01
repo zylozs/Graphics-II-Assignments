@@ -19,6 +19,8 @@ protected:
 	float m_Width;
 	float m_Height;
 
+	virtual void generateUVs();
+
 public:
 	Cube(float length, float width, float height);
 	~Cube();

@@ -42,7 +42,7 @@ void ColorMaterial::setColor(FLOAT r, FLOAT g, FLOAT b, FLOAT a)
 
 	m_DiffuseColor = m_Color;
 	m_SpecularColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Shininess = 0.5f;
+	m_Shininess = 64.0f;
 }
 
 void ColorMaterial::setColor(const D3DXCOLOR& color)

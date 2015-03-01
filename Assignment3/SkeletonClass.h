@@ -64,7 +64,12 @@ private: //variables
 	bool m_UseTexture;
 	std::string m_ColorMaterialFX;
 	std::string m_TextureMaterialFX;
-	std::string m_Texture;
+	
+	std::string m_CubeTexture;
+	std::string m_SphereTexture;
+	std::string m_CylinderTexture;
+	std::string m_ConeTexture;
+
 	bool m_UseDiffuse;
 	bool m_UseSpecular;
 

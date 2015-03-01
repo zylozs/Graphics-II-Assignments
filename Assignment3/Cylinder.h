@@ -29,6 +29,7 @@ protected:
 
 	//virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
 	//virtual void calculateIndexBuffer(std::vector<WORD>& indices);
+	virtual void generateUVs();
 
 public:
 	Cylinder(float radius, UINT height, UINT sideFacetsNum);

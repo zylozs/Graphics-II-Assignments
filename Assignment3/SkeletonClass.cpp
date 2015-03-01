@@ -86,12 +86,18 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_CameraRotationY = 1.2 * D3DX_PI;
 	m_CameraRotationX    = 5.0f;
 
-	m_LightPoint = D3DXVECTOR3(5.0f, 5.0f, 0.0f);
+	m_LightPoint = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
 
 	m_RenderType = D3DFILL_SOLID;
 	m_ObjectColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 	m_UseTexture = true;
-	m_Texture = "Assets/crate.jpg";
+
+	m_CubeTexture = "Assets/crate.jpg";
+	m_SphereTexture = "Assets/rock.jpg";
+	m_CylinderTexture = "Assets/WhiteVermontMarble.jpg";
+	m_ConeTexture = "Assets/gold-texture.jpg";
+	//m_CylinderTexture = "Assets/rock.jpg";
+
 	m_TextureMaterialFX = "FX/TextureMap.fx";
 	m_ColorMaterialFX = "FX/Color.fx";
 	m_IsWireframe = true;
@@ -110,9 +116,24 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
+		std::string texture = m_CubeTexture;
+
+		switch (i)
+		{
+			case 1:
+				texture = m_SphereTexture;
+				break;
+			case 2:
+				texture = m_CylinderTexture;
+				break;
+			case 3:
+				texture = m_ConeTexture;
+				break;
+		}
+
  		BaseMaterial* colorMaterial = New ColorMaterial(m_ObjectColor.r, m_ObjectColor.g, m_ObjectColor.b, m_ObjectColor.a);
 		colorMaterial->LoadEffectFromFile(gd3dDevice, m_ColorMaterialFX);
-		BaseMaterial* textureMaterial = New TextureMaterial(m_Texture);
+		BaseMaterial* textureMaterial = New TextureMaterial(texture);
 		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
 
 		colorMaterial->setActiveTechnique("Gouraud");
@@ -242,12 +263,15 @@ void SkeletonClass::drawScene()
 
     // Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
+	HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
 
     // Render the specific object
     m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj, m_LightPoint, m_ViewPos);
 
     // display the render statistics
     GfxStats::GetInstance()->display();
+
+	//HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, 0));
 
 	HR(gd3dDevice->EndScene());
 

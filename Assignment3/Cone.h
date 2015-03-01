@@ -17,6 +17,7 @@ class Cone : public Cylinder
 protected:
 	//virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
 	//virtual void calculateIndexBuffer(std::vector<WORD>& indicies);
+	virtual void generateUVs();
 
 public:
 	Cone(float radius, float height, UINT sideFacetsNum);

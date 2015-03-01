@@ -43,6 +43,9 @@ protected:
 
 	LPD3DXMESH m_Mesh;
 	LPD3DXBUFFER *mp_Buffer;
+
+	virtual void generateUVs(){}; // Used by subclass (if they choose) to put their uv generation code in
+
 private:
 	void RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);
 	void RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);

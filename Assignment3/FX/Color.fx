@@ -88,7 +88,7 @@ OutputVS ColorGouraudVS(InputVS input)
 	float atten = gAttenuation.x + gAttenuation.y * dist + gAttenuation.z * dist * dist;
 
 	// Combine all the colors together to get our final color
-	float3 color = ambient + ((diffuse + specular) / 2);
+	float3 color = ambient + ((diffuse + specular) / atten);
 
 	// Assign the values of our colors to the output and set our alpha to the diffuse color's alpha
 	outVS.Color = float4(color, gDiffuseColor.a);
