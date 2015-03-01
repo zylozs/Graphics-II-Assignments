@@ -31,18 +31,97 @@ struct OutputVS
 	float4 Color : COLOR1;
 };
 
-OutputVS ColorPhongVS(InputVS input)
+// Phong shading done by Tyler Cifelli
+// With the aid of source: http://glasnost.itcarlow.ie/~powerk/xna/shading/basiclightingwithshader.htm
+
+struct OutputVS_PHONG
 {
-	OutputVS outVS = (OutputVS)0;
+	float4 Position: POSITION0;
+	float4 Color : COLOR0;
+	float3 Normal: TEXCOORD1;
+	float3 LightDir: TEXCOORD2;
+	float3 Reflection : TEXCOORD3;
+	float Attenuation : TEXCOORD4;
+};
+
+float4 calcLighting(float4 color, float3 normal, float3 direction, float3 reflection, float atten )
+{
+	// Calculate our ambient coloring
+	float3 ambient = (gColor * gAmbientLight).rgb;
+
+	//declare specular and diffuse components
+	float diffuse = 0.0f;
+	float specular = 0.0f;
+
+	//calculate specular component, if toggled on
+	if (gUseSpecular)
+	{
+		specular = max(0, pow(abs(dot(normal, reflection)), gSpecularPower));
+	}
+
+	//calculate diffuse component, if toggled on
+	if (gUseDiffuse)
+	{
+		diffuse = max(0, dot(normal, direction));
+	}
+
+	//calculate final color
+	//color *= (specular + diffuse);
+	float3 colorCalc = ambient + ((diffuse + specular) / atten);
+
+	color = float4(colorCalc, gDiffuseColor.a);
+
+	return color;
+}
+
+OutputVS_PHONG ColorPhongVS(InputVS input)
+{
+	OutputVS_PHONG outVS = (OutputVS_PHONG)0;
+
+	// Transform our normals to world space and normalize them for use
+	float3 normal = mul(float4(input.Normal, 0.0f), gWorldInvTrans).xyz;
+		normal = normalize(normal);
+
+	//put the normal into struct
+	outVS.Normal = normal;
+
+	// Transform our position into world space
+	float3 pos = mul(float4(input.Position, 1.0f), gWorld).xyz;
+
+	// Calculate our light vector and normalize it
+	float3 lightVec = normalize(gLightPosition - pos);
+
+	//place in struct
+	outVS.LightDir = lightVec;
+
+	// Calculate our eye (view) vector and normalize it
+	float3 eyeVec = normalize(gEyePosW - pos);
+
+	// Calculate the reflection vector from the light vector
+	float3 reflectVec = reflect(-lightVec, normal);
+
+	//place in struct
+	outVS.Reflection = reflectVec;
+
+	// Calculate our position in homogeneous space
+	outVS.Position = mul(float4(input.Position, 1.0f), gWVP);
+
+	// Calculate the attenuation of our lighting
+	float dist = distance(gLightPosition, pos);
+	float atten = gAttenuation.x + gAttenuation.y * dist + gAttenuation.z * dist * dist;
+
+	//place in struct
+	outVS.Attenuation = atten;
 
 	return outVS;
 }
 
-float4 ColorPhongPS(OutputVS input) : COLOR
+float4 ColorPhongPS(OutputVS_PHONG input) : COLOR
 {
-	return float4(0.0f, 0.0f, 0.0f, 1.0f);
+	return calcLighting(input.Color, input.Normal, input.LightDir, input.Reflection, input.Attenuation);
 }
 
+// Gouraud shading done by Vincent Loignon
 OutputVS ColorGouraudVS(InputVS input)
 {
 	OutputVS outVS = (OutputVS)0;

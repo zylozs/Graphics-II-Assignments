@@ -136,7 +136,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 		BaseMaterial* textureMaterial = New TextureMaterial(texture);
 		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
 
-		colorMaterial->setActiveTechnique("Gouraud");
+		colorMaterial->setActiveTechnique("Phong");
 
 		m_Objects[i]->Create(gd3dDevice);
 		m_Objects[i]->addMaterial("Color", colorMaterial, false);
