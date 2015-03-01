@@ -10,6 +10,9 @@ uniform extern float4 gDiffuseColor;
 uniform extern float4 gSpecularColor;
 uniform extern float gSpecularPower;
 
+uniform extern bool gUseDiffuse;
+uniform extern bool gUseSpecular;
+
 float4 gAmbientLight = float4(0.4f, 0.4f, 0.4f, 0.4f);
 float4 gDiffuseLight = float4(1.0f, 1.0f, 1.0f, 1.0f);
 float4 gSpecularLight = float4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -46,7 +49,7 @@ OutputVS ColorGouraudVS(InputVS input)
 
 	// Transform our normals to world space and normalize them for use
 	float3 normal = mul(float4(input.Normal, 0.0f), gWorldInvTrans).xyz;
-	normal = normalize(normal);
+		normal = normalize(normal);
 
 	// Transform our position into world space
 	float3 pos = mul(float4(input.Position, 1.0f), gWorld).xyz;
@@ -63,13 +66,22 @@ OutputVS ColorGouraudVS(InputVS input)
 	// Calculate our ambient coloring
 	float3 ambient = (gColor * gAmbientLight).rgb;
 
-	// Calculate our diffuse coloring
-	float s = max(dot(input.Normal, lightVec), 0.0f);
-	float3 diffuse = s * (gDiffuseColor * gDiffuseLight).rgb;
+	float diffuse = 0.0f;
+	float specular = 0.0f;
 
-	// Calculate our specular coloring
-	float t = pow(max(dot(reflectVec, eyeVec), 0.0f), gSpecularPower);
-	float3 specular = t * (gSpecularColor * gSpecularLight).rgb;
+	if (gUseDiffuse)
+	{
+		// Calculate our diffuse coloring
+		float s = max(dot(input.Normal, lightVec), 0.0f);
+		diffuse = s * (gDiffuseColor * gDiffuseLight).rgb;
+	}
+
+	if (gUseSpecular)
+	{
+		// Calculate our specular coloring
+		float t = pow(max(dot(reflectVec, eyeVec), 0.0f), gSpecularPower);
+		specular = t * (gSpecularColor * gSpecularLight).rgb;
+	}
 
 	// Calculate the attenuation of our lighting
 	float dist = distance(gLightPosition, pos);

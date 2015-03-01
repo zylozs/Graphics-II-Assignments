@@ -95,6 +95,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_TextureMaterialFX = "FX/TextureMap.fx";
 	m_ColorMaterialFX = "FX/Color.fx";
 	m_IsWireframe = true;
+	m_UseSpecular = true;
+	m_UseDiffuse = true;
 
 	onResetDevice();
 
@@ -184,8 +186,10 @@ void SkeletonClass::onKeyUp(Event* ev)
 			changeSelectedObject();
 			break;
 		case Keys::S:	//Specular component swap
+			toggleSpecularComponent();
 			break;
 		case Keys::D:	//Diffuse component swap
+			toggleDiffuseComponent();
 			break;
 		case Keys::T:	//Texture/No Texture
 			toggleTexture();
@@ -330,5 +334,27 @@ void SkeletonClass::toggleTexture()
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
 		m_Objects[i]->setActiveMaterial(active);
+	}
+}
+
+void SkeletonClass::toggleSpecularComponent()
+{
+	m_UseSpecular = !m_UseSpecular;
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->getMaterial("Color")->setUseSpecular(m_UseSpecular);
+		m_Objects[i]->getMaterial("Texture")->setUseSpecular(m_UseSpecular);
+	}
+}
+
+void SkeletonClass::toggleDiffuseComponent()
+{
+	m_UseDiffuse = !m_UseDiffuse;
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->getMaterial("Color")->setUseSpecular(m_UseDiffuse);
+		m_Objects[i]->getMaterial("Texture")->setUseSpecular(m_UseDiffuse);
 	}
 }

@@ -9,6 +9,9 @@ uniform extern float4 gDiffuseColor;
 uniform extern float4 gSpecularColor;
 uniform extern float gSpecularPower;
 
+uniform extern bool gUseDiffuse;
+uniform extern bool gUseSpecular;
+
 float4 gAmbientLight = float4(0.4f, 0.4f, 0.4f, 0.4f);
 float4 gDiffuseLight = float4(1.0f, 1.0f, 1.0f, 1.0f);
 float4 gSpecularLight = float4(1.0f, 1.0f, 1.0f, 1.0f);

@@ -16,37 +16,43 @@
 class BaseMaterial : public Trackable
 {
 protected:
-    ID3DXEffect*        m_Effect;               // the shader associate effect file
+	ID3DXEffect*        m_Effect;               // the shader associate effect file
 
-    //-------- Material Parameters -------
-    D3DXMATRIX          m_WorldMat;
-    D3DXMATRIX          m_ViewProjectionMat;
+	//-------- Material Parameters -------
+	D3DXMATRIX          m_WorldMat;
+	D3DXMATRIX          m_ViewProjectionMat;
 
-    D3DXCOLOR			m_DiffuseColor;
-    D3DXCOLOR			m_SpecularColor;
-    FLOAT               m_Shininess;            // specular power
+	D3DXCOLOR			m_DiffuseColor;
+	D3DXCOLOR			m_SpecularColor;
+	FLOAT               m_Shininess;            // specular power
 
 
-    //---------- Shader Handles ----------
-    // Generic shader handles
-    D3DXHANDLE          m_WorldMatHandle;    
-    D3DXHANDLE          m_WVPMatHandle;
+	//---------- Shader Handles ----------
+	// Generic shader handles
+	D3DXHANDLE          m_WorldMatHandle;
+	D3DXHANDLE          m_WVPMatHandle;
 	D3DXHANDLE			m_WorldInvTransMatHandle;
 
-    D3DXHANDLE          m_LightPosWHandle;       // Position (spot/point) / Direction (directional)
-    D3DXHANDLE          m_ViewerPosWHandle;
+	D3DXHANDLE          m_LightPosWHandle;       // Position (spot/point) / Direction (directional)
+	D3DXHANDLE          m_ViewerPosWHandle;
 
-    // Material specific shader handles
-    D3DXHANDLE          m_DiffuseColHandle;    
-    D3DXHANDLE          m_SpecularColHandle;       
-    D3DXHANDLE          m_ShininessHandle;   
+	// Material specific shader handles
+	D3DXHANDLE          m_DiffuseColHandle;
+	D3DXHANDLE          m_SpecularColHandle;
+	D3DXHANDLE          m_ShininessHandle;
+
+	D3DXHANDLE			m_UseDiffuseHandle;
+	D3DXHANDLE			m_UseSpecularHandle;
 
 	std::map<std::string, D3DXHANDLE> m_TechniqueHandles; // All the techniques we should know about for this shader
 	std::string m_ActiveTechnique;
 
+	BOOL m_UseDiffuse;
+	BOOL m_UseSpecular;
+
 public:
-    BaseMaterial(void);
-    virtual ~BaseMaterial(void);
+	BaseMaterial(void);
+	virtual ~BaseMaterial(void);
 
 	void LoadEffectFromFile(IDirect3DDevice9* gd3dDevice, std::string filename);
 	virtual void ConnectToEffect(ID3DXEffect* effect);
@@ -57,6 +63,12 @@ public:
 
 	D3DXHANDLE getTechniqueHandle(std::string key);
 	void addTechnique(std::string name, std::string key = "", bool setToActive = false);
+
+	bool getUseDiffuse() { return m_UseDiffuse; }
+	bool getUseSpecular() { return m_UseSpecular; }
+
+	void setUseDiffuse(BOOL value) { m_UseDiffuse = value; }
+	void setUseSpecular(BOOL value) { m_UseSpecular = value; }
 
 	void onLostDevice();
 	void onResetDevice();

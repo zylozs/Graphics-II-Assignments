@@ -47,6 +47,8 @@ private: //functions
 	void swapRenderType();
 	void changeSelectedObject();
 	void toggleTexture();
+	void toggleSpecularComponent();
+	void toggleDiffuseComponent();
 
 private: //variables
 	float m_CameraRotationY;
@@ -63,6 +65,8 @@ private: //variables
 	std::string m_ColorMaterialFX;
 	std::string m_TextureMaterialFX;
 	std::string m_Texture;
+	bool m_UseDiffuse;
+	bool m_UseSpecular;
 
 	DWORD m_RenderType; // D3DFILL_SOLID, D3DFILL_WIREFRAME
 	bool m_IsWireframe;
