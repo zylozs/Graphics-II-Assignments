@@ -266,9 +266,6 @@ void SkeletonClass::drawScene()
     // Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
 
-	if (m_ObjectIndex > 0)
-		HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
-
 	GfxStats::GetInstance()->setShader(m_Objects[m_ObjectIndex]->getMaterial("Texture")->getActiveTechnique());
 	GfxStats::GetInstance()->setFillMode(m_RenderType);
 

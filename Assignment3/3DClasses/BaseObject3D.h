@@ -47,8 +47,8 @@ protected:
 	virtual void generateUVs(){}; // Used by subclass (if they choose) to put their uv generation code in
 
 private:
-	void RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);
-	void RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);
+	void RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos);
+	void RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos);
 
 public:
 	BaseObject3D();
@@ -56,7 +56,7 @@ public:
 
     // Replace or add to the following code as you progress with the material
     virtual void Create( IDirect3DDevice9* gd3dDevice ) = 0;
-	virtual void Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);
+	virtual void Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos);
 	virtual void Update(float dt) {}
 
 	const D3DXVECTOR3& getCenterPos() { return m_CenterPos; }

@@ -93,6 +93,17 @@ void Cone::generateUVs()
 	ReleaseCOM(temp);
 }
 
+void Cone::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos)
+{
+	// Tell it to wrap the u coordinate
+	HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
+
+	BaseObject3D::Render(gd3dDevice, view, projection, lightVec, viewPos);
+
+	// Set it back to what it was
+	HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, 0));
+}
+
 /*
 void Cone::calculateVertexBuffer(std::vector<Vertex>& vertices)
 {

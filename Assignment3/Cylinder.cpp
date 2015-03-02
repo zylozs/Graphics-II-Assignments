@@ -91,6 +91,17 @@ void Cylinder::generateUVs()
 	ReleaseCOM(temp);
 }
 
+void Cylinder::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos)
+{
+	// Tell it to wrap the u coordinate
+	HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
+
+	BaseObject3D::Render(gd3dDevice, view, projection, lightVec, viewPos);
+
+	// Set it back to what it was
+	HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, 0));
+}
+
 /*
  // D3DXCreate* functions generate vertices with position
  // and normal data. But for texturing, we also need
