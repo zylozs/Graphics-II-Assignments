@@ -33,7 +33,7 @@ protected:
 	D3DXHANDLE          m_WVPMatHandle;
 	D3DXHANDLE			m_WorldInvTransMatHandle;
 
-	D3DXHANDLE          m_LightPosWHandle;       // Position (spot/point) / Direction (directional)
+	D3DXHANDLE          m_LightVecHandle;       // Position (spot/point) / Direction (directional)
 	D3DXHANDLE          m_ViewerPosWHandle;
 
 	// Material specific shader handles
@@ -56,7 +56,7 @@ public:
 
 	void LoadEffectFromFile(IDirect3DDevice9* gd3dDevice, std::string filename);
 	virtual void ConnectToEffect(ID3DXEffect* effect);
-	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);
+	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos);
 
 	std::string getActiveTechnique() { return m_ActiveTechnique; }
 	void setActiveTechnique(std::string key) { m_ActiveTechnique = key; }

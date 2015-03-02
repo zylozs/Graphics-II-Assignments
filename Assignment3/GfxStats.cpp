@@ -13,7 +13,7 @@ DEFINE_SINGLETON(GfxStats);
 //=============================================================================
 
 GfxStats::GfxStats()
-: mFont(0), mFPS(0.0f), mMilliSecPerFrame(0.0f), mNumTris(0), mNumVertices(0)
+	: mFont(0), mFPS(0.0f), mMilliSecPerFrame(0.0f), mNumTris(0), mNumVertices(0), m_ShaderName("")
 {
 	D3DXFONT_DESC fontDesc;
 	fontDesc.Height          = 18;
@@ -75,6 +75,19 @@ void GfxStats::setVertexCount(DWORD n)
 	mNumVertices = n;
 }
 
+void GfxStats::setShader(std::string name)
+{
+	m_ShaderName = name;
+}
+
+void GfxStats::setFillMode(DWORD mode)
+{
+	if (mode == D3DFILL_SOLID)
+		m_FillMode = "Solid";
+	else if (mode == D3DFILL_WIREFRAME)
+		m_FillMode = "Wireframe";
+}
+
 void GfxStats::update(float dt)
 {
 	// Make static so that their values persist accross function calls.
@@ -116,7 +129,9 @@ void GfxStats::display()
 	sprintf(buffer, "Frames Per Second = %.2f\n"
 		"Milliseconds Per Frame = %.4f\n"
 		"Triangle Count = %d\n"
-		"Vertex Count = %d", mFPS, mMilliSecPerFrame, mNumTris, mNumVertices);
+		"Vertex Count = %d\n"
+		"Fill Mode: %s\n"
+		"Shader: %s", mFPS, mMilliSecPerFrame, mNumTris, mNumVertices, m_FillMode.c_str(), m_ShaderName.c_str());
 
 	RECT R = {5, 5, 0, 0};
 	HR(mFont->DrawText(0, buffer, -1, &R, DT_NOCLIP, D3DCOLOR_XRGB(0,0,0)));

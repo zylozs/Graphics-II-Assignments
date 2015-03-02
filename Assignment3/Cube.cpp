@@ -38,40 +38,13 @@ void Cube::generateUVs()
 	Vertex* vertices = 0;
 	HR(temp->LockVertexBuffer(0, (void**)&vertices));
 
-	vertices[0].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
-	vertices[1].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
-	vertices[2].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
-	vertices[3].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
-
-	// Fill in the back face vertex data.
-	vertices[4].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
-	vertices[5].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
-	vertices[6].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
-	vertices[7].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
-
-	// Fill in the top face vertex data.
-	vertices[8].TexCoord  = D3DXVECTOR2(0.0f, 1.0f);
-	vertices[9].TexCoord  = D3DXVECTOR2(0.0f, 0.0f);
-	vertices[10].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
-	vertices[11].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
-
-	// Fill in the bottom face vertex data.
-	vertices[12].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
-	vertices[13].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
-	vertices[14].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
-	vertices[15].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
-
-	// Fill in the left face vertex data.
-	vertices[16].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
-	vertices[17].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
-	vertices[18].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
-	vertices[19].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
-
-	// Fill in the right face vertex data.
-	vertices[20].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
-	vertices[21].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
-	vertices[22].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
-	vertices[23].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
+	for (int i = 0; i < (int)temp->GetNumVertices() / 4; i++)
+	{
+		vertices[i * 4 + 0].TexCoord = D3DXVECTOR2(0.0f, 0.0f);
+		vertices[i * 4 + 1].TexCoord = D3DXVECTOR2(1.0f, 0.0f);
+		vertices[i * 4 + 2].TexCoord = D3DXVECTOR2(1.0f, 1.0f);
+		vertices[i * 4 + 3].TexCoord = D3DXVECTOR2(0.0f, 1.0f);
+	}
 
 	// Unlock the buffer since we no longer need it
 	HR(temp->UnlockVertexBuffer());

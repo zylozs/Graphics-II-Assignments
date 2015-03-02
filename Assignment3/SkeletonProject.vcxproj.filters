@@ -51,9 +51,6 @@
     <ClCompile Include="Trackable.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="ColorMaterial.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
     <ClCompile Include="TextureMaterial.cpp">
       <Filter>Materials</Filter>
     </ClCompile>
@@ -127,9 +124,6 @@
     <ClInclude Include="IObject.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="ColorMaterial.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
     <ClInclude Include="TextureMaterial.h">
       <Filter>Materials</Filter>
     </ClInclude>
@@ -164,9 +158,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="FX\Color.fx">
-      <Filter>FX</Filter>
-    </FxCompile>
     <FxCompile Include="FX\TextureMap.fx">
       <Filter>FX</Filter>
     </FxCompile>

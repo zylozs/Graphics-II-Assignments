@@ -49,19 +49,19 @@ private: //functions
 	void toggleTexture();
 	void toggleSpecularComponent();
 	void toggleDiffuseComponent();
+	void swapShaderTechnique();
 
 private: //variables
 	float m_CameraRotationY;
 	float m_CameraRadius;
 	float m_CameraRotationX;
 
-	D3DXVECTOR3 m_LightPoint;
+	D3DXVECTOR3 m_LightVec;
 	D3DXVECTOR3 m_ViewPos;
 	D3DXMATRIX m_View;
 	D3DXMATRIX m_Proj;
 
-	D3DXCOLOR m_ObjectColor;
-	bool m_UseTexture;
+	D3DXCOLOR m_ObjectColor;	
 	std::string m_ColorMaterialFX;
 	std::string m_TextureMaterialFX;
 	
@@ -72,6 +72,7 @@ private: //variables
 
 	bool m_UseDiffuse;
 	bool m_UseSpecular;
+	bool m_UseTexture;
 
 	DWORD m_RenderType; // D3DFILL_SOLID, D3DFILL_WIREFRAME
 	bool m_IsWireframe;

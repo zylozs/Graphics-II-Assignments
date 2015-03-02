@@ -25,7 +25,7 @@ BaseMaterial::BaseMaterial(void)
 	m_WVPMatHandle = NULL;
 	m_WorldMatHandle = NULL;
 	m_WorldInvTransMatHandle = NULL;
-	m_LightPosWHandle = NULL;
+	m_LightVecHandle = NULL;
 	m_ViewerPosWHandle = NULL;
 }
 
@@ -66,11 +66,11 @@ void BaseMaterial::ConnectToEffect(ID3DXEffect* effect)
 	m_WorldMatHandle = m_Effect->GetParameterByName(0, "gWorld");
 	m_WorldInvTransMatHandle = m_Effect->GetParameterByName(0, "gWorldInvTrans");
 
-	m_LightPosWHandle = m_Effect->GetParameterByName(0, "gLightPosition");
-	m_ViewerPosWHandle = m_Effect->GetParameterByName(0, "gEyePosW");
+	m_LightVecHandle = m_Effect->GetParameterByName(0, "gLightVec");
+	m_ViewerPosWHandle = m_Effect->GetParameterByName(0, "gEyePos");
 }
 
-void BaseMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos)
+void BaseMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos)
 {
 	D3DXMATRIX wvp = worldMat * viewProjMat;
 
@@ -93,7 +93,7 @@ void BaseMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DX
 	HR(m_Effect->SetMatrix(m_WorldInvTransMatHandle, &WIT));
 	HR(m_Effect->SetMatrix(m_WVPMatHandle, &wvp));
 
-	HR(m_Effect->SetValue(m_LightPosWHandle, &lightPos, sizeof(D3DXVECTOR3)));
+	HR(m_Effect->SetValue(m_LightVecHandle, &lightVec, sizeof(D3DXVECTOR3)));
 	HR(m_Effect->SetValue(m_ViewerPosWHandle, &viewPos, sizeof(D3DXVECTOR3)));
 }
 

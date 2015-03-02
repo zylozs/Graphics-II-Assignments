@@ -27,6 +27,9 @@ public:
 	void subVertices(DWORD n);
 	void addTriangles(DWORD n);
 	void subTriangles(DWORD n);
+	
+	void setShader(std::string name);
+	void setFillMode(DWORD mode);
 
 	void setTriCount(DWORD n);
 	void setVertexCount(DWORD n);
@@ -45,5 +48,7 @@ private:
 	float mMilliSecPerFrame;
 	DWORD mNumTris;
 	DWORD mNumVertices;
+	std::string m_ShaderName;
+	std::string m_FillMode;
 };
 #endif // GFX_STATS_H

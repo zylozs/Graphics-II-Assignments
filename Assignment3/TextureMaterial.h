@@ -9,10 +9,23 @@ protected:
 	IDirect3DTexture9* m_Texture;
 	D3DXHANDLE m_TextureHandle;
 
+	BOOL m_UseTexture;
+	D3DXHANDLE m_UseTextureHandle;
+
+	D3DXCOLOR m_Color;
+	D3DXHANDLE m_ColorHandle;
+
 public:
 	TextureMaterial();
 	TextureMaterial(std::string filename);
 	~TextureMaterial();
+
+	void setColor(FLOAT r, FLOAT g, FLOAT b, FLOAT a);
+	void setColor(const D3DXCOLOR& color);
+	const D3DXCOLOR& getColor() { return m_Color; }
+
+	void setUseTexture(BOOL value) { m_UseTexture = value; }
+	BOOL getUseTexture() { return m_UseTexture; }
 
 	void LoadTextureFromFile(std::string filename);
 

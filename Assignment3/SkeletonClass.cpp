@@ -21,7 +21,6 @@
 #include "KeyEvent.h"
 #include "Delegate.h"
 #include "BaseMaterial.h"
-#include "ColorMaterial.h"
 #include "TextureMaterial.h"
 
 #include "SkeletonClass.h"
@@ -86,15 +85,17 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_CameraRotationY = 1.2 * D3DX_PI;
 	m_CameraRotationX    = 5.0f;
 
-	m_LightPoint = D3DXVECTOR3(10.0f, 10.0f, 0.0f);
+	m_LightVec = D3DXVECTOR3(0.5f, 0.5f, 1.5f);
 
 	m_RenderType = D3DFILL_SOLID;
 	m_ObjectColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 	m_UseTexture = true;
 
 	m_CubeTexture = "Assets/crate.jpg";
+	//m_CubeTexture = "Assets/companion cube.png";
 	m_SphereTexture = "Assets/rock.jpg";
-	m_CylinderTexture = "Assets/WhiteVermontMarble.jpg";
+	//m_CylinderTexture = "Assets/WhiteVermontMarble.jpg";
+	m_CylinderTexture = "Assets/crate.jpg";
 	m_ConeTexture = "Assets/gold-texture.jpg";
 	//m_CylinderTexture = "Assets/rock.jpg";
 
@@ -131,15 +132,13 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 				break;
 		}
 
- 		BaseMaterial* colorMaterial = New ColorMaterial(m_ObjectColor.r, m_ObjectColor.g, m_ObjectColor.b, m_ObjectColor.a);
-		colorMaterial->LoadEffectFromFile(gd3dDevice, m_ColorMaterialFX);
 		BaseMaterial* textureMaterial = New TextureMaterial(texture);
 		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
 
-		colorMaterial->setActiveTechnique("Phong");
+		//textureMaterial->setActiveTechnique("Phong");
+		textureMaterial->setActiveTechnique("Gouraud");
 
 		m_Objects[i]->Create(gd3dDevice);
-		m_Objects[i]->addMaterial("Color", colorMaterial, false);
 		m_Objects[i]->addMaterial("Texture", textureMaterial, true);
 	}
 
@@ -215,6 +214,9 @@ void SkeletonClass::onKeyUp(Event* ev)
 		case Keys::T:	//Texture/No Texture
 			toggleTexture();
 			break;
+		case Keys::P:
+			swapShaderTechnique();
+			break;
 	}
 }
 
@@ -237,7 +239,7 @@ void SkeletonClass::updateScene(float dt)
 	// Divide by 50 to make mouse less sensitive. 
 	m_CameraRotationY += g_Input->getMouseDX() / 100.0f;
 	m_CameraRadius    += -g_Input->getMouseDZ() / 50.0f;
-	m_CameraRotationX += g_Input->getMouseDY() / 50.0f;
+	m_CameraRotationX += g_Input->getMouseDY() / 25.0f;
 
 	// If we rotate over 360 degrees, just roll back to 0
 	if( fabsf(m_CameraRotationY) >= 2.0f * D3DX_PI ) 
@@ -263,15 +265,18 @@ void SkeletonClass::drawScene()
 
     // Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
-	HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
+
+	if (m_ObjectIndex > 0)
+		HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, D3DWRAP_U));
+
+	GfxStats::GetInstance()->setShader(m_Objects[m_ObjectIndex]->getMaterial("Texture")->getActiveTechnique());
+	GfxStats::GetInstance()->setFillMode(m_RenderType);
 
     // Render the specific object
-    m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj, m_LightPoint, m_ViewPos);
+    m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj, m_LightVec, m_ViewPos);
 
     // display the render statistics
     GfxStats::GetInstance()->display();
-
-	//HR(gd3dDevice->SetRenderState(D3DRS_WRAP0, 0));
 
 	HR(gd3dDevice->EndScene());
 
@@ -281,38 +286,13 @@ void SkeletonClass::drawScene()
 
 void SkeletonClass::buildViewMtx()
 {
-	// Bad way
-// 	float x = m_CameraRadius * cosf(m_CameraRotationY);
-// 	float z = m_CameraRadius * sinf(m_CameraRotationY);
-// 
-// 	float y = m_CameraRadius * cosf(m_CameraRotationX);
-// 	float z2 = m_CameraRadius * sinf(m_CameraRotationX);
-// 	D3DXVECTOR3 posxz(x, 0, z);
-// 	D3DXVECTOR3 posyz(0, y, z2);
-// 	m_ViewPos = D3DXVECTOR3(posxz.x, posyz.y, (posxz.z + posyz.z) / 2);
-// 	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
-// 	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
-// 	D3DXMatrixLookAtLH(&m_View, &m_ViewPos, &target, &up);
+	float x = m_CameraRadius * cosf(m_CameraRotationY);
+	float z = m_CameraRadius * sinf(m_CameraRotationY);
 
-	// Good way
- 	D3DXMATRIX move;
- 	D3DXMATRIX upDownRotate;
- 	D3DXMATRIX leftRightRotate;
- 
- 	D3DXMatrixTranslation(&move, 0, 0, -m_CameraRadius); // -Z axis using camera radius
- 	D3DXMatrixRotationX(&upDownRotate, m_CameraRotationX); // Up Down Rotation
- 	D3DXMatrixRotationY(&leftRightRotate, m_CameraRotationY); // left right rotation
- 
- 	D3DXMatrixMultiply(&m_View, &move, &upDownRotate);
- 	D3DXMatrixMultiply(&m_View, &m_View, &leftRightRotate);
- 
- 	D3DXMatrixInverse(&m_View, NULL, &m_View); // Invert
-
-	D3DXVECTOR3 temp;
-	D3DXQUATERNION temp2;
-
-	// Get our view position
-	D3DXMatrixDecompose(&temp, &temp2, &m_ViewPos, &m_View);
+	m_ViewPos = D3DXVECTOR3(x, m_CameraRotationX, z);
+	D3DXVECTOR3 target(0.0f, 0.0f, 0.0f);
+	D3DXVECTOR3 up(0.0f, 1.0f, 0.0f);
+	D3DXMatrixLookAtLH(&m_View, &m_ViewPos, &target, &up);
 }
 
 void SkeletonClass::buildProjMtx()
@@ -348,16 +328,10 @@ void SkeletonClass::changeSelectedObject()
 void SkeletonClass::toggleTexture()
 {
 	m_UseTexture = !m_UseTexture;
-	std::string active = "";
-
-	if (m_UseTexture)
-		active = "Texture";
-	else
-		active = "Color";
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
-		m_Objects[i]->setActiveMaterial(active);
+		((TextureMaterial*)m_Objects[i]->getMaterial("Texture"))->setUseTexture(m_UseTexture);
 	}
 }
 
@@ -367,7 +341,6 @@ void SkeletonClass::toggleSpecularComponent()
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
-		m_Objects[i]->getMaterial("Color")->setUseSpecular(m_UseSpecular);
 		m_Objects[i]->getMaterial("Texture")->setUseSpecular(m_UseSpecular);
 	}
 }
@@ -378,7 +351,19 @@ void SkeletonClass::toggleDiffuseComponent()
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
-		m_Objects[i]->getMaterial("Color")->setUseSpecular(m_UseDiffuse);
-		m_Objects[i]->getMaterial("Texture")->setUseSpecular(m_UseDiffuse);
+		m_Objects[i]->getMaterial("Texture")->setUseDiffuse(m_UseDiffuse);
+	}
+}
+
+void SkeletonClass::swapShaderTechnique()
+{
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		BaseMaterial* mat = m_Objects[i]->getMaterial("Texture");
+
+		if (mat->getActiveTechnique() == "Gouraud")
+			mat->setActiveTechnique("Phong");
+		else if (mat->getActiveTechnique() == "Phong")
+			mat->setActiveTechnique("Gouraud");
 	}
 }
