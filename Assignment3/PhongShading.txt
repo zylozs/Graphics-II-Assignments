@@ -1,0 +1,12 @@
+Our phong method of shading works a bit differently than Gouraud. The struct that we use for Phong
+has different data types in order to fulfill what phong needs to communicate between the vertex and
+pixel shaders. OutputVS_PHONG has a position, normal, world position, and texture coordinate. Inside
+the Phongvertex shader calculates all four of these variables using variables passed into the shader, 
+and hands the output off to the pixel shader for coloring, unlike Gouraud which does both in the 
+vertex. The Phong pixel shader takes this output and does a few more altering calculations to make
+sure everything transferred well. This includes renormalizing, calculating eye vector, and the
+reflection vector. Finally, the pixel shader calculates color with the three components (specular,
+ambient, diffuse) and omits the ones that were told to be omitted with information passed into the
+shader (if we toggle off diffuse and specular, these values will remain 0.0f). Then, if a texture is
+used, we incorporate the rgb values into the diffuse component, and add all of the components together
+to produce the correct color.
