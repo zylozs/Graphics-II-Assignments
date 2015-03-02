@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 3
+*	Trackable.h
+*	I certify that this assignment is entirely our own work.
+*/
+
 #ifndef TRACKABLE_H
 #define TRACKABLE_H
 

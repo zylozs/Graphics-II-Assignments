@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 3
+*	InputSystem.h
+*	I certify that this assignment is entirely our own work.
+*/
+
 #ifndef INPUT_SYSTEM_H
 #define INPUT_SYSTEM_H
 

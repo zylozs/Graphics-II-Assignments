@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 3
+*	Trackable.cpp
+*	I certify that this assignment is entirely our own work.
+*/
+
 #include "Trackable.h"
 #include "MemoryTracker.h"
 

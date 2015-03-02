@@ -1,3 +1,12 @@
+/*
+*	Vincent Loignon and Tyler Cifelli
+*	Assignment 3
+*	Cube.cpp
+*	I certify that this assignment is entirely our own work.
+*
+*	Heavy influences from Frank Luna's code
+*/
+
 #include "Cube.h"
 #include "3DClasses/Vertex.h"
 

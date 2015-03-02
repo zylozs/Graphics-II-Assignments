@@ -42,7 +42,7 @@ public:
 	virtual int run();
 	virtual LRESULT msgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
-	void initDebugConsole();
+	void initDebugConsole(); // Added by Vincent Loignon to allow a debug window ONLY in debug mode
 
 	void enableFullScreenMode(bool enable);
 	bool isDeviceLost();

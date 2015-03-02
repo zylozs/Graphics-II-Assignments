@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 3
+*	Timer.cpp
+*	I certify that this assignment is entirely our own work.
+*/
+
 #include "Timer.h"
 
 Timer::Timer()

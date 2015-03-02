@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 3
+*	EventType.h
+*	I certify that this assignment is entirely our own work.
+*/
+
 #ifndef EVENT_TYPE
 #define EVENT_TYPE
 

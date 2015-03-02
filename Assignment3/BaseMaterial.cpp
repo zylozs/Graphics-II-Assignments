@@ -3,6 +3,8 @@
 //
 // Writen by Adi Bar-Lev, 2013
 // EGP 300-101, Graphics Programming II  - skeleton project
+// 
+// Modified by Vincent Loignon and Tyler Cifelli
 //
 // Base class that contains the most intrinsic parameters to implement per model
 // lighting / shaders effects.

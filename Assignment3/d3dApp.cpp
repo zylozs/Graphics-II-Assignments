@@ -405,6 +405,7 @@ bool D3DApp::isDeviceLost()
 		return false;
 }
 
+// Creates a debug window for the program and re-routes stdin stdout and sterr to it
 void D3DApp::initDebugConsole()
 {
 	int hConHandle;

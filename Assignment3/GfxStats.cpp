@@ -1,6 +1,8 @@
 //=============================================================================
 // GfxStats.cpp by Frank Luna (C) 2005 All Rights Reserved.
 // Edited by Adi Bar-Lev, 2013
+// 
+// Modified by Vincent Loignon (added more functionality)
 //=============================================================================
 
 #include "d3dUtil.h"

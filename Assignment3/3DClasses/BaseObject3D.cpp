@@ -3,8 +3,11 @@
 //
 // Writen by Adi Bar-Lev, 2013
 // EGP 300-101, Graphics Programming II  - skeleton project
+// 
+// Modified by Vincent Loignon
+// Added more modularity to it
 //
-// Base class that can handle 3D rendergin via Vertex and Index buffer
+// Base class that can handle 3D rendering via D3DXMESHs
 //=============================================================================
 #include "BaseObject3D.h"
 #include "Vertex.h"

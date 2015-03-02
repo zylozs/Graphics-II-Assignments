@@ -10,8 +10,13 @@
 // able to start working with sample classes and develop evolve it according to the 
 // given exercises
 //
-// Controls: Use mouse to orbit and zoom; use the 'W' and 'S' keys to 
-//           alter the height of the camera.
+// Modified by Vincent Loignon and Tyler Cifelli
+//
+// Controls: Use mouse to orbit and zoom; Press P to switch between Gouraud and Phong
+//			 shading. Press O (the letter) to switch between the different objects.
+//			 Press T to toggle texturing. Press S to toggle the specular component.
+//			 Press D to toggle the diffuse component. Press W to switch between solid
+//			 and wireframe fill modes.
 //=============================================================================
 #include "InputSystem.h"
 #include <crtdbg.h>
@@ -89,7 +94,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	m_RenderType = D3DFILL_SOLID;
 	m_ObjectColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-	m_UseTexture = true;
+	m_UseTexture = false;
 
 	m_CubeTexture = "Assets/crate.jpg";
 	//m_CubeTexture = "Assets/companion cube.png";
@@ -137,6 +142,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 		//textureMaterial->setActiveTechnique("Phong");
 		textureMaterial->setActiveTechnique("Gouraud");
+		((TextureMaterial*)textureMaterial)->setUseTexture(m_UseTexture);
 
 		m_Objects[i]->Create(gd3dDevice);
 		m_Objects[i]->addMaterial("Texture", textureMaterial, true);

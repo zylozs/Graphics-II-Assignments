@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon and Tyler Cifelli
+*	Assignment 3
+*	TextureMaterial.h
+*	I certify that this assignment is entirely our own work.
+*/
+
 #ifndef _TEXTURE_MATERIAL_H
 #define _TEXTURE_MATERIAL_H
 

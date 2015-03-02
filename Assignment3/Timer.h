@@ -1,13 +1,13 @@
+/*
+*	Vincent Loignon
+*	Assignment 3
+*	Timer.h
+*	I certify that this assignment is entirely our own work.
+*/
+
 #pragma once
 #include <windows.h>
 #include "Trackable.h"
-
-/* Timer - high accuracy timer - uses Large Integer to prevent rollover
-
-Dean Lawson
-Champlain College
-2011
-*/
 
 class Timer : public Trackable
 {

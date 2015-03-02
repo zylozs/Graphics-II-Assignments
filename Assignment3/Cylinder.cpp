@@ -1,3 +1,12 @@
+/*
+*	Vincent Loignon and Tyler Cifelli
+*	Assignment 3
+*	Cylinder.cpp
+*	I certify that this assignment is entirely our own work.
+*
+*	Heavy influences from Frank Luna's code
+*/
+
 #include "Cylinder.h"
 #include "3DClasses\Vertex.h"
 

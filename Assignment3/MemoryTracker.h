@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 3
+*	MemoryTracker.h
+*	I certify that this assignment is entirely our own work.
+*/
+
 #ifndef MEMORY_TRACKER_H
 #define MEMORY_TRACKER_H
 

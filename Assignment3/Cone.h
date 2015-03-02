@@ -1,10 +1,10 @@
 /*
-*	Vince Loignon and Tyler Cifelli
-*	Assignment 2
+*	Vincent Loignon and Tyler Cifelli
+*	Assignment 3
 *	Cone.h
 *	I certify that this assignment is entirely our own work.
 *
-*	Heavy influences from Frank Luna's DX11 code
+*	Heavy influences from Frank Luna's code
 */
 
 #ifndef _CONE_H
@@ -15,8 +15,6 @@
 class Cone : public Cylinder
 {
 protected:
-	//virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
-	//virtual void calculateIndexBuffer(std::vector<WORD>& indicies);
 	virtual void generateUVs();
 
 public:

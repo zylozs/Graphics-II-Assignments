@@ -5,6 +5,8 @@
 // per second, milliseconds per frame, and vertex and triangle counts.
 
 // Edited by Adi Bar-Lwv, 2013
+// 
+// Modified by Vincent Loignon (added new functionality)
 //=============================================================================
 
 #ifndef GFX_STATS_H
