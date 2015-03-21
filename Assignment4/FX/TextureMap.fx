@@ -29,14 +29,16 @@ uniform extern float4 gDiffuseColor;
 uniform extern float4 gSpecularColor;
 uniform extern float gSpecularPower;
 
-uniform extern bool gUseDiffuse;
-uniform extern bool gUseSpecular;
 uniform extern bool gUseTexture;
 
 float4 gAmbientColor = float4(0.2f, 0.2f, 0.2f, 1.0f);
 float4 gAmbientLight = float4(0.4f, 0.4f, 0.4f, 0.4f);
 float4 gDiffuseLight = float4(1.0f, 1.0f, 1.0f, 1.0f);
 float4 gSpecularLight = float4(1.0f, 1.0f, 1.0f, 1.0f);
+
+float gAmbientBlend = float(0.2f);
+float gDiffuseBlend = float(0.65f);
+float gSpecularBlend = float(0.15f);
 
 struct InputVS
 {
@@ -97,26 +99,19 @@ float4 TexturePhongPS(OutputVS_PHONG input) : COLOR
 	float3 specular = 0.0f;
 
 	// Calculate our specular coloring
-	if (gUseSpecular)
-	{
-		float t = pow(max(dot(reflectVec, eyeVec), 0.0f), gSpecularPower);
-		specular = t * (gSpecularColor * gSpecularLight).rgb;
-	}
+  float t = pow(max(dot(reflectVec, eyeVec), 0.0f), gSpecularPower);
+  specular = t * (gSpecularColor * gSpecularLight).rgb;
 
 	// Calculate the ambient coloring
 	float3 ambient = gAmbientColor * gAmbientLight;
 
 	float3 diffuse = 0.0f;
-	
+
 	// Calculate our diffuse coloring
-	if (gUseDiffuse)
-	{
-		float s = max(dot(lightVec, normal), 0.0f);
+	float s = max(dot(lightVec, normal), 0.0f);
 
-		// Thanks to Kyle Strader here for a tip on improving diffuse!
-		diffuse = s * (gDiffuseLight).rgb;
-	}
-
+	// Thanks to Kyle Strader here for a tip on improving diffuse!
+	diffuse = s * (gDiffuseLight).rgb;
 	diffuse = (diffuse + ambient);
 
 	if (gUseTexture)
@@ -162,22 +157,15 @@ OutputVS_GOURAUD TextureGouraudVS(InputVS input)
 	float3 specular = 0.0f;
 	float3 diffuse = 0.0f;
 
-	if (gUseSpecular)
-	{
-		// Calculate our specular coloring
-		float t = pow(max(dot(reflectVec, eyeVec), 0.0f), gSpecularPower);
-		specular = t * (gSpecularColor * gSpecularLight).rgb;
-	}
+	// Calculate our specular coloring
+	float t = pow(max(dot(reflectVec, eyeVec), 0.0f), gSpecularPower);
+	specular = t * (gSpecularColor * gSpecularLight).rgb;
 
-	if (gUseDiffuse)
-	{
-		// Calculate our diffuse coloring
-		float s = max(dot(lightVec, normal), 0.0f);
+	// Calculate our diffuse coloring
+	float s = max(dot(lightVec, normal), 0.0f);
 
-		// Thanks to Kyle Strader here for a tip on improving diffuse!
-		diffuse = s * (gDiffuseLight).rgb;
-	}
-
+	// Thanks to Kyle Strader here for a tip on improving diffuse!
+	diffuse = s * (gDiffuseLight).rgb;
 	diffuse = (diffuse + ambient);
 
 	// Sum all the terms together and copy over the diffuse alpha.

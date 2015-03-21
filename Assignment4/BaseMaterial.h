@@ -43,14 +43,8 @@ protected:
 	D3DXHANDLE          m_SpecularColHandle;
 	D3DXHANDLE          m_ShininessHandle;
 
-	D3DXHANDLE			m_UseDiffuseHandle;
-	D3DXHANDLE			m_UseSpecularHandle;
-
 	std::map<std::string, D3DXHANDLE> m_TechniqueHandles; // All the techniques we should know about for this shader
 	std::string m_ActiveTechnique;
-
-	BOOL m_UseDiffuse;
-	BOOL m_UseSpecular;
 
 public:
 	BaseMaterial(void);
@@ -68,12 +62,6 @@ public:
 
 	FLOAT getShinines() { return m_Shininess; }
 	void setShininess(FLOAT value) { m_Shininess = value; }
-
-	BOOL getUseDiffuse() { return m_UseDiffuse; }
-	BOOL getUseSpecular() { return m_UseSpecular; }
-
-	void setUseDiffuse(BOOL value) { m_UseDiffuse = value; }
-	void setUseSpecular(BOOL value) { m_UseSpecular = value; }
 
 	void onLostDevice();
 	void onResetDevice();

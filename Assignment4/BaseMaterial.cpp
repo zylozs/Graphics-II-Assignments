@@ -18,8 +18,6 @@ BaseMaterial::BaseMaterial(void)
 	m_DiffuseColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_SpecularColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Shininess = 8.0f;
-	m_UseDiffuse = true;
-	m_UseSpecular = true;
 
 	m_DiffuseColHandle = NULL;
 	m_SpecularColHandle = NULL;
@@ -61,9 +59,6 @@ void BaseMaterial::ConnectToEffect(ID3DXEffect* effect)
 	m_SpecularColHandle = m_Effect->GetParameterByName(0, "gSpecularColor");
 	m_ShininessHandle = m_Effect->GetParameterByName(0, "gSpecularPower");
 
-	m_UseDiffuseHandle = m_Effect->GetParameterByName(0, "gUseDiffuse");
-	m_UseSpecularHandle = m_Effect->GetParameterByName(0, "gUseSpecular");
-
 	m_WVPMatHandle = m_Effect->GetParameterByName(0, "gWVP");
 	m_WorldMatHandle = m_Effect->GetParameterByName(0, "gWorld");
 	m_WorldInvTransMatHandle = m_Effect->GetParameterByName(0, "gWorldInvTrans");
@@ -83,9 +78,6 @@ void BaseMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DX
 
 	m_WorldMat = worldMat;
 	m_ViewProjectionMat = viewProjMat;
-
-	HR(m_Effect->SetBool(m_UseDiffuseHandle, m_UseDiffuse));
-	HR(m_Effect->SetBool(m_UseSpecularHandle, m_UseSpecular));
 
 	HR(m_Effect->SetValue(m_DiffuseColHandle, &m_DiffuseColor, sizeof(D3DXCOLOR)));
 	HR(m_Effect->SetValue(m_SpecularColHandle, &m_SpecularColor, sizeof(D3DXCOLOR)));
