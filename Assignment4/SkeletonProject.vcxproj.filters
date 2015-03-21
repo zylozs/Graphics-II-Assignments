@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="GfxStats.cpp" />
+    <ClCompile Include="SkeletonClass.cpp" />
+    <ClCompile Include="Cone.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="3DClasses\BaseObject3D.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMaterial.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dApp.cpp">
+      <Filter>D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="3DClasses\Vertex.cpp">
+      <Filter>D3D</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>D3D\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Event System</Filter>
+    </ClCompile>
+    <ClCompile Include="EventDispatcher.cpp">
+      <Filter>Event System</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyEvent.cpp">
+      <Filter>D3D\Input\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="MouseEvent.cpp">
+      <Filter>D3D\Input\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryTracker.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Trackable.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureMaterial.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Teapot.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="Torus.cpp">
+      <Filter>Primitives</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GfxStats.h" />
+    <ClInclude Include="SkeletonClass.h" />
+    <ClInclude Include="Cone.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="3DClasses\BaseObject3D.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMaterial.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dApp.h">
+      <Filter>D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dUtil.h">
+      <Filter>D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="3DClasses\Vertex.h">
+      <Filter>D3D</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>D3D\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Keys.h">
+      <Filter>D3D\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseKeys.h">
+      <Filter>D3D\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Event System</Filter>
+    </ClInclude>
+    <ClInclude Include="EventDispatcher.h">
+      <Filter>Event System</Filter>
+    </ClInclude>
+    <ClInclude Include="EventType.h">
+      <Filter>Event System</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyEvent.h">
+      <Filter>D3D\Input\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseEvent.h">
+      <Filter>D3D\Input\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Delegate.h">
+      <Filter>Event System</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryTracker.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Trackable.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="IObject.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureMaterial.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Teapot.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Torus.h">
+      <Filter>Primitives</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Primitives">
+      <UniqueIdentifier>{b094a912-d852-4dcc-b62e-45ddb748b802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{3ed99417-856f-4e9f-8fa2-d0c24774b6a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D">
+      <UniqueIdentifier>{988c68d2-4db8-4c59-a093-831bc584d647}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D\Input">
+      <UniqueIdentifier>{22eed777-cc1c-4fbd-9de9-f072f0f8fd4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event System">
+      <UniqueIdentifier>{dc474d63-d99d-46ff-9fd7-d6ea500e6855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D\Input\Events">
+      <UniqueIdentifier>{143722c3-69d9-4d9a-a4ca-8df3f36c500d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{27aa7ff4-ceb5-4792-a0bc-208e9458a7f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{4257927d-fb7f-4310-84a4-f89be454a564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FX">
+      <UniqueIdentifier>{6fd9c7c9-69f2-4afa-af11-f02ee787cb91}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="FX\TextureMap.fx">
+      <Filter>FX</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
