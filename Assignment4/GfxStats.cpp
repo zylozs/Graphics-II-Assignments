@@ -175,10 +175,10 @@ void GfxStats::display()
 		"[1-7] Shininess: %.2f\n"
 		"[-/+] Env Map Strength: %.1f\n"
 		"[A/S] Normal Map Strength: %.1f\n"
-		"[P] Shader: %s", mFPS, mMilliSecPerFrame, mNumTris, mNumVertices, 
-						  m_FillMode.c_str(), m_Texturing.c_str(), m_ObjectName.c_str(), 
-						  m_EnvironmentMap.c_str(), m_NormalMap.c_str(), m_Shininess,
-						  m_EnvMapStr, m_NormalMapStr, m_ShaderName.c_str());
+		"Shader: %s", mFPS, mMilliSecPerFrame, mNumTris, mNumVertices, 
+					  m_FillMode.c_str(), m_Texturing.c_str(), m_ObjectName.c_str(), 
+					  m_EnvironmentMap.c_str(), m_NormalMap.c_str(), m_Shininess,
+					  m_EnvMapStr, m_NormalMapStr, m_ShaderName.c_str());
 
 	RECT R = {5, 5, 0, 0};
 	HR(mFont->DrawText(0, buffer, -1, &R, DT_NOCLIP, D3DCOLOR_XRGB(0,0,0)));

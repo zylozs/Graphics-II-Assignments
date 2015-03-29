@@ -11,19 +11,22 @@ TextureMaterial::TextureMaterial()
 {
 	m_Texture = NULL;
 	m_TextureHandle = NULL;
-	setColor(1.0f, 0.0f, 0.0f, 1.0f);
-	m_ColorHandle = NULL;
+	m_EnvMapHandle = NULL;
 	m_UseTextureHandle = NULL;
+	m_UseEnvMapHandle = NULL;
+	m_EnvMapStrHandle = NULL;
 }
 
-TextureMaterial::TextureMaterial(std::string filename)
+TextureMaterial::TextureMaterial(std::string filename, std::string envMap)
 {
 	m_TextureHandle = NULL;
-	setColor(1.0f, 0.0f, 0.0f, 1.0f);
-	m_ColorHandle = NULL;
+	m_EnvMapHandle = NULL;
 	m_UseTextureHandle = NULL;
+	m_UseEnvMapHandle = NULL;
+	m_EnvMapStrHandle = NULL;
 
 	LoadTextureFromFile(filename);
+	LoadEnvMapFromFile(envMap);
 }
 
 TextureMaterial::~TextureMaterial()
@@ -36,11 +39,12 @@ void TextureMaterial::ConnectToEffect(ID3DXEffect* effect)
 	BaseMaterial::ConnectToEffect(effect);
 
 	addTechnique("PhongTech", "Phong");
-	addTechnique("GouraudTech", "Gouraud");
 
 	m_TextureHandle = m_Effect->GetParameterByName(0, "gTexture");
-	m_ColorHandle = m_Effect->GetParameterByName(0, "gColor");
+	m_EnvMapHandle = m_Effect->GetParameterByName(0, "gEnvMap");
 	m_UseTextureHandle = m_Effect->GetParameterByName(0, "gUseTexture");
+	m_UseEnvMapHandle = m_Effect->GetParameterByName(0, "gUseEnvMap");
+	m_EnvMapStrHandle = m_Effect->GetParameterByName(0, "gEnvMapStr");
 }
 
 void TextureMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos)
@@ -49,8 +53,10 @@ void TextureMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D
 
 	HR(m_Effect->SetTechnique(getTechniqueHandle(m_ActiveTechnique)));
 	HR(m_Effect->SetTexture(m_TextureHandle, m_Texture));
-	HR(m_Effect->SetValue(m_ColorHandle, &m_Color, sizeof(D3DXCOLOR)));
+	HR(m_Effect->SetTexture(m_EnvMapHandle, m_EnvMap));
 	HR(m_Effect->SetBool(m_UseTextureHandle, m_UseTexture));
+	HR(m_Effect->SetBool(m_UseEnvMapHandle, m_UseEnvMap));
+	HR(m_Effect->SetFloat(m_EnvMapStrHandle, m_EnvMapStrength));
 }
 
 void TextureMaterial::LoadTextureFromFile(std::string filename)
@@ -58,15 +64,7 @@ void TextureMaterial::LoadTextureFromFile(std::string filename)
 	HR(D3DXCreateTextureFromFile(gd3dDevice, filename.c_str(), &m_Texture));
 }
 
-void TextureMaterial::setColor(FLOAT r, FLOAT g, FLOAT b, FLOAT a)
+void TextureMaterial::LoadEnvMapFromFile(std::string envMap)
 {
-	m_Color = D3DXCOLOR(r, g, b, a);
-
-	m_DiffuseColor = m_Color;
-	m_SpecularColor = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-}
-
-void TextureMaterial::setColor(const D3DXCOLOR& color)
-{
-	setColor(color.r, color.g, color.b, color.a);
+	HR(D3DXCreateCubeTextureFromFile(gd3dDevice, envMap.c_str(), &m_EnvMap));
 }

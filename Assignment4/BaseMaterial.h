@@ -13,6 +13,7 @@
 #include "d3dApp.h"
 #include "Trackable.h"
 #include <map>
+#include "Common.h"
 
 //=============================================================================
 class BaseMaterial : public Trackable
@@ -24,10 +25,7 @@ protected:
 	D3DXMATRIX          m_WorldMat;
 	D3DXMATRIX          m_ViewProjectionMat;
 
-	D3DXCOLOR			m_DiffuseColor;
-	D3DXCOLOR			m_SpecularColor;
-	FLOAT               m_Shininess;            // specular power
-
+	MaterialColor		m_Colors;
 
 	//---------- Shader Handles ----------
 	// Generic shader handles
@@ -38,10 +36,10 @@ protected:
 	D3DXHANDLE          m_LightVecHandle;       // Position (spot/point) / Direction (directional)
 	D3DXHANDLE          m_ViewerPosWHandle;
 
-	// Material specific shader handles
-	D3DXHANDLE          m_DiffuseColHandle;
-	D3DXHANDLE          m_SpecularColHandle;
-	D3DXHANDLE          m_ShininessHandle;
+	D3DXHANDLE			m_AmbientHandle;
+	D3DXHANDLE			m_DiffuseHandle;
+	D3DXHANDLE			m_SpecularHandle;
+	D3DXHANDLE			m_ShininessHandle;
 
 	std::map<std::string, D3DXHANDLE> m_TechniqueHandles; // All the techniques we should know about for this shader
 	std::string m_ActiveTechnique;
@@ -60,8 +58,17 @@ public:
 	D3DXHANDLE getTechniqueHandle(std::string key);
 	void addTechnique(std::string name, std::string key = "", bool setToActive = false);
 
-	FLOAT getShinines() { return m_Shininess; }
-	void setShininess(FLOAT value) { m_Shininess = value; }
+	D3DXCOLOR getDiffuse() { return m_Colors.diffuse; }
+	void setDiffuse(D3DXCOLOR value) { m_Colors.diffuse = value; }
+
+	D3DXCOLOR getAmbient() { return m_Colors.ambient; }
+	void setAmbient(D3DXCOLOR value) { m_Colors.ambient = value; }
+
+	D3DXCOLOR getSpecular() { return m_Colors.specular; }
+	void setSpecular(D3DXCOLOR value) { m_Colors.specular = value; }
+
+	FLOAT getShinines() { return m_Colors.shininess; }
+	void setShininess(FLOAT value) { m_Colors.shininess = value; }
 
 	void onLostDevice();
 	void onResetDevice();

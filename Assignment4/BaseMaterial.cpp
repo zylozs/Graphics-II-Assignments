@@ -15,12 +15,15 @@ BaseMaterial::BaseMaterial(void)
 {
     m_Effect = NULL;
 	m_ActiveTechnique = "";
-	m_DiffuseColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	m_SpecularColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Shininess = 8.0f;
+	
+	m_Colors.ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f);
+	m_Colors.diffuse = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
+	m_Colors.specular = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
+	m_Colors.shininess = 8.0f;
 
-	m_DiffuseColHandle = NULL;
-	m_SpecularColHandle = NULL;
+	m_AmbientHandle = NULL;
+	m_DiffuseHandle = NULL;
+	m_SpecularHandle = NULL;
 	m_ShininessHandle = NULL;
 	m_WVPMatHandle = NULL;
 	m_WorldMatHandle = NULL;
@@ -55,9 +58,10 @@ void BaseMaterial::ConnectToEffect(ID3DXEffect* effect)
 {
 	m_Effect = effect;
 
-	m_DiffuseColHandle = m_Effect->GetParameterByName(0, "gDiffuseColor");
-	m_SpecularColHandle = m_Effect->GetParameterByName(0, "gSpecularColor");
-	m_ShininessHandle = m_Effect->GetParameterByName(0, "gSpecularPower");
+	m_AmbientHandle = m_Effect->GetParameterByName(0, "gColors.ambient");
+	m_DiffuseHandle = m_Effect->GetParameterByName(0, "gColors.diffuse");
+	m_SpecularHandle = m_Effect->GetParameterByName(0, "gColors.specular");
+	m_ShininessHandle = m_Effect->GetParameterByName(0, "gColors.shininess");
 
 	m_WVPMatHandle = m_Effect->GetParameterByName(0, "gWVP");
 	m_WorldMatHandle = m_Effect->GetParameterByName(0, "gWorld");
@@ -79,9 +83,10 @@ void BaseMaterial::PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DX
 	m_WorldMat = worldMat;
 	m_ViewProjectionMat = viewProjMat;
 
-	HR(m_Effect->SetValue(m_DiffuseColHandle, &m_DiffuseColor, sizeof(D3DXCOLOR)));
-	HR(m_Effect->SetValue(m_SpecularColHandle, &m_SpecularColor, sizeof(D3DXCOLOR)));
-	HR(m_Effect->SetFloat(m_ShininessHandle, m_Shininess));
+	HR(m_Effect->SetValue(m_AmbientHandle, &m_Colors.ambient, sizeof(D3DXCOLOR)));
+	HR(m_Effect->SetValue(m_DiffuseHandle, &m_Colors.diffuse, sizeof(D3DXCOLOR)));
+	HR(m_Effect->SetValue(m_SpecularHandle, &m_Colors.specular, sizeof(D3DXCOLOR)));
+	HR(m_Effect->SetFloat(m_ShininessHandle, m_Colors.shininess));
 
 	HR(m_Effect->SetMatrix(m_WorldMatHandle, &m_WorldMat));
 	HR(m_Effect->SetMatrix(m_WorldInvTransMatHandle, &WIT));

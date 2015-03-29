@@ -109,6 +109,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_ConeTexture = "Assets/gold-texture.jpg";
 	//m_CylinderTexture = "Assets/rock.jpg";
 
+	m_EnvMapTexture = "Assets/cubeMap.dds";
+
 	m_TextureMaterialFX = "FX/TextureMap.fx";
 	m_ColorMaterialFX = "FX/Color.fx";
 	m_IsWireframe = true;
@@ -153,12 +155,14 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 				break;
 		}
 
-		BaseMaterial* textureMaterial = New TextureMaterial(texture);
+		BaseMaterial* textureMaterial = New TextureMaterial(texture, m_EnvMapTexture);
 		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
+		((TextureMaterial*)textureMaterial)->setUseEnvMap(m_UseEnvironmentMapping);
 
-		//textureMaterial->setActiveTechnique("Phong");
-		textureMaterial->setActiveTechnique("Gouraud");
+		textureMaterial->setActiveTechnique("Phong");
 		((TextureMaterial*)textureMaterial)->setUseTexture(m_UseTexture);
+
+		((TextureMaterial*)textureMaterial)->setEnvMapStr(m_EnvironmentMapStrength);
 
 		m_Objects[i]->Create(gd3dDevice);
 		m_Objects[i]->addMaterial("Texture", textureMaterial, true);
@@ -237,9 +241,6 @@ void SkeletonClass::onKeyUp(Event* ev)
 			break;
 		case Keys::T:	//Texture/No Texture
 			toggleTexture();
-			break;
-		case Keys::P:
-			swapShaderTechnique();
 			break;
 		case Keys::R: // Environment Mapping On/Off
 			toggleEnvironmentMapping();
@@ -411,25 +412,17 @@ void SkeletonClass::toggleEnvironmentMapping()
 {
 	m_UseEnvironmentMapping = !m_UseEnvironmentMapping;
 	GfxStats::GetInstance()->setEnvironmentMap(m_UseEnvironmentMapping);
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		((TextureMaterial*)m_Objects[i]->getMaterial("Texture"))->setUseEnvMap(m_UseEnvironmentMapping);
+	}
 }
 
 void SkeletonClass::toggleNormalMapping()
 {
 	m_UseNormalMapping = !m_UseNormalMapping;
 	GfxStats::GetInstance()->setNormalMap(m_UseNormalMapping);
-}
-
-void SkeletonClass::swapShaderTechnique()
-{
-	for (UINT i = 0; i < m_Objects.size(); i++)
-	{
-		BaseMaterial* mat = m_Objects[i]->getMaterial("Texture");
-
-		if (mat->getActiveTechnique() == "Gouraud")
-			mat->setActiveTechnique("Phong");
-		else if (mat->getActiveTechnique() == "Phong")
-			mat->setActiveTechnique("Gouraud");
-	}
 }
 
 void SkeletonClass::changeShininess(FLOAT newValue)
@@ -464,4 +457,9 @@ void SkeletonClass::incrementEnvMapStr(FLOAT increment)
 		m_EnvironmentMapStrength = 1.0f;
 
 	GfxStats::GetInstance()->setEnvMapStr(m_EnvironmentMapStrength);
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		((TextureMaterial*)m_Objects[i]->getMaterial("Texture"))->setEnvMapStr(m_EnvironmentMapStrength);
+	}
 }

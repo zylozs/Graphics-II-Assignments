@@ -139,6 +139,9 @@
     <ClInclude Include="Torus.h">
       <Filter>Primitives</Filter>
     </ClInclude>
+    <ClInclude Include="Common.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Primitives">

@@ -54,7 +54,6 @@ private: //functions
 	void toggleTexture();
 	void toggleEnvironmentMapping();
 	void toggleNormalMapping();
-	void swapShaderTechnique();
 	void changeShininess(FLOAT newValue);
 	void incrementNormalMapStr(FLOAT increment);
 	void incrementEnvMapStr(FLOAT increment);
@@ -77,6 +76,8 @@ private: //variables
 	std::string m_SphereTexture;
 	std::string m_CylinderTexture;
 	std::string m_ConeTexture;
+
+	std::string m_EnvMapTexture;
 
 	bool m_UseTexture;
 	bool m_UseEnvironmentMapping;

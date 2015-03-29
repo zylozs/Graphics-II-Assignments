@@ -16,25 +16,34 @@ protected:
 	IDirect3DTexture9* m_Texture;
 	D3DXHANDLE m_TextureHandle;
 
+	IDirect3DCubeTexture9* m_EnvMap;
+	D3DXHANDLE m_EnvMapHandle;
+
 	BOOL m_UseTexture;
 	D3DXHANDLE m_UseTextureHandle;
 
-	D3DXCOLOR m_Color;
-	D3DXHANDLE m_ColorHandle;
+	BOOL m_UseEnvMap;
+	D3DXHANDLE m_UseEnvMapHandle;
+
+	FLOAT m_EnvMapStrength;
+	D3DXHANDLE m_EnvMapStrHandle;
 
 public:
 	TextureMaterial();
-	TextureMaterial(std::string filename);
+	TextureMaterial(std::string filename, std::string envMap);
 	~TextureMaterial();
-
-	void setColor(FLOAT r, FLOAT g, FLOAT b, FLOAT a);
-	void setColor(const D3DXCOLOR& color);
-	const D3DXCOLOR& getColor() { return m_Color; }
 
 	void setUseTexture(BOOL value) { m_UseTexture = value; }
 	BOOL getUseTexture() { return m_UseTexture; }
 
+	void setUseEnvMap(BOOL value) { m_UseEnvMap = value; }
+	BOOL getUseEnvMap() { return m_UseEnvMap; }
+
+	void setEnvMapStr(FLOAT value) { m_EnvMapStrength = value; }
+	FLOAT getEnvMapStr() { return m_EnvMapStrength; }
+
 	void LoadTextureFromFile(std::string filename);
+	void LoadEnvMapFromFile(std::string envMap);
 
 	virtual void ConnectToEffect(ID3DXEffect* effect);
 	virtual void PreRender(D3DXMATRIX& worldMat, D3DXMATRIX& viewProjMat, D3DXVECTOR3& lightPos, D3DXVECTOR3& viewPos);
