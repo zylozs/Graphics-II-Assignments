@@ -101,7 +101,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_ObjectColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 	m_UseTexture = false;
 
-	m_CubeTexture = "Assets/crate.jpg";
+	m_CubeTexture = "Assets/color_map.jpg";
+	m_NormalMapTexture = "Assets/normal_map.jpg";
 	//m_CubeTexture = "Assets/companion cube.png";
 	m_SphereTexture = "Assets/rock.jpg";
 	//m_CylinderTexture = "Assets/WhiteVermontMarble.jpg";
@@ -135,8 +136,9 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
 		std::string texture = m_CubeTexture;
+		std::string normal = m_NormalMapTexture;
 
-		switch (i)
+		/*switch (i)
 		{
 			case 1:
 				texture = m_SphereTexture;
@@ -153,16 +155,16 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 			case 5:
 				texture = m_SphereTexture;
 				break;
-		}
+		}*/
 
-		BaseMaterial* textureMaterial = New TextureMaterial(texture, m_EnvMapTexture);
+		TextureMaterial* textureMaterial = New TextureMaterial(texture, normal, m_EnvMapTexture);
 		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
-		((TextureMaterial*)textureMaterial)->setUseEnvMap(m_UseEnvironmentMapping);
-
 		textureMaterial->setActiveTechnique("Phong");
-		((TextureMaterial*)textureMaterial)->setUseTexture(m_UseTexture);
-
-		((TextureMaterial*)textureMaterial)->setEnvMapStr(m_EnvironmentMapStrength);
+		textureMaterial->setUseTexture(m_UseTexture);
+		textureMaterial->setUseEnvMap(m_UseEnvironmentMapping);
+		textureMaterial->setEnvMapStr(m_EnvironmentMapStrength);
+		textureMaterial->setUseNormalMap(m_UseNormalMapping);
+		textureMaterial->setNormalMapStr(m_NormalMapStrength);
 
 		m_Objects[i]->Create(gd3dDevice);
 		m_Objects[i]->addMaterial("Texture", textureMaterial, true);
@@ -423,6 +425,11 @@ void SkeletonClass::toggleNormalMapping()
 {
 	m_UseNormalMapping = !m_UseNormalMapping;
 	GfxStats::GetInstance()->setNormalMap(m_UseNormalMapping);
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		((TextureMaterial*)m_Objects[i]->getMaterial("Texture"))->setUseNormalMap(m_UseNormalMapping);
+	}
 }
 
 void SkeletonClass::changeShininess(FLOAT newValue)
@@ -445,6 +452,11 @@ void SkeletonClass::incrementNormalMapStr(FLOAT increment)
 		m_NormalMapStrength = 1.0f;
 
 	GfxStats::GetInstance()->setNormalMapStr(m_NormalMapStrength);
+
+	for (UINT i = 0; i < m_Objects.size(); i++)
+	{
+		((TextureMaterial*)m_Objects[i]->getMaterial("Texture"))->setNormalMapStr(m_NormalMapStrength);
+	}
 }
 
 void SkeletonClass::incrementEnvMapStr(FLOAT increment)

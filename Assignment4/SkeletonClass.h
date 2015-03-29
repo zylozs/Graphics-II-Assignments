@@ -78,6 +78,7 @@ private: //variables
 	std::string m_ConeTexture;
 
 	std::string m_EnvMapTexture;
+	std::string m_NormalMapTexture;
 
 	bool m_UseTexture;
 	bool m_UseEnvironmentMapping;

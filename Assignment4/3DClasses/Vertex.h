@@ -20,11 +20,13 @@ struct Vertex
 		   : Position(p), Normal(n), TexCoord(uv){}
 	Vertex(float px, float py, float pz,
 		   float nx, float ny, float nz,
-		   float u, float v)
-		   : Position(px, py, pz), Normal(nx, ny, nz), TexCoord(u, v){}
+		   float u, float v, 
+		   float tx = 0.0f, float ty = 0.0f, float tz = 0.0f)
+		   : Position(px, py, pz), Normal(nx, ny, nz), TexCoord(u, v), Tangent(tx, ty, tz){}
 
 	D3DXVECTOR3 Position;
 	D3DXVECTOR3 Normal;
+	D3DXVECTOR3 Tangent;
 	D3DXVECTOR2 TexCoord;
 
 	static IDirect3DVertexDeclaration9* Decl;

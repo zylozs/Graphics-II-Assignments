@@ -16,6 +16,9 @@ protected:
 	IDirect3DTexture9* m_Texture;
 	D3DXHANDLE m_TextureHandle;
 
+	IDirect3DTexture9* m_NormalMap;
+	D3DXHANDLE m_NormalMapHandle;
+
 	IDirect3DCubeTexture9* m_EnvMap;
 	D3DXHANDLE m_EnvMapHandle;
 
@@ -28,9 +31,15 @@ protected:
 	FLOAT m_EnvMapStrength;
 	D3DXHANDLE m_EnvMapStrHandle;
 
+	BOOL m_UseNormalMap;
+	D3DXHANDLE m_UseNormalMapHandle;
+
+	FLOAT m_NormalMapStr;
+	D3DXHANDLE m_NormalMapStrHandle;
+
 public:
 	TextureMaterial();
-	TextureMaterial(std::string filename, std::string envMap);
+	TextureMaterial(std::string texture, std::string normalMap, std::string envMap);
 	~TextureMaterial();
 
 	void setUseTexture(BOOL value) { m_UseTexture = value; }
@@ -42,7 +51,13 @@ public:
 	void setEnvMapStr(FLOAT value) { m_EnvMapStrength = value; }
 	FLOAT getEnvMapStr() { return m_EnvMapStrength; }
 
-	void LoadTextureFromFile(std::string filename);
+	void setUseNormalMap(BOOL value) { m_UseNormalMap = value; }
+	BOOL getUseNormalMap() { return m_UseNormalMap; }
+
+	void setNormalMapStr(FLOAT value) { m_NormalMapStr = value; }
+	FLOAT getNormalMapStr() { return m_NormalMapStr; }
+
+	void LoadTextureFromFile(std::string filename, IDirect3DTexture9** texture);
 	void LoadEnvMapFromFile(std::string envMap);
 
 	virtual void ConnectToEffect(ID3DXEffect* effect);

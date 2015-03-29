@@ -12,25 +12,33 @@
 uniform extern texture gTexture;
 sampler TextureSampler = sampler_state
 {
-      Texture = <gTexture>;
-      MinFilter = LINEAR;
-      MagFilter = LINEAR;
+    Texture = <gTexture>;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
 };
 
 uniform extern texture gEnvMap;
 sampler EnvMapSampler = sampler_state
 {
-  Texture = <gEnvMap>;
-  MinFilter = LINEAR;
-  MagFilter = LINEAR;
+    Texture = <gEnvMap>;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
+};
+
+uniform extern texture gNormalMap;
+sampler NormalMapSampler = sampler_state
+{
+    Texture = <gNormalMap>;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
 };
 
 struct MaterialColor
 {
-  float4 ambient;
-  float4 diffuse;
-  float4 specular;
-  float shininess;
+    float4 ambient;
+    float4 diffuse;
+    float4 specular;
+    float shininess;
 };
 
 uniform extern float4x4 gWorld;
@@ -44,8 +52,10 @@ uniform extern MaterialColor gColors;
 
 uniform extern bool gUseTexture;
 uniform extern bool gUseEnvMap;
+uniform extern bool gUseNormalMap;
 
 uniform extern float gEnvMapStr;
+uniform extern float gNormalMapStr;
 
 float4 gAmbientLight = float4(0.4f, 0.4f, 0.4f, 0.4f);
 float4 gDiffuseLight = float4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -57,37 +67,38 @@ float gSpecularBlend = float(0.15f);
 
 struct InputVS
 {
-	float3 Position : POSITION0;
-	float3 Normal : NORMAL0;
-	float2 TexCoord : TEXCOORD0;
+    float3 Position : POSITION0;
+    float3 Normal : NORMAL0;
+    float3 Tangent : TANGENT0;
+    float2 TexCoord : TEXCOORD0;
 };
 
 struct OutputVS_PHONG
 {
-	float4 Position    : POSITION0;
-	float3 Normal	   : TEXCOORD0;
-	float3 WorldPos    : TEXCOORD1;
-	float2 TexCoord    : TEXCOORD2;
+    float4 Position    : POSITION0;
+    float3 Normal	   : TEXCOORD0;
+    float3 WorldPos    : TEXCOORD1;
+    float2 TexCoord    : TEXCOORD2;
 };
 
 // Phong shading done by Tyler Cifelli
 // With the aid from frank luna's examples
 OutputVS_PHONG TexturePhongVS(InputVS input)
 {
-	OutputVS_PHONG outVS = (OutputVS_PHONG)0;
+    OutputVS_PHONG outVS = (OutputVS_PHONG)0;
 
-	// Transform our normal into world space
-	outVS.Normal = mul(float4(input.Normal, 0.0f), gWorldInvTrans).xyz;
-	outVS.Normal = normalize(outVS.Normal);
+    // Transform our normal into world space
+    outVS.Normal = mul(float4(input.Normal, 0.0f), gWorldInvTrans).xyz;
+    outVS.Normal = normalize(outVS.Normal);
 
-	// Transform our vertex into world space
-	outVS.WorldPos = mul(float4(input.Position, 1.0f), gWorld).xyz;
+    // Transform our vertex into world space
+    outVS.WorldPos = mul(float4(input.Position, 1.0f), gWorld).xyz;
 
-	// Transform our vertex into homogenous space
-	outVS.Position = mul(float4(input.Position, 1.0f), gWVP);
-	outVS.TexCoord = input.TexCoord;
+    // Transform our vertex into homogenous space
+    outVS.Position = mul(float4(input.Position, 1.0f), gWVP);
+    outVS.TexCoord = input.TexCoord;
 
-	return outVS;
+    return outVS;
 }
 
 float4 TexturePhongPS(OutputVS_PHONG input) : COLOR
@@ -104,41 +115,41 @@ float4 TexturePhongPS(OutputVS_PHONG input) : COLOR
 	float3 reflectVec = reflect(-lightVec, normal);
 
 	float3 specular = 0.0f;
-  float3 diffuse = gColors.diffuse.rgb;
-  float3 ambient = gColors.ambient.rgb;
-  float alpha = gColors.diffuse.a;
+    float3 diffuse = gColors.diffuse.rgb;
+    float3 ambient = gColors.ambient.rgb;
+    float alpha = gColors.diffuse.a;
 
 	// Calculate our specular coloring
-  float t = pow(max(dot(reflectVec, eyeVec), 0.0f), gColors.shininess);
-  float s = max(dot(lightVec, normal), 0.0f);
+    float t = pow(max(dot(reflectVec, eyeVec), 0.0f), gColors.shininess);
+    float s = max(dot(lightVec, normal), 0.0f);
 
 	if (gUseTexture)
-	{
+    {
 		float4 texColor = tex2D(TextureSampler, input.TexCoord);
 
-    diffuse *= texColor;
-    ambient *= texColor;
-    alpha *= texColor.a;
+        diffuse *= texColor ;
+        ambient *= texColor;
+        alpha *= texColor.a;
 	}
 
-  if (gUseEnvMap)
-  {
-    float3 envMapTex = reflect(-eyeVec, normal);
-    float3 envMapColor = texCUBE(EnvMapSampler, envMapTex);
+    if (gUseEnvMap)
+    {
+        float3 envMapTex = reflect(-eyeVec, normal);
+        float3 envMapColor = texCUBE(EnvMapSampler, envMapTex);
 
-    diffuse *= (1.0f - gEnvMapStr);
-    ambient *= (1.0f - gEnvMapStr);
+        diffuse *= (1.0f - gEnvMapStr);
+        ambient *= (1.0f - gEnvMapStr);
 
-    diffuse += gEnvMapStr * envMapColor;
-    ambient += gEnvMapStr * envMapColor;
-  }
+        diffuse += gEnvMapStr * envMapColor;
+        ambient += gEnvMapStr * envMapColor;
+    }
 
-  diffuse *= gDiffuseLight.rgb;
-  diffuse *= s;
-  ambient *= gAmbientLight.rgb;
-  specular = t * (gColors.specular * gSpecularLight).rgb;
+    diffuse *= gDiffuseLight.rgb;
+    diffuse *= s;
+    ambient *= gAmbientLight.rgb;
+    specular = t * (gColors.specular * gSpecularLight).rgb;
 
-	return float4(ambient + diffuse + specular, alpha);
+	return float4((ambient * gAmbientBlend) + (diffuse * gDiffuseBlend) + (specular * gSpecularBlend), alpha);
 }
 
 technique PhongTech
