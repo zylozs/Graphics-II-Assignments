@@ -68,17 +68,16 @@ private: //variables
 	D3DXMATRIX m_View;
 	D3DXMATRIX m_Proj;
 
-	D3DXCOLOR m_ObjectColor;	
-	std::string m_ColorMaterialFX;
 	std::string m_TextureMaterialFX;
 	
-	std::string m_CubeTexture;
-	std::string m_SphereTexture;
-	std::string m_CylinderTexture;
-	std::string m_ConeTexture;
+	std::string m_Texture;
+	std::string m_Texture2;
+	std::string m_Texture3;
 
 	std::string m_EnvMapTexture;
 	std::string m_NormalMapTexture;
+	std::string m_NormalMap2Texture;
+	std::string m_NormalMap3Texture;
 
 	bool m_UseTexture;
 	bool m_UseEnvironmentMapping;

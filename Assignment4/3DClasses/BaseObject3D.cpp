@@ -150,12 +150,20 @@ void BaseObject3D::onResetDevice()
 
 void BaseObject3D::generateTBNs()
 {
-	// Clone the mesh to the NMapVertex format.
-	//ID3DXMesh* tempMesh = 0;
-	//HR(m_Mesh->CloneMesh(D3DXMESH_MANAGED, elems, gd3dDevice, &tempMesh));
+	// Grab our vertex description
+	D3DVERTEXELEMENT9 elements[64];
+	UINT numElements = 0;
+	Vertex::Decl->GetDeclaration(elements, &numElements);
+
+	// Create a copy of our sphere mesh using our vertex description instead of the old one
+	ID3DXMesh* temp = 0;
+	HR(m_Mesh->CloneMesh(D3DXMESH_MANAGED, elements, gd3dDevice, &temp));
+
+	// Release our old mesh since we have a copy we will be modifying in system memory
+	ReleaseCOM(m_Mesh);
 
 	HR(D3DXComputeTangentFrameEx(
-		m_Mesh, // Input mesh
+		temp, // Input mesh
 		D3DDECLUSAGE_TEXCOORD, 0, // Vertex element of input tex-coords.  
 		D3DDECLUSAGE_BINORMAL, 0, // Vertex element to output binormal.
 		D3DDECLUSAGE_TANGENT, 0,  // Vertex element to output tangent.
@@ -166,6 +174,9 @@ void BaseObject3D::generateTBNs()
 		&m_Mesh, // Output mesh
 		0));         // Vertex Remapping
 
-	// Done with temps.
-	//ReleaseCOM(tempMesh);
+	// Clone the copy of the mesh back into the member variable with hardware friendly tags
+	//HR(temp->CloneMesh(D3DXMESH_MANAGED | D3DXMESH_WRITEONLY, elements, gd3dDevice, &m_Mesh));
+
+	// Release our local copy since we no longer need it
+	ReleaseCOM(temp);
 }

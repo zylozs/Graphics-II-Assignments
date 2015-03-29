@@ -1,6 +1,6 @@
 /*
 *	Vincent Loignon
-*	Assignment 3
+*	Assignment 4
 *	InputSystem.cpp
 *	I certify that this assignment is entirely our own work.
 */

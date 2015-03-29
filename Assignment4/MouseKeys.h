@@ -1,6 +1,6 @@
 /*
 *	Vincent Loignon
-*	Assignment 3
+*	Assignment 4
 *	MouseKeys.h
 *	I certify that this assignment is entirely our own work.
 */

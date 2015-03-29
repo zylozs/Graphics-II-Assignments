@@ -67,7 +67,7 @@ public:
 	D3DXCOLOR getSpecular() { return m_Colors.specular; }
 	void setSpecular(D3DXCOLOR value) { m_Colors.specular = value; }
 
-	FLOAT getShinines() { return m_Colors.shininess; }
+	FLOAT getShininess() { return m_Colors.shininess; }
 	void setShininess(FLOAT value) { m_Colors.shininess = value; }
 
 	void onLostDevice();

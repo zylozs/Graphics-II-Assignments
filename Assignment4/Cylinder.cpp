@@ -1,6 +1,6 @@
 /*
 *	Vincent Loignon and Tyler Cifelli
-*	Assignment 3
+*	Assignment 4
 *	Cylinder.cpp
 *	I certify that this assignment is entirely our own work.
 *
@@ -95,7 +95,7 @@ void Cylinder::generateUVs()
 	HR(temp->UnlockVertexBuffer());
 
 	// Clone the copy of the mesh back into the member variable with hardware friendly tags
-	HR(temp->CloneMesh(D3DXMESH_MANAGED | D3DXMESH_WRITEONLY, elements, gd3dDevice, &m_Mesh));
+	HR(temp->CloneMesh(D3DXMESH_MANAGED, elements, gd3dDevice, &m_Mesh));
 
 	// Release our local copy since we no longer need it
 	ReleaseCOM(temp);

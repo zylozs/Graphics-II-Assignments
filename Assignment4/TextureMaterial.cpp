@@ -1,6 +1,6 @@
 /*
 *	Vincent Loignon and Tyler Cifelli
-*	Assignment 3
+*	Assignment 4
 *	TextureMaterial.cpp
 *	I certify that this assignment is entirely our own work.
 */

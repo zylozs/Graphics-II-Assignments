@@ -98,22 +98,20 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_LightVec = D3DXVECTOR3(0.5f, 0.5f, 1.5f);
 
 	m_RenderType = D3DFILL_SOLID;
-	m_ObjectColor = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
 	m_UseTexture = false;
 
-	m_CubeTexture = "Assets/color_map.jpg";
+	m_Texture = "Assets/color_map.jpg";
 	m_NormalMapTexture = "Assets/normal_map.jpg";
-	//m_CubeTexture = "Assets/companion cube.png";
-	m_SphereTexture = "Assets/rock.jpg";
-	//m_CylinderTexture = "Assets/WhiteVermontMarble.jpg";
-	m_CylinderTexture = "Assets/crate.jpg";
-	m_ConeTexture = "Assets/gold-texture.jpg";
-	//m_CylinderTexture = "Assets/rock.jpg";
+
+	m_Texture2 = "Assets/bricks_color.bmp";
+	m_NormalMap2Texture = "Assets/bricks_nmap.bmp";
+
+	m_Texture3 = "Assets/floor_color.bmp";
+	m_NormalMap3Texture = "Assets/floor_nmap.bmp";
 
 	m_EnvMapTexture = "Assets/cubeMap.dds";
 
 	m_TextureMaterialFX = "FX/TextureMap.fx";
-	m_ColorMaterialFX = "FX/Color.fx";
 	m_IsWireframe = true;
 	m_UseEnvironmentMapping = false;
 	m_UseNormalMapping = false;
@@ -135,27 +133,32 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
-		std::string texture = m_CubeTexture;
+		std::string texture = m_Texture;
 		std::string normal = m_NormalMapTexture;
 
-		/*switch (i)
+		switch (i)
 		{
 			case 1:
-				texture = m_SphereTexture;
+				texture = m_Texture3;
+				normal = m_NormalMap3Texture;
 				break;
 			case 2:
-				texture = m_CylinderTexture;
+				texture = m_Texture2;
+				normal = m_NormalMap2Texture;
 				break;
 			case 3:
-				texture = m_ConeTexture;
+				texture = m_Texture3;
+				normal = m_NormalMap3Texture;
 				break;
 			case 4:
-				texture = m_SphereTexture;
+				texture = m_Texture3;
+				normal = m_NormalMap3Texture;
 				break;
 			case 5:
-				texture = m_SphereTexture;
+				texture = m_Texture3;
+				normal = m_NormalMap3Texture;
 				break;
-		}*/
+		}
 
 		TextureMaterial* textureMaterial = New TextureMaterial(texture, normal, m_EnvMapTexture);
 		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
@@ -176,7 +179,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	GfxStats::GetInstance()->setEnvironmentMap(m_UseEnvironmentMapping);
 	GfxStats::GetInstance()->setNormalMap(m_UseNormalMapping);
 	GfxStats::GetInstance()->setObjectName(m_Objects[m_ObjectIndex]->getName());
-	GfxStats::GetInstance()->setShininess(m_Objects[m_ObjectIndex]->getMaterial("Texture")->getShinines());
+	GfxStats::GetInstance()->setShininess(m_Objects[m_ObjectIndex]->getMaterial("Texture")->getShininess());
 	GfxStats::GetInstance()->setEnvMapStr(m_EnvironmentMapStrength);
 	GfxStats::GetInstance()->setNormalMapStr(m_NormalMapStrength);
 }
