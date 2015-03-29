@@ -28,6 +28,7 @@ void Cone::Create(IDirect3DDevice9* gd3dDevice)
 	D3DXCreateCylinder(gd3dDevice, m_Radius1, 0, m_Height, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
 
 	generateUVs();
+	generateTBNs();
 }
 
 void Cone::Update(float dt)

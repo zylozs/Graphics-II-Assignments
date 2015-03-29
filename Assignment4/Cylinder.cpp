@@ -31,6 +31,7 @@ void Cylinder::Create(IDirect3DDevice9* gd3dDevice)
 	D3DXCreateCylinder(gd3dDevice, m_Radius1, m_Radius2, m_Height, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
 
 	generateUVs();
+	generateTBNs();
 }
 
 void Cylinder::generateUVs()

@@ -46,6 +46,7 @@ protected:
 	LPD3DXBUFFER *mp_Buffer;
 
 	virtual void generateUVs(){}; // Used by subclass (if they choose) to put their uv generation code in
+	virtual void generateTBNs();
 
 private:
 	void RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos);

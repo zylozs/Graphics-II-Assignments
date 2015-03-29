@@ -28,6 +28,7 @@ void Cube::Create(IDirect3DDevice9* gd3dDevice)
 	D3DXCreateBox(gd3dDevice, m_Width, m_Height, m_Length, &m_Mesh, mp_Buffer);
 
 	generateUVs();
+	generateTBNs();
 }
 
 void Cube::generateUVs()

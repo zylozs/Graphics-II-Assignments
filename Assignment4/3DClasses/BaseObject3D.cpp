@@ -147,3 +147,25 @@ void BaseObject3D::onResetDevice()
 		it->second->onResetDevice();
 	}
 }
+
+void BaseObject3D::generateTBNs()
+{
+	// Clone the mesh to the NMapVertex format.
+	//ID3DXMesh* tempMesh = 0;
+	//HR(m_Mesh->CloneMesh(D3DXMESH_MANAGED, elems, gd3dDevice, &tempMesh));
+
+	HR(D3DXComputeTangentFrameEx(
+		m_Mesh, // Input mesh
+		D3DDECLUSAGE_TEXCOORD, 0, // Vertex element of input tex-coords.  
+		D3DDECLUSAGE_BINORMAL, 0, // Vertex element to output binormal.
+		D3DDECLUSAGE_TANGENT, 0,  // Vertex element to output tangent.
+		D3DDECLUSAGE_NORMAL, 0,   // Vertex element to output normal.
+		0, // Options
+		0, // Adjacency
+		0.01f, 0.25f, 0.01f, // Thresholds for handling errors
+		&m_Mesh, // Output mesh
+		0));         // Vertex Remapping
+
+	// Done with temps.
+	//ReleaseCOM(tempMesh);
+}

@@ -27,6 +27,7 @@ void Sphere::Create(IDirect3DDevice9* gd3dDevice)
 	D3DXCreateSphere(gd3dDevice, m_Radius, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
 
 	generateUVs();
+	generateTBNs();
 }
 
 void Sphere::generateUVs()
