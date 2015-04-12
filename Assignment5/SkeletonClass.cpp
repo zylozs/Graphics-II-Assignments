@@ -118,7 +118,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_Texture3 = "Assets/floor_color.bmp";
 	m_NormalMap3Texture = "Assets/floor_nmap.bmp";
 
-	m_EnvMapTexture = "Assets/cubeMap.dds";
+	m_EnvMapTexture = "Assets/spaceCubeMap.dds";
 
 	m_TextureMaterialFX = "FX/PhongTexture.fx";
 	m_IsWireframe = true;
