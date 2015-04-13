@@ -105,6 +105,7 @@
     <ClCompile Include="MemoryTracker.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="PhongTextureMaterial.cpp" />
+    <ClCompile Include="Planet.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -139,6 +140,7 @@
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="MouseKeys.h" />
     <ClInclude Include="PhongTextureMaterial.h" />
+    <ClInclude Include="Planet.h" />
     <ClInclude Include="SkeletonClass.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Sphere.h" />

@@ -7,13 +7,13 @@
 
 #include <d3dx9.h>
 #include "d3dUtil.h"
-#include "IObject.h"
 #include "3DClasses/BaseObject3D.h"
 
-class Camera : public IObject, public BaseObject3D
+class Camera : public BaseObject3D
 {
 public:
 	Camera();
+	~Camera();
 
 	const D3DXMATRIX& getView() const { return m_View; }
 	const D3DXMATRIX& getProj() const { return m_Proj; }

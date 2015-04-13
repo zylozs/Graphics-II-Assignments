@@ -17,7 +17,7 @@
 #include <d3dx9.h>
 
 #include "../d3dUtil.h"
-#include "../Trackable.h"
+#include "../IObject.h"
 #include <vector>
 #include <map>
 //=============================================================================
@@ -27,7 +27,7 @@ struct Vertex;
 class BaseMaterial;
 //=============================================================================
 
-class BaseObject3D : public Trackable
+class BaseObject3D : public IObject
 {
 protected:	
     D3DXMATRIX m_World;
@@ -51,7 +51,7 @@ protected:
 
 	//////////////////////////////////////////////////////////////////////////
 
-	D3DXVECTOR3 m_CenterPos;
+	D3DXVECTOR3 m_Position;
 	D3DXVECTOR3 m_Rotation; // Euler Rotation value (to use for parenting)
 
 	LPD3DXMESH m_Mesh;
@@ -74,18 +74,23 @@ public:
     virtual void Create( IDirect3DDevice9* gd3dDevice ) = 0;
 	virtual void Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos);
 	virtual void Update(float dt);
+	virtual void dispose();
 
-	const D3DXVECTOR3& getCenterPos() { return m_CenterPos; }
-	void setCenterPos(FLOAT x, FLOAT y, FLOAT z); // Used to move a BaseObject3D to a position in World space by translating its World Matrix
-	void addMaterial(std::string key, BaseMaterial* material, bool setToActive = false);
-	void setActiveMaterial(std::string key) { m_ActiveMaterial = key; }
-	bool getUseMaterial() { return m_UseMaterial; }
-	void setUseMaterial(bool value) { m_UseMaterial = value; }
-	std::string getName() { return m_Name; }
+	void setPosition(FLOAT x, FLOAT y, FLOAT z); // Used to move a BaseObject3D to a position in World space by translating its World Matrix
+	void addToPosition(FLOAT x, FLOAT y, FLOAT z);
+	void setRotation(FLOAT x, FLOAT y, FLOAT z);
+	void addToRotation(FLOAT x, FLOAT y, FLOAT z);
+	virtual void addMaterial(std::string key, BaseMaterial* material, bool setToActive = false);
+	virtual void setActiveMaterial(std::string key) { m_ActiveMaterial = key; }
+	virtual void setUseMaterial(bool value) { m_UseMaterial = value; }
 	void setName(std::string name) { m_Name = name; }
 	
-	BaseMaterial* getMaterial(std::string key);
+	virtual BaseMaterial* getMaterial(std::string key);
 	D3DXMATRIX getWorldMatrix() { return m_World; }
+	virtual bool getUseMaterial() { return m_UseMaterial; }
+	std::string getName() { return m_Name; }
+	const D3DXVECTOR3& getPosition() { return m_Position; }
+	const D3DXVECTOR3& getRotation() { return m_Rotation; }
 
 	//////////////////////////////////////////////////////////////////////////
 	// Tree stuff

@@ -40,6 +40,7 @@
 #include "Sphere.h"
 #include "Teapot.h"
 #include "Torus.h"
+#include "Planet.h"
 
 #define STRENGTH_INCREMENT 0.1f
 
@@ -101,7 +102,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	m_SkyBox = NULL;
 
-	g_Camera->setCenterPos(50.0f, 50.0f, 0.0f);
+	g_Camera->setPosition(0.0f, 100.0f, 100.0f);
 	//g_Camera->getPos().y = 0.0f;
 	//g_Camera->getPos().z = -10.0f;
 	g_Camera->setSpeed(10.0f);
@@ -131,9 +132,15 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_SkyBox = New SkyBox(m_EnvMapTexture, 10000.0f);
 
 	// replace or add to the following object creation
-	m_Objects.push_back(New Sphere(5.0f, 50));
-	m_Objects.push_back(New Sphere(2.0f, 50));
-	m_Objects.push_back(New Sphere(1.0f, 50));
+	//m_Objects.push_back(New Sphere(5.0f, 50));
+	//m_Objects.push_back(New Sphere(2.0f, 50));
+	//m_Objects.push_back(New Sphere(1.0f, 50));
+	m_Objects.push_back(New Planet(5.0f, 0.5f, 0.25f));
+	m_Objects.push_back(New Planet(2.0f, 0.1f, 1.0f));
+	m_Objects.push_back(New Planet(2.0f, 0.1f, 1.0f));
+	m_Objects.push_back(New Planet(2.0f, 0.1f, 1.0f));
+	m_Objects.push_back(New Planet(1.0f, 0.05f, 0.5f));
+	m_Objects.push_back(New Planet(1.0f, 0.05f, 0.5f));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
@@ -150,14 +157,16 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	m_Objects[0]->addChild(g_Camera);
 	m_Objects[0]->addChild(m_Objects[1]);
-	m_Objects[1]->addChild(m_Objects[2]);
+	m_Objects[0]->addChild(m_Objects[2]);
+	m_Objects[0]->addChild(m_Objects[3]);
+	m_Objects[1]->addChild(m_Objects[4]);
+	m_Objects[1]->addChild(m_Objects[5]);
 
-	m_Objects[1]->setCenterPos(30.0f, 0.0f, 0.0f);
-	m_Objects[2]->setCenterPos(5.0f, 0.0f, 0.0f);
-
-	m_ObjectIndex = 0;
-
-	GfxStats::GetInstance()->setObjectName(m_Objects[m_ObjectIndex]->getName());
+	m_Objects[1]->setPosition(30.0f, 0.0f, 0.0f);
+	m_Objects[2]->setPosition(-60.0f, 0.0f, 0.0f);
+	m_Objects[3]->setPosition(-25.0f, 0.0f, 25.0f);
+	m_Objects[4]->setPosition(5.0f, 0.0f, 0.0f);
+	m_Objects[5]->setPosition(2.5f, 0.0f, 2.5f);
 }
 
 SkeletonClass::~SkeletonClass()
@@ -166,11 +175,18 @@ SkeletonClass::~SkeletonClass()
 
 	g_Input->removeEventListener(KEY_UP, m_KeyUpDelegate);
 	
-    for ( unsigned int obj=0 ; obj<m_Objects.size() ; obj++ )
-        delete m_Objects[obj];
+	for (unsigned int obj = 0; obj < m_Objects.size(); obj++)
+	{
+		m_Objects[obj]->dispose();
+		delete m_Objects[obj];
+		m_Objects[obj] = NULL;
+	}
     m_Objects.clear();
 
+
+	m_SkyBox->dispose();
 	delete m_SkyBox;
+	m_SkyBox = NULL;
 
 	DestroyAllVertexDeclarations();
 }
@@ -227,9 +243,6 @@ void SkeletonClass::onKeyUp(Event* ev)
 		case Keys::W:	//Wireframe/Not Wireframe
 			swapRenderType();
 			break;
-		case Keys::O:	//Object Swap
-			changeSelectedObject();
-			break;
 	}
 }
 
@@ -254,7 +267,8 @@ void SkeletonClass::updateScene(float dt)
 		m_Objects[i]->Update(dt);
 	}
 
-	//g_Camera->Update(dt);
+	if (g_Camera->isRoot())
+		g_Camera->Update(dt);
 }
 
 
@@ -270,14 +284,13 @@ void SkeletonClass::drawScene()
 	// Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
 
-	GfxStats::GetInstance()->setShader(m_Objects[m_ObjectIndex]->getMaterial("Texture")->getActiveTechnique());
+	GfxStats::GetInstance()->setShader(m_Objects[0]->getMaterial("Texture")->getActiveTechnique());
 	GfxStats::GetInstance()->setFillMode(m_RenderType);
 
 	D3DXMATRIX view = g_Camera->getView();
 	D3DXMATRIX proj = g_Camera->getProj();
 
 	// Render the specific object
-	//m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj, m_LightVec, m_ViewPos);
 	for (unsigned int i = 0; i < m_Objects.size(); i++)
 	{
 		m_Objects[i]->Render(gd3dDevice, view, proj, m_LightVec, g_Camera->getPos());
@@ -305,14 +318,4 @@ void SkeletonClass::swapRenderType()
 	{
 		m_Objects[i]->setUseMaterial(m_IsWireframe);
 	}
-}
-
-void SkeletonClass::changeSelectedObject()
-{
-	m_ObjectIndex++;
-
-	if (m_ObjectIndex >= (int)m_Objects.size())
-		m_ObjectIndex = 0;
-
-	GfxStats::GetInstance()->setObjectName(m_Objects[m_ObjectIndex]->getName());
 }

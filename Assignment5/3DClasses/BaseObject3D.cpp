@@ -16,7 +16,7 @@
 //=============================================================================
 BaseObject3D::BaseObject3D()
 {
-	m_CenterPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Position = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
     D3DXMatrixIdentity(&m_World);
@@ -30,6 +30,11 @@ BaseObject3D::BaseObject3D()
 
 //-----------------------------------------------------------------------------
 BaseObject3D::~BaseObject3D(void)
+{
+	
+}
+
+void BaseObject3D::dispose()
 {
 	if (m_Mesh != NULL)
 		ReleaseCOM(m_Mesh);
@@ -47,7 +52,6 @@ BaseObject3D::~BaseObject3D(void)
 
 void BaseObject3D::Update(float dt)
 {
-	m_Rotation.x += 0.5f * dt;
 	calculateWorldMatrix();
 	updateChildren(dt);
 }
@@ -61,7 +65,7 @@ void BaseObject3D::calculateWorldMatrix()
 
 	// Calculate the rotation and translation values for the camera
 	D3DXMatrixRotationYawPitchRoll(&rotation, m_Rotation.x, m_Rotation.y, m_Rotation.z);
-	D3DXMatrixTranslation(&translation, m_CenterPos.x, m_CenterPos.y, m_CenterPos.z);
+	D3DXMatrixTranslation(&translation, m_Position.x, m_Position.y, m_Position.z);
 
 	// Multiply them by its world matrix
 	D3DXMatrixMultiply(&m_World, &m_World, &rotation);
@@ -140,6 +144,9 @@ void BaseObject3D::removeChild(BaseObject3D* child)
 //-----------------------------------------------------------------------------
 void BaseObject3D::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos)
 {
+	if (m_Mesh == NULL)
+		return;
+
     // Update the statistics singleton class
     GfxStats::GetInstance()->addVertices(m_Mesh->GetNumVertices());
 	//this might not work
@@ -190,15 +197,36 @@ void BaseObject3D::RenderWithoutMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRI
 	m_Mesh->DrawSubset(0);
 }
 
-void BaseObject3D::setCenterPos(FLOAT x, FLOAT y, FLOAT z)
+void BaseObject3D::setPosition(FLOAT x, FLOAT y, FLOAT z)
 {
 	// Translate the object using its world matrix to the center position indicated
-	D3DXMatrixTranslation(&m_World, x, y, z);
+	//D3DXMatrixTranslation(&m_World, x, y, z);
 
 	// Set m_CenterPos to new values
-	m_CenterPos.x = x;
-	m_CenterPos.y = y;
-	m_CenterPos.z = z;
+	m_Position.x = x;
+	m_Position.y = y;
+	m_Position.z = z;
+}
+
+void BaseObject3D::addToPosition(FLOAT x, FLOAT y, FLOAT z)
+{
+	m_Position.x += x;
+	m_Position.y += y;
+	m_Position.z += z;
+}
+
+void BaseObject3D::setRotation(FLOAT x, FLOAT y, FLOAT z)
+{
+	m_Rotation.x = x;
+	m_Rotation.y = y;
+	m_Rotation.z = z;
+}
+
+void BaseObject3D::addToRotation(FLOAT x, FLOAT y, FLOAT z)
+{
+	m_Rotation.x += x;
+	m_Rotation.y += y;
+	m_Rotation.z += z;
 }
 
 void BaseObject3D::addMaterial(std::string key, BaseMaterial* material, bool setToActive /* = false*/)

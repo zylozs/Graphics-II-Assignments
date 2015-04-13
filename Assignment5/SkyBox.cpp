@@ -17,6 +17,12 @@ SkyBox::SkyBox(const std::string& envmapFilename, float skyRadius)
 
 SkyBox::~SkyBox()
 {
+	
+}
+
+void SkyBox::dispose()
+{
+	m_Sphere->dispose();
 	delete m_Sphere;
 	m_Sphere = NULL;
 }

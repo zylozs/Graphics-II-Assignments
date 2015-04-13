@@ -68,6 +68,7 @@
     <ClCompile Include="CubeMapMaterial.cpp">
       <Filter>Materials</Filter>
     </ClCompile>
+    <ClCompile Include="Planet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GfxStats.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="CubeMapMaterial.h">
       <Filter>Materials</Filter>
     </ClInclude>
+    <ClInclude Include="Planet.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Primitives">

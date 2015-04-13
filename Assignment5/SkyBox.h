@@ -3,11 +3,11 @@
 
 #include <d3dx9.h>
 #include <string>
-#include "Trackable.h"
+#include "IObject.h"
 
 class Sphere;
 
-class SkyBox : public Trackable
+class SkyBox : public IObject
 {
 private:
 	Sphere* m_Sphere;
@@ -24,6 +24,8 @@ public:
 	void onResetDevice();
 
 	void draw();
+
+	virtual void dispose();
 };
 
 #endif // SKY_H

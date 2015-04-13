@@ -25,9 +25,14 @@ Camera::Camera()
 	m_Speed  = 50.0f;
 }
 
-void Camera::dispose()
+Camera::~Camera()
 {
 
+}
+
+void Camera::dispose()
+{
+	BaseObject3D::dispose();
 }
 
 void Camera::lookAt(D3DXVECTOR3& pos, D3DXVECTOR3& target, D3DXVECTOR3& up)
@@ -188,8 +193,8 @@ void Camera::Update(float dt)
 		D3DXMATRIX parentMatrix = this->getParent()->getWorldMatrix();
 		D3DXMatrixMultiply(&m_World, &m_World, &parentMatrix);*/
 
-		D3DXVECTOR3 targetPos = m_Parent->getCenterPos();
-		lookAt(m_CenterPos, targetPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+		D3DXVECTOR3 targetPos = m_Parent->getPosition();
+		lookAt(m_Position, targetPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 	}
 }
 

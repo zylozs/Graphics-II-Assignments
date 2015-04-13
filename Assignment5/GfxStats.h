@@ -31,7 +31,6 @@ public:
 	void subTriangles(DWORD n);
 	
 	void setShader(std::string name);
-	void setObjectName(std::string name);
 	void setFillMode(DWORD mode);
 
 	void setTriCount(DWORD n);
@@ -53,6 +52,5 @@ private:
 	DWORD mNumVertices;
 	std::string m_ShaderName;
 	std::string m_FillMode;
-	std::string m_ObjectName;
 };
 #endif // GFX_STATS_H

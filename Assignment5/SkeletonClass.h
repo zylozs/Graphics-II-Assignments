@@ -47,7 +47,6 @@ public:
 private: //functions
 	void onKeyUp(Event* ev);
 	void swapRenderType();
-	void changeSelectedObject();
 
 private: //variables
 	D3DXVECTOR3 m_LightVec;
@@ -71,7 +70,6 @@ private: //variables
 	Delegate* m_KeyUpDelegate; // For Key Up events
 
     std::vector<BaseObject3D*> m_Objects;
-	int m_ObjectIndex;
 
 };
 //=============================================================================
