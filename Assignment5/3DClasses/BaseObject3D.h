@@ -18,7 +18,6 @@
 
 #include "../d3dUtil.h"
 #include "../Trackable.h"
-#include "../ITreeNode.h"
 #include <vector>
 #include <map>
 //=============================================================================
@@ -28,7 +27,7 @@ struct Vertex;
 class BaseMaterial;
 //=============================================================================
 
-class BaseObject3D : public Trackable, public ITreeNode<BaseObject3D>
+class BaseObject3D : public Trackable
 {
 protected:	
     D3DXMATRIX m_World;
@@ -41,7 +40,19 @@ protected:
 	int m_Vertices;
 	bool m_UseMaterial;
 
+	//////////////////////////////////////////////////////////////////////////
+	// Tree stuff
+
+	BaseObject3D* m_Parent;
+	std::vector<BaseObject3D*> m_Children;
+
+	bool childrenContains(BaseObject3D* child);
+	void removeFromChildList(BaseObject3D* child);
+
+	//////////////////////////////////////////////////////////////////////////
+
 	D3DXVECTOR3 m_CenterPos;
+	D3DXVECTOR3 m_Rotation; // Euler Rotation value (to use for parenting)
 
 	LPD3DXMESH m_Mesh;
 	LPD3DXBUFFER *mp_Buffer;
@@ -49,6 +60,7 @@ protected:
 	virtual void generateUVs(){}; // Used by subclass (if they choose) to put their uv generation code in
 	virtual void generateTBNs();
 	virtual void updateChildren(float dt);
+	virtual void calculateWorldMatrix();
 
 private:
 	void RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos);
@@ -73,7 +85,25 @@ public:
 	void setName(std::string name) { m_Name = name; }
 	
 	BaseMaterial* getMaterial(std::string key);
-	D3DXMATRIX getWorldMatrix() { return m_World;  }
+	D3DXMATRIX getWorldMatrix() { return m_World; }
+
+	//////////////////////////////////////////////////////////////////////////
+	// Tree stuff
+	bool isRoot() { return (m_Parent == NULL); }
+	bool isAttached() { return !isRoot(); }
+
+	void addChild(BaseObject3D* child);
+	void addChildren(std::vector<BaseObject3D*> children);
+	void removeChild(BaseObject3D* child);
+
+	// Getters
+	BaseObject3D* getParent() { return m_Parent; }
+	std::vector<BaseObject3D*> getChildren() { return m_Children; }
+
+	// Setters
+	void setParent(BaseObject3D* parent) { m_Parent = parent; }
+	void setChildren(std::vector<BaseObject3D*> children) { m_Children = children; }
+	//////////////////////////////////////////////////////////////////////////
 
 	// For resetting the shaders...
 	void onLostDevice();

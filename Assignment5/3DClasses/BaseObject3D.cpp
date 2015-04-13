@@ -17,18 +17,22 @@
 BaseObject3D::BaseObject3D()
 {
 	m_CenterPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Rotation = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
     D3DXMatrixIdentity(&m_World);
 	mp_Buffer = NULL;
 	m_ActiveMaterial = "";
 	m_UseMaterial = true;
+	m_Mesh = NULL;
+	m_Parent = NULL;
 	m_Name = "BaseObject3D";
 }
 
 //-----------------------------------------------------------------------------
 BaseObject3D::~BaseObject3D(void)
 {
-	ReleaseCOM(m_Mesh);
+	if (m_Mesh != NULL)
+		ReleaseCOM(m_Mesh);
 
 	std::map<std::string, BaseMaterial*>::iterator it = m_Materials.begin();
 
@@ -43,7 +47,32 @@ BaseObject3D::~BaseObject3D(void)
 
 void BaseObject3D::Update(float dt)
 {
+	m_Rotation.x += 0.5f * dt;
+	calculateWorldMatrix();
 	updateChildren(dt);
+}
+
+void BaseObject3D::calculateWorldMatrix()
+{
+	D3DXMatrixIdentity(&m_World);
+
+	D3DXMATRIX rotation;
+	D3DXMATRIX translation;
+
+	// Calculate the rotation and translation values for the camera
+	D3DXMatrixRotationYawPitchRoll(&rotation, m_Rotation.x, m_Rotation.y, m_Rotation.z);
+	D3DXMatrixTranslation(&translation, m_CenterPos.x, m_CenterPos.y, m_CenterPos.z);
+
+	// Multiply them by its world matrix
+	D3DXMatrixMultiply(&m_World, &m_World, &rotation);
+	D3DXMatrixMultiply(&m_World, &m_World, &translation);
+
+	if (isAttached())
+	{
+		// Multiply the child's world matrix by its parent
+		D3DXMATRIX parentMatrix = this->getParent()->getWorldMatrix();
+		D3DXMatrixMultiply(&m_World, &m_World, &parentMatrix);
+	}
 }
 
 void BaseObject3D::updateChildren(float dt)
@@ -54,6 +83,59 @@ void BaseObject3D::updateChildren(float dt)
 		children[i]->Update(dt);
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// Tree stuff
+
+bool BaseObject3D::childrenContains(BaseObject3D* child)
+{
+	for (unsigned int i = 0; i < m_Children.size(); i++)
+	{
+		if (child == m_Children[i])
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void BaseObject3D::removeFromChildList(BaseObject3D* child)
+{
+	for (unsigned int i = 0; i < m_Children.size(); i++)
+	{
+		if (child == m_Children[i])
+		{
+			m_Children.erase(m_Children.begin() + i);
+			return;
+		}
+	}
+}
+
+void BaseObject3D::addChild(BaseObject3D* child)
+{
+	child->setParent(this);
+	m_Children.push_back(child);
+}
+
+void BaseObject3D::addChildren(std::vector<BaseObject3D*> children)
+{
+	for (unsigned int i = 0; i < children.size(); i++)
+	{
+		addChild(children[i]);
+	}
+}
+
+void BaseObject3D::removeChild(BaseObject3D* child)
+{
+	if (child->getParent() != this || !childrenContains(child))
+		return;
+
+	child->setParent(NULL);
+	removeFromChildList(child);
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------
 void BaseObject3D::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos)

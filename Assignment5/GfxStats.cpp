@@ -143,5 +143,5 @@ void GfxStats::display()
 					  m_FillMode.c_str(), m_ObjectName.c_str(), m_ShaderName.c_str());
 
 	RECT R = {5, 5, 0, 0};
-	HR(mFont->DrawText(0, buffer, -1, &R, DT_NOCLIP, D3DCOLOR_XRGB(0,0,0)));
+	HR(mFont->DrawText(0, buffer, -1, &R, DT_NOCLIP, D3DCOLOR_XRGB(255,255,255)));
 }

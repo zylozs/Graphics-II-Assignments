@@ -59,7 +59,7 @@ extern IDirect3DDevice9* gd3dDevice;
 #define DEFINE_SINGLETON(clsName)  \
     clsName*    clsName::ms_instance = NULL;
 
-struct AABB
+/*struct AABB
 {
 	// Initialize to an infinitely small bounding box.
 	AABB()
@@ -100,7 +100,7 @@ struct AABB
 
 	D3DXVECTOR3 minPt;
 	D3DXVECTOR3 maxPt;
-};
+};*/
 
 //==============================================================================
 // Clean up

@@ -8,8 +8,9 @@
 #include <d3dx9.h>
 #include "d3dUtil.h"
 #include "IObject.h"
+#include "3DClasses/BaseObject3D.h"
 
-class Camera : public IObject
+class Camera : public IObject, public BaseObject3D
 {
 public:
 	Camera();
@@ -29,11 +30,12 @@ public:
 	void setSpeed(float s) { m_Speed = s; }
 
 	// Box coordinates should be relative to world space.
-	bool isVisible(const AABB& box)const;
+	//bool isVisible(const AABB& box)const;
 
-	void update(float dt);
+	virtual void Update(float dt);
 
 	virtual void dispose();
+	virtual void Create(IDirect3DDevice9* gd3dDevice);
 
 protected:
 	void buildView();

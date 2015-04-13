@@ -101,16 +101,17 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	m_SkyBox = NULL;
 
-	g_Camera->getPos().y = 3.0f;
-	g_Camera->getPos().z = -10.0f;
+	g_Camera->setCenterPos(50.0f, 50.0f, 0.0f);
+	//g_Camera->getPos().y = 0.0f;
+	//g_Camera->getPos().z = -10.0f;
 	g_Camera->setSpeed(10.0f);
 
 	m_LightVec = D3DXVECTOR3(0.5f, 0.5f, 1.5f);
 
 	m_RenderType = D3DFILL_SOLID;
 
-	m_Texture = "Assets/color_map.jpg";
-	m_NormalMapTexture = "Assets/normal_map.jpg";
+	m_Texture = "Assets/fire.jpg";
+	m_NormalMapTexture = "Assets/fire_nmap.png";
 
 	m_Texture2 = "Assets/bricks_color.bmp";
 	m_NormalMap2Texture = "Assets/bricks_nmap.bmp";
@@ -130,41 +131,14 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_SkyBox = New SkyBox(m_EnvMapTexture, 10000.0f);
 
 	// replace or add to the following object creation
-	m_Objects.push_back(New Cube(1.0f, 1.0f, 1.0f));
-	m_Objects.push_back(New Sphere(1.0f, 20));
-	m_Objects.push_back(New Cylinder(1.0f, 2, 20));
-	m_Objects.push_back(New Cone(1.0f, 2, 20));
-	m_Objects.push_back(New Teapot());
-	m_Objects.push_back(New Torus(0.5f, 1.5f, 20));
+	m_Objects.push_back(New Sphere(5.0f, 50));
+	m_Objects.push_back(New Sphere(2.0f, 50));
+	m_Objects.push_back(New Sphere(1.0f, 50));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
 		std::string texture = m_Texture;
 		std::string normal = m_NormalMapTexture;
-
-		switch (i)
-		{
-			case 1:
-				texture = m_Texture3;
-				normal = m_NormalMap3Texture;
-				break;
-			case 2:
-				texture = m_Texture2;
-				normal = m_NormalMap2Texture;
-				break;
-			case 3:
-				texture = m_Texture3;
-				normal = m_NormalMap3Texture;
-				break;
-			case 4:
-				texture = m_Texture3;
-				normal = m_NormalMap3Texture;
-				break;
-			case 5:
-				texture = m_Texture3;
-				normal = m_NormalMap3Texture;
-				break;
-		}
 
 		PhongTextureMaterial* textureMaterial = New PhongTextureMaterial(texture, normal);
 		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
@@ -173,6 +147,13 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 		m_Objects[i]->Create(gd3dDevice);
 		m_Objects[i]->addMaterial("Texture", textureMaterial, true);
 	}
+
+	m_Objects[0]->addChild(g_Camera);
+	m_Objects[0]->addChild(m_Objects[1]);
+	m_Objects[1]->addChild(m_Objects[2]);
+
+	m_Objects[1]->setCenterPos(30.0f, 0.0f, 0.0f);
+	m_Objects[2]->setCenterPos(5.0f, 0.0f, 0.0f);
 
 	m_ObjectIndex = 0;
 
@@ -268,7 +249,12 @@ void SkeletonClass::updateScene(float dt)
 		PostQuitMessage(0);
 	}
 
-	g_Camera->update(dt);
+	for (unsigned int i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->Update(dt);
+	}
+
+	//g_Camera->Update(dt);
 }
 
 
@@ -281,7 +267,7 @@ void SkeletonClass::drawScene()
 
 	m_SkyBox->draw();
 
-    // Set render states for the entire scene here:
+	// Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));
 
 	GfxStats::GetInstance()->setShader(m_Objects[m_ObjectIndex]->getMaterial("Texture")->getActiveTechnique());
@@ -290,9 +276,12 @@ void SkeletonClass::drawScene()
 	D3DXMATRIX view = g_Camera->getView();
 	D3DXMATRIX proj = g_Camera->getProj();
 
-    // Render the specific object
-    //m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj, m_LightVec, m_ViewPos);
-    m_Objects[m_ObjectIndex]->Render( gd3dDevice, view, proj, m_LightVec, g_Camera->getPos());
+	// Render the specific object
+	//m_Objects[m_ObjectIndex]->Render( gd3dDevice, m_View, m_Proj, m_LightVec, m_ViewPos);
+	for (unsigned int i = 0; i < m_Objects.size(); i++)
+	{
+		m_Objects[i]->Render(gd3dDevice, view, proj, m_LightVec, g_Camera->getPos());
+	}
 
     // display the render statistics
     GfxStats::GetInstance()->display();

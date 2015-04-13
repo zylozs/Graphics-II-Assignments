@@ -49,6 +49,7 @@ technique CubeMapTech
     {
         vertexShader = compile vs_2_0 CubeMapVS();
         pixelShader  = compile ps_2_0 CubeMapPS();
+        FillMode = Solid;
 		CullMode = None;
 		ZFunc = Always; // Always write sky to depth buffer
 		StencilEnable = true;

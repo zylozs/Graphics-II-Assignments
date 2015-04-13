@@ -150,9 +150,6 @@
     <ClInclude Include="Common.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="ITreeNode.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="PhongTextureMaterial.h">
       <Filter>Materials</Filter>
     </ClInclude>

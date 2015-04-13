@@ -61,7 +61,12 @@ void Camera::setLens(float fov, float aspect, float nearZ, float farZ)
 	m_ViewProj = m_View * m_Proj;
 }
 
-bool Camera::isVisible(const AABB& box)const
+void Camera::Create(IDirect3DDevice9* gd3dDevice)
+{
+
+}
+
+/*bool Camera::isVisible(const AABB& box)const
 {
 	// Test assumes frustum planes face inward.
 
@@ -109,49 +114,83 @@ bool Camera::isVisible(const AABB& box)const
 			return false;
 	}
 	return true;
-}
+}*/
 
-void Camera::update(float dt)
+void Camera::Update(float dt)
 {
-	// Find the net direction the camera is traveling in (since the
-	// camera could be running and strafing).
-	D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
-	if(g_Input->isKeyDown(Keys::W))
-		dir += m_LookW;
-	if (g_Input->isKeyDown(Keys::S))
-		dir -= m_LookW;
-	if (g_Input->isKeyDown(Keys::D))
-		dir += m_RightW;
-	if (g_Input->isKeyDown(Keys::A))
-		dir -= m_RightW;
+	if (!isAttached())
+	{
+		// Find the net direction the camera is traveling in (since the
+		// camera could be running and strafing).
+		D3DXVECTOR3 dir(0.0f, 0.0f, 0.0f);
+		if (g_Input->isKeyDown(Keys::W))
+			dir += m_LookW;
+		if (g_Input->isKeyDown(Keys::S))
+			dir -= m_LookW;
+		if (g_Input->isKeyDown(Keys::D))
+			dir += m_RightW;
+		if (g_Input->isKeyDown(Keys::A))
+			dir -= m_RightW;
 
-	// Move at mSpeed along net direction.
-	D3DXVec3Normalize(&dir, &dir);
-	D3DXVECTOR3 newPos = m_PosW + dir * m_Speed * dt;
+		// Move at mSpeed along net direction.
+		D3DXVec3Normalize(&dir, &dir);
+		D3DXVECTOR3 newPos = m_PosW + dir * m_Speed * dt;
 
-	m_PosW = newPos;
+		m_PosW = newPos;
 
-	// We rotate at a fixed speed.
-	float pitch  = g_Input->getMouseDY() / 150.0f;
-	float yAngle = g_Input->getMouseDX() / 150.0f;
+		// We rotate at a fixed speed.
+		float pitch = g_Input->getMouseDY() / 150.0f;
+		float yAngle = g_Input->getMouseDX() / 150.0f;
 
-	// Rotate camera's look and up vectors around the camera's right vector.
-	D3DXMATRIX R;
-	D3DXMatrixRotationAxis(&R, &m_RightW, pitch);
-	D3DXVec3TransformCoord(&m_LookW, &m_LookW, &R);
-	D3DXVec3TransformCoord(&m_UpW, &m_UpW, &R);
+		// Rotate camera's look and up vectors around the camera's right vector.
+		D3DXMATRIX R;
+		D3DXMatrixRotationAxis(&R, &m_RightW, pitch);
+		D3DXVec3TransformCoord(&m_LookW, &m_LookW, &R);
+		D3DXVec3TransformCoord(&m_UpW, &m_UpW, &R);
 
-	// Rotate camera axes about the world's y-axis.
-	D3DXMatrixRotationY(&R, yAngle);
-	D3DXVec3TransformCoord(&m_RightW, &m_RightW, &R);
-	D3DXVec3TransformCoord(&m_UpW, &m_UpW, &R);
-	D3DXVec3TransformCoord(&m_LookW, &m_LookW, &R);
+		// Rotate camera axes about the world's y-axis.
+		D3DXMatrixRotationY(&R, yAngle);
+		D3DXVec3TransformCoord(&m_RightW, &m_RightW, &R);
+		D3DXVec3TransformCoord(&m_UpW, &m_UpW, &R);
+		D3DXVec3TransformCoord(&m_LookW, &m_LookW, &R);
 
-	// Rebuild the view matrix to reflect changes.
-	buildView();
-	buildWorldFrustumPlanes();
+		// Rebuild the view matrix to reflect changes.
+		buildView();
+		buildWorldFrustumPlanes();
 
-	m_ViewProj = m_View * m_Proj;
+		m_ViewProj = m_View * m_Proj;
+	}
+	else
+	{
+		calculateWorldMatrix();
+
+		//D3DXMatrixInverse(&m_View, 0, &m_World);
+
+		/*D3DXMATRIX rotation;
+		D3DXMATRIX translation;
+
+		// We rotate at a fixed speed.
+		float pitch = g_Input->getMouseDY() / 150.0f;
+		float yaw = g_Input->getMouseDX() / 150.0f;
+
+		m_CenterPos.x += yaw;
+		m_CenterPos.y += pitch;
+
+		// Calculate the rotation and translation values for the camera
+		D3DXMatrixRotationYawPitchRoll(&rotation, m_Rotation.x, m_Rotation.y, m_Rotation.z);
+		D3DXMatrixTranslation(&translation, m_CenterPos.x, m_CenterPos.y, m_CenterPos.z);
+
+		// Multiply them by its world matrix
+		D3DXMatrixMultiply(&m_World, &m_World, &rotation);
+		D3DXMatrixMultiply(&m_World, &m_World, &translation);
+
+		// Multiply the child's world matrix by its parent
+		D3DXMATRIX parentMatrix = this->getParent()->getWorldMatrix();
+		D3DXMatrixMultiply(&m_World, &m_World, &parentMatrix);*/
+
+		D3DXVECTOR3 targetPos = m_Parent->getCenterPos();
+		lookAt(m_CenterPos, targetPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+	}
 }
 
 void Camera::buildView()

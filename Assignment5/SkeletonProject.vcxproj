@@ -133,7 +133,6 @@
     <ClInclude Include="GfxStats.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="IObject.h" />
-    <ClInclude Include="ITreeNode.h" />
     <ClInclude Include="KeyEvent.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="MemoryTracker.h" />
