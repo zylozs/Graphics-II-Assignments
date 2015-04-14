@@ -47,6 +47,7 @@ public:
 private: //functions
 	void onKeyUp(Event* ev);
 	void swapRenderType();
+	void changeCameraTarget();
 
 private: //variables
 	D3DXVECTOR3 m_LightVec;
@@ -63,6 +64,7 @@ private: //variables
 	std::string m_NormalMap3Texture;
 
 	SkyBox* m_SkyBox;
+	PointLight* m_Light;
 
 	DWORD m_RenderType; // D3DFILL_SOLID, D3DFILL_WIREFRAME
 	bool m_IsWireframe;
@@ -70,7 +72,7 @@ private: //variables
 	Delegate* m_KeyUpDelegate; // For Key Up events
 
     std::vector<BaseObject3D*> m_Objects;
-
+	int m_CameraIndex; // The object the camera is currently a child of
 };
 //=============================================================================
 #endif // _SKELETON_CLASS_H_

@@ -10,8 +10,8 @@
 #include "Cone.h"
 #include "3DClasses\Vertex.h"
 
-Cone::Cone(float radius, float height, UINT sideFacetsNum)
-	: Cylinder(radius, (UINT)height, sideFacetsNum)
+Cone::Cone(FLOAT radius, FLOAT height, UINT sideFacetsNum)
+	: Cylinder(radius, height, sideFacetsNum)
 {
 	//Second radius is zero because cone
 	m_Radius2 = 0;
@@ -25,7 +25,7 @@ Cone::~Cone()
 
 void Cone::Create(IDirect3DDevice9* gd3dDevice)
 {
-	D3DXCreateCylinder(gd3dDevice, m_Radius1, 0, m_Height, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
+	HR(D3DXCreateCylinder(gd3dDevice, m_Radius1, 0, m_Height, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer));
 
 	generateUVs();
 	generateTBNs();

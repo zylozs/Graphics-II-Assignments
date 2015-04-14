@@ -15,7 +15,7 @@
 class Sphere : public BaseObject3D
 {
 protected:
-	float m_Radius;
+	FLOAT m_Radius;
 	UINT m_SideFacetsNum;
 
 	//virtual void calculateVertexBuffer(std::vector<Vertex>& vertices);
@@ -24,7 +24,7 @@ protected:
 	virtual void generateUVs();
 
 public:
-	Sphere(float radius, int sideFacetsNum);
+	Sphere(FLOAT radius, UINT sideFacetsNum);
 	~Sphere();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);

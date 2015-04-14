@@ -82,6 +82,11 @@ void GfxStats::setShader(std::string name)
 	m_ShaderName = name;
 }
 
+void GfxStats::setObjectName(std::string name)
+{
+	m_ObjectName = name;
+}
+
 void GfxStats::setFillMode(DWORD mode)
 {
 	if (mode == D3DFILL_SOLID)
@@ -133,8 +138,10 @@ void GfxStats::display()
 		"Triangle Count = %d\n"
 		"Vertex Count = %d\n"
 		"[W] Fill Mode: %s\n"
+		"[O] Switch Camera Target\n"
+		"Target: %s\n"
 		"Shader: %s", mFPS, mMilliSecPerFrame, mNumTris, mNumVertices, 
-					  m_FillMode.c_str(), m_ShaderName.c_str());
+					  m_FillMode.c_str(), m_ObjectName.c_str(), m_ShaderName.c_str());
 
 	RECT R = {5, 5, 0, 0};
 	HR(mFont->DrawText(0, buffer, -1, &R, DT_NOCLIP, D3DCOLOR_XRGB(255,255,255)));

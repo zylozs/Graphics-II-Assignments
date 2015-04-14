@@ -20,7 +20,7 @@ Teapot::~Teapot()
 
 void Teapot::Create(IDirect3DDevice9* gd3dDevice)
 {
-	D3DXCreateTeapot(gd3dDevice, &m_Mesh, mp_Buffer);
+	HR(D3DXCreateTeapot(gd3dDevice, &m_Mesh, mp_Buffer));
 
 	generateUVs();
 	generateTBNs();

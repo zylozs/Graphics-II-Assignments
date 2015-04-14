@@ -30,6 +30,7 @@
 #include "BaseMaterial.h"
 #include "TextureMaterial.h"
 #include "PhongTextureMaterial.h"
+#include "NoLightTextureMaterial.h"
 
 #include "SkeletonClass.h"
 #include "3DClasses\BaseObject3D.h"
@@ -41,6 +42,7 @@
 #include "Teapot.h"
 #include "Torus.h"
 #include "Planet.h"
+#include "PointLight.h"
 
 #define STRENGTH_INCREMENT 0.1f
 
@@ -103,8 +105,6 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_SkyBox = NULL;
 
 	g_Camera->setPosition(0.0f, 100.0f, 100.0f);
-	//g_Camera->getPos().y = 0.0f;
-	//g_Camera->getPos().z = -10.0f;
 	g_Camera->setSpeed(10.0f);
 
 	m_LightVec = D3DXVECTOR3(0.5f, 0.5f, 1.5f);
@@ -130,32 +130,50 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	InitAllVertexDeclarations();
 
 	m_SkyBox = New SkyBox(m_EnvMapTexture, 10000.0f);
+	m_Light = New PointLight(0.6f, 0.0f, 0.0f);
+	m_Light->setPosition(0.0f, 0.0f, 0.0f);
 
 	// replace or add to the following object creation
 	//m_Objects.push_back(New Sphere(5.0f, 50));
 	//m_Objects.push_back(New Sphere(2.0f, 50));
 	//m_Objects.push_back(New Sphere(1.0f, 50));
-	m_Objects.push_back(New Planet(5.0f, 0.5f, 0.25f));
-	m_Objects.push_back(New Planet(2.0f, 0.1f, 1.0f));
-	m_Objects.push_back(New Planet(2.0f, 0.1f, 1.0f));
-	m_Objects.push_back(New Planet(2.0f, 0.1f, 1.0f));
-	m_Objects.push_back(New Planet(1.0f, 0.05f, 0.5f));
-	m_Objects.push_back(New Planet(1.0f, 0.05f, 0.5f));
+	m_Objects.push_back(New Planet(New Sphere(5.0f, 50), 0.5f, 0.25f, "Sun"));
+	m_Objects.push_back(New Planet(New Sphere(2.0f, 50), 0.1f, 1.0f, "Sphere"));
+	m_Objects.push_back(New Planet(New Cube(2.0f, 2.0f, 2.0f), 0.1f, 1.0f, "Cube"));
+	m_Objects.push_back(New Planet(New Cylinder(2.0f, 2.0f, 50), 0.1f, 1.0f, "Cylinder"));
+	m_Objects.push_back(New Planet(New Teapot(), 0.05f, 0.5f, "Teapot"));
+	m_Objects.push_back(New Planet(New Cone(1.0f, 1.0f, 50), 0.05f, 0.5f, "Cone"));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
 		std::string texture = m_Texture;
 		std::string normal = m_NormalMapTexture;
 
-		PhongTextureMaterial* textureMaterial = New PhongTextureMaterial(texture, normal);
-		textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
-		textureMaterial->setActiveTechnique("Phong");
+		BaseMaterial* material = NULL;
+
+		if (i != 0)
+		{
+			PhongTextureMaterial* textureMaterial = New PhongTextureMaterial(texture, normal, m_Light);
+			textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
+			textureMaterial->setActiveTechnique("PhongPoint");
+			material = textureMaterial;
+		}
+		else
+		{
+			NoLightTextureMaterial* textureMaterial = New NoLightTextureMaterial(texture, normal);
+			textureMaterial->LoadEffectFromFile(gd3dDevice, "FX/NoLightTexture.fx");
+			textureMaterial->setActiveTechnique("NoLightTexture");
+			material = textureMaterial;
+		}
 
 		m_Objects[i]->Create(gd3dDevice);
-		m_Objects[i]->addMaterial("Texture", textureMaterial, true);
+		m_Objects[i]->addMaterial("Texture", material, true);
 	}
 
+	m_CameraIndex = 0;
+
 	m_Objects[0]->addChild(g_Camera);
+	m_Objects[0]->addChild(m_Light);
 	m_Objects[0]->addChild(m_Objects[1]);
 	m_Objects[0]->addChild(m_Objects[2]);
 	m_Objects[0]->addChild(m_Objects[3]);
@@ -167,6 +185,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_Objects[3]->setPosition(-25.0f, 0.0f, 25.0f);
 	m_Objects[4]->setPosition(5.0f, 0.0f, 0.0f);
 	m_Objects[5]->setPosition(2.5f, 0.0f, 2.5f);
+
+	GfxStats::GetInstance()->setObjectName(m_Objects[m_CameraIndex]->getName());
 }
 
 SkeletonClass::~SkeletonClass()
@@ -187,6 +207,10 @@ SkeletonClass::~SkeletonClass()
 	m_SkyBox->dispose();
 	delete m_SkyBox;
 	m_SkyBox = NULL;
+
+	m_Light->dispose();
+	delete m_Light;
+	m_Light = NULL;
 
 	DestroyAllVertexDeclarations();
 }
@@ -211,6 +235,8 @@ void SkeletonClass::onLostDevice()
 		m_Objects[i]->onLostDevice();
 	}
 
+	g_Camera->onLostDevice();
+
 	if (m_SkyBox != NULL)
 		m_SkyBox->onLostDevice();
 }
@@ -223,6 +249,8 @@ void SkeletonClass::onResetDevice()
 	{
 		m_Objects[i]->onResetDevice();
 	}
+
+	g_Camera->onResetDevice();
 
 	// The aspect ratio depends on the backbuffer dimensions, which can 
 	// possibly change after a reset.  So rebuild the projection matrix.
@@ -243,7 +271,24 @@ void SkeletonClass::onKeyUp(Event* ev)
 		case Keys::W:	//Wireframe/Not Wireframe
 			swapRenderType();
 			break;
+		case Keys::O:
+			changeCameraTarget();
+			break;
 	}
+}
+
+void SkeletonClass::changeCameraTarget()
+{
+	m_Objects[m_CameraIndex]->removeChild(g_Camera);
+
+	m_CameraIndex++;
+
+	if ((unsigned int)m_CameraIndex >= m_Objects.size())
+		m_CameraIndex = 0;
+
+	m_Objects[m_CameraIndex]->addChild(g_Camera);
+
+	GfxStats::GetInstance()->setObjectName(m_Objects[m_CameraIndex]->getName());
 }
 
 void SkeletonClass::updateScene(float dt)
@@ -289,11 +334,13 @@ void SkeletonClass::drawScene()
 
 	D3DXMATRIX view = g_Camera->getView();
 	D3DXMATRIX proj = g_Camera->getProj();
+	D3DXVECTOR3 cameraPos = g_Camera->getPosition();
+	D3DXVECTOR3 lightPos = m_Light->getPosition();
 
 	// Render the specific object
 	for (unsigned int i = 0; i < m_Objects.size(); i++)
 	{
-		m_Objects[i]->Render(gd3dDevice, view, proj, m_LightVec, g_Camera->getPos());
+		m_Objects[i]->Render(gd3dDevice, view, proj, lightPos, cameraPos);
 	}
 
     // display the render statistics

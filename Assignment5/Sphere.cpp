@@ -10,7 +10,7 @@
 #include "Sphere.h"
 #include "3DClasses/Vertex.h"
 
-Sphere::Sphere(float radius, int sideFacetsNum)
+Sphere::Sphere(FLOAT radius, UINT sideFacetsNum)
 {
 	m_Radius = radius;
 	m_SideFacetsNum = sideFacetsNum;
@@ -24,7 +24,7 @@ Sphere::~Sphere()
 
 void Sphere::Create(IDirect3DDevice9* gd3dDevice)
 {
-	D3DXCreateSphere(gd3dDevice, m_Radius, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
+	HR(D3DXCreateSphere(gd3dDevice, m_Radius, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer));
 
 	generateUVs();
 	generateTBNs();

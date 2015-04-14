@@ -139,9 +139,9 @@ void Camera::Update(float dt)
 
 		// Move at mSpeed along net direction.
 		D3DXVec3Normalize(&dir, &dir);
-		D3DXVECTOR3 newPos = m_PosW + dir * m_Speed * dt;
+		D3DXVECTOR3 newPos = m_Position + dir * m_Speed * dt;
 
-		m_PosW = newPos;
+		m_Position = newPos;
 
 		// We rotate at a fixed speed.
 		float pitch = g_Input->getMouseDY() / 150.0f;
@@ -167,34 +167,21 @@ void Camera::Update(float dt)
 	}
 	else
 	{
+		float distance = -g_Input->getMouseDZ() / 75.0f;
+
+		m_Position.y += distance;
+		m_Position.z += distance;
+
 		calculateWorldMatrix();
 
-		//D3DXMatrixInverse(&m_View, 0, &m_World);
+		D3DXVECTOR3 parentPos;
+		D3DXVECTOR3 scale;
+		D3DXQUATERNION rot;
+		D3DXMATRIX parentWorldMatrix = m_Parent->getWorldMatrix();
+		
+		D3DXMatrixDecompose(&scale, &rot, &parentPos, &parentWorldMatrix);		
 
-		/*D3DXMATRIX rotation;
-		D3DXMATRIX translation;
-
-		// We rotate at a fixed speed.
-		float pitch = g_Input->getMouseDY() / 150.0f;
-		float yaw = g_Input->getMouseDX() / 150.0f;
-
-		m_CenterPos.x += yaw;
-		m_CenterPos.y += pitch;
-
-		// Calculate the rotation and translation values for the camera
-		D3DXMatrixRotationYawPitchRoll(&rotation, m_Rotation.x, m_Rotation.y, m_Rotation.z);
-		D3DXMatrixTranslation(&translation, m_CenterPos.x, m_CenterPos.y, m_CenterPos.z);
-
-		// Multiply them by its world matrix
-		D3DXMatrixMultiply(&m_World, &m_World, &rotation);
-		D3DXMatrixMultiply(&m_World, &m_World, &translation);
-
-		// Multiply the child's world matrix by its parent
-		D3DXMATRIX parentMatrix = this->getParent()->getWorldMatrix();
-		D3DXMatrixMultiply(&m_World, &m_World, &parentMatrix);*/
-
-		D3DXVECTOR3 targetPos = m_Parent->getPosition();
-		lookAt(m_Position, targetPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+		lookAt(m_Position, parentPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 	}
 }
 
@@ -211,9 +198,9 @@ void Camera::buildView()
 
 	// Fill in the view matrix entries.
 
-	float x = -D3DXVec3Dot(&m_PosW, &m_RightW);
-	float y = -D3DXVec3Dot(&m_PosW, &m_UpW);
-	float z = -D3DXVec3Dot(&m_PosW, &m_LookW);
+	float x = -D3DXVec3Dot(&m_Position, &m_RightW);
+	float y = -D3DXVec3Dot(&m_Position, &m_UpW);
+	float z = -D3DXVec3Dot(&m_Position, &m_LookW);
 
 	m_View(0,0) = m_RightW.x; 
 	m_View(1,0) = m_RightW.y; 

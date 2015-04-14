@@ -23,7 +23,7 @@ Torus::~Torus()
 
 void Torus::Create(IDirect3DDevice9* gd3dDevice)
 {
-	D3DXCreateTorus(gd3dDevice, m_InnerRadius, m_OuterRadius, m_NumFaces, m_NumFaces, &m_Mesh, mp_Buffer);
+	HR(D3DXCreateTorus(gd3dDevice, m_InnerRadius, m_OuterRadius, m_NumFaces, m_NumFaces, &m_Mesh, mp_Buffer));
 	generateUVs();
 	generateTBNs();
 }

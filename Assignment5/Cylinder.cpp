@@ -10,11 +10,11 @@
 #include "Cylinder.h"
 #include "3DClasses\Vertex.h"
 
-Cylinder::Cylinder(float radius, UINT height, UINT sideFacetsNum)
+Cylinder::Cylinder(FLOAT radius, FLOAT height, UINT sideFacetsNum)
 	: m_Radius1(radius), m_Radius2(radius),
-	m_Height((float)height), m_SideFacetsNum(sideFacetsNum)
+	m_Height(height), m_SideFacetsNum(sideFacetsNum)
 {
-	m_StackHeight = (UINT)m_Height / m_SideFacetsNum;
+	m_StackHeight = (UINT)(m_Height / m_SideFacetsNum);
 
 	//calculate radius step per stack level
 	m_RadiusStep = (m_Radius1 - m_Radius2) / m_SideFacetsNum;
@@ -28,7 +28,7 @@ Cylinder::~Cylinder()
 
 void Cylinder::Create(IDirect3DDevice9* gd3dDevice)
 {
-	D3DXCreateCylinder(gd3dDevice, m_Radius1, m_Radius2, m_Height, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer);
+	HR(D3DXCreateCylinder(gd3dDevice, m_Radius1, m_Radius2, m_Height, m_SideFacetsNum, m_SideFacetsNum, &m_Mesh, mp_Buffer));
 
 	generateUVs();
 	generateTBNs();

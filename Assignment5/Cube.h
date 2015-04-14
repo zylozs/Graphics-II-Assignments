@@ -15,14 +15,14 @@
 class Cube : public BaseObject3D
 {
 protected:
-	float m_Length;
-	float m_Width;
-	float m_Height;
+	FLOAT m_Length;
+	FLOAT m_Width;
+	FLOAT m_Height;
 
 	virtual void generateUVs();
 
 public:
-	Cube(float length, float width, float height);
+	Cube(FLOAT length, FLOAT width, FLOAT height);
 	~Cube();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);

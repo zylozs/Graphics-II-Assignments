@@ -10,7 +10,7 @@
 #include "Cube.h"
 #include "3DClasses/Vertex.h"
 
-Cube::Cube(float length, float width, float height)
+Cube::Cube(FLOAT length, FLOAT width, FLOAT height)
 {
 	m_Length = length;
 	m_Width = width;
@@ -25,7 +25,7 @@ Cube::~Cube()
 
 void Cube::Create(IDirect3DDevice9* gd3dDevice)
 {
-	D3DXCreateBox(gd3dDevice, m_Width, m_Height, m_Length, &m_Mesh, mp_Buffer);
+	HR(D3DXCreateBox(gd3dDevice, m_Width, m_Height, m_Length, &m_Mesh, mp_Buffer));
 
 	generateUVs();
 	generateTBNs();

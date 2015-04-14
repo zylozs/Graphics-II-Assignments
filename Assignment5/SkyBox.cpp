@@ -51,5 +51,6 @@ void SkyBox::draw()
 {
 	D3DXMATRIX view = g_Camera->getView();
 	D3DXMATRIX proj = g_Camera->getProj();
-	m_Sphere->Render(gd3dDevice, view, proj, D3DXVECTOR3(), g_Camera->getPos());
+	D3DXVECTOR3 cameraPos = g_Camera->getPosition();
+	m_Sphere->Render(gd3dDevice, view, proj, D3DXVECTOR3(), cameraPos);
 }

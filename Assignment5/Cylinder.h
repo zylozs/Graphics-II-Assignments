@@ -15,12 +15,12 @@
 class Cylinder : public BaseObject3D
 {
 protected:
-	float m_Radius1;
-	float m_Radius2;
-	float m_Height;
+	FLOAT m_Radius1;
+	FLOAT m_Radius2;
+	FLOAT m_Height;
 	UINT m_SideFacetsNum;
 	UINT m_StackHeight;
-	float m_RadiusStep;
+	FLOAT m_RadiusStep;
 
 	UINT m_BaseIndex1;
 	UINT m_CenterIndex1;
@@ -32,7 +32,7 @@ protected:
 	virtual void generateUVs();
 
 public:
-	Cylinder(float radius, UINT height, UINT sideFacetsNum);
+	Cylinder(FLOAT radius, FLOAT height, UINT sideFacetsNum);
 	~Cylinder();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);

@@ -23,8 +23,6 @@ public:
 	const D3DXVECTOR3& getUp() const { return m_UpW; }
 	const D3DXVECTOR3& getLook() const { return m_LookW; }
 
-	D3DXVECTOR3& getPos() { return m_PosW; }
-
 	void lookAt(D3DXVECTOR3& pos, D3DXVECTOR3& target, D3DXVECTOR3& up);
 	void setLens(float fov, float aspect, float nearZ, float farZ);
 	void setSpeed(float s) { m_Speed = s; }

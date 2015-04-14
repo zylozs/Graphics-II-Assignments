@@ -2,17 +2,18 @@
 #define _PLANET_H
 
 #include "3DClasses/BaseObject3D.h"
+#include <string>
 
 class Planet : public BaseObject3D
 {
 protected:
-	BaseObject3D* m_Sphere; // This is the sphere object which visually represents this planet
+	BaseObject3D* m_PlanetObj; // This is the sphere object which visually represents this planet
 
 	float m_RotationSpeed;
 	float m_ChildRotationSpeed;
 
 public:
-	Planet(float radius, float rotationSpeed, float childRotationSpeed);
+	Planet(BaseObject3D* planetObj, FLOAT rotationSpeed, FLOAT childRotationSpeed, std::string name = "");
 	~Planet();
 
 	virtual void addMaterial(std::string key, BaseMaterial* material, bool setToActive = false);

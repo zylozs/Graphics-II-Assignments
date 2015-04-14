@@ -157,6 +157,14 @@ void BaseObject3D::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMA
 	HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
 	HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));	
 
+	/*D3DXMATRIX localLight;
+	D3DXVECTOR3 pos;
+	D3DXVECTOR3 scale;
+	D3DXQUATERNION rot;
+	D3DXMatrixTranslation(&localLight, lightVec.x, lightVec.y, lightVec.z);
+	D3DXMatrixMultiply(&localLight, &m_World, &localLight);
+	D3DXMatrixDecompose(&scale, &rot, &pos, &localLight);*/
+
 	if (m_UseMaterial && m_Materials.size() > 0)
 		RenderWithMaterial(gd3dDevice, view, projection, lightVec, viewPos);
 	else

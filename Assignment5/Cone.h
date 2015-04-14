@@ -18,7 +18,7 @@ protected:
 	virtual void generateUVs();
 
 public:
-	Cone(float radius, float height, UINT sideFacetsNum);
+	Cone(FLOAT radius, FLOAT height, UINT sideFacetsNum);
 	~Cone();
 
 	virtual void Create(IDirect3DDevice9* gd3dDevice);

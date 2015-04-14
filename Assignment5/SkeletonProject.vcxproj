@@ -104,8 +104,10 @@
     <ClCompile Include="KeyEvent.cpp" />
     <ClCompile Include="MemoryTracker.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
+    <ClCompile Include="NoLightTextureMaterial.cpp" />
     <ClCompile Include="PhongTextureMaterial.cpp" />
     <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -139,8 +141,10 @@
     <ClInclude Include="MemoryTracker.h" />
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="MouseKeys.h" />
+    <ClInclude Include="NoLightTextureMaterial.h" />
     <ClInclude Include="PhongTextureMaterial.h" />
     <ClInclude Include="Planet.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="SkeletonClass.h" />
     <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Sphere.h" />
@@ -152,6 +156,10 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FX\CubeMap.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="FX\NoLightTexture.fx">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2.0</ShaderModel>
     </FxCompile>

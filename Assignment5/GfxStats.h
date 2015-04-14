@@ -32,6 +32,7 @@ public:
 	
 	void setShader(std::string name);
 	void setFillMode(DWORD mode);
+	void setObjectName(std::string name);
 
 	void setTriCount(DWORD n);
 	void setVertexCount(DWORD n);
@@ -52,5 +53,6 @@ private:
 	DWORD mNumVertices;
 	std::string m_ShaderName;
 	std::string m_FillMode;
+	std::string m_ObjectName;
 };
 #endif // GFX_STATS_H
