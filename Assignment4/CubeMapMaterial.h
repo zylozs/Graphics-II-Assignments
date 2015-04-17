@@ -1,7 +1,7 @@
 /*
-*	Vincent Loignon and Tyler Cifelli
+*	Vincent Loignon
 *	Assignment 4
-*	PhongTextureMaterial.h
+*	CubeMapMaterial.h
 *	I certify that this assignment is entirely our own work.
 */
 

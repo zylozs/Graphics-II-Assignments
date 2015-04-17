@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 4
+*	SkyBox.cpp
+*	I certify that this assignment is entirely our own work.
+*/
+
 #include "SkyBox.h"
 #include "d3dUtil.h"
 #include "CubeMapMaterial.h"

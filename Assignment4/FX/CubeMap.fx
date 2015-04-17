@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 4
+*	CubeMap.fx
+*	I certify that this assignment is entirely our own work.
+*/
+
 uniform extern float4x4 gWVP;
 uniform extern texture  gEnvMap;
 

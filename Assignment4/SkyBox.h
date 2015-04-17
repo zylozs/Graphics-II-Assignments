@@ -1,3 +1,10 @@
+/*
+*	Vincent Loignon
+*	Assignment 4
+*	SkyBox.h
+*	I certify that this assignment is entirely our own work.
+*/
+
 #ifndef _SKY_BOX_H
 #define _SKY_BOX_H
 
