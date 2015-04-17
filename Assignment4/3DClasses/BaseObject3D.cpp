@@ -28,6 +28,11 @@ BaseObject3D::BaseObject3D()
 //-----------------------------------------------------------------------------
 BaseObject3D::~BaseObject3D(void)
 {
+	
+}
+
+void BaseObject3D::dispose()
+{
 	ReleaseCOM(m_Mesh);
 
 	std::map<std::string, BaseMaterial*>::iterator it = m_Materials.begin();

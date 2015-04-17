@@ -93,6 +93,7 @@
     <ClCompile Include="BaseMaterial.cpp" />
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="CubeMapMaterial.cpp" />
     <ClCompile Include="Cylinder.cpp" />
     <ClCompile Include="d3dApp.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -103,6 +104,7 @@
     <ClCompile Include="MemoryTracker.cpp" />
     <ClCompile Include="MouseEvent.cpp" />
     <ClCompile Include="SkeletonClass.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Teapot.cpp" />
     <ClCompile Include="TextureMaterial.cpp" />
@@ -117,6 +119,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="Cone.h" />
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="CubeMapMaterial.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="d3dApp.h" />
     <ClInclude Include="d3dUtil.h" />
@@ -133,6 +136,7 @@
     <ClInclude Include="MouseEvent.h" />
     <ClInclude Include="MouseKeys.h" />
     <ClInclude Include="SkeletonClass.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Teapot.h" />
     <ClInclude Include="TextureMaterial.h" />
@@ -141,6 +145,12 @@
     <ClInclude Include="Trackable.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="FX\CubeMap.fx">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">2.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="FX\TextureMap.fx">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>

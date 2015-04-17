@@ -1,9 +1,9 @@
 #ifndef _POINT_LIGHT_H
 #define _POINT_LIGHT_H
 
-#include "3DClasses/BaseObject3D.h"
+#include "Sphere.h"
 
-class PointLight : public BaseObject3D
+class PointLight : public Sphere
 {
 private:
 	D3DXVECTOR3 m_Attenuation;
@@ -13,7 +13,6 @@ public:
 	~PointLight();
 
 	virtual void dispose();
-	virtual void Create(IDirect3DDevice9* gd3dDevice);
 
 	const D3DXVECTOR3& getAttenuation() { return m_Attenuation; }
 	void setAttenuation(FLOAT x, FLOAT y, FLOAT z);

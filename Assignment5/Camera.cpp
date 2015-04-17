@@ -48,7 +48,7 @@ void Camera::lookAt(D3DXVECTOR3& pos, D3DXVECTOR3& target, D3DXVECTOR3& up)
 	D3DXVec3Cross(&U, &L, &R);
 	D3DXVec3Normalize(&U, &U);
 
-	m_PosW = pos;
+	m_Position = pos;
 	m_RightW = R;
 	m_UpW = U;
 	m_LookW = L;
@@ -167,19 +167,22 @@ void Camera::Update(float dt)
 	}
 	else
 	{
-		float distance = -g_Input->getMouseDZ() / 75.0f;
-
-		m_Position.y += distance;
-		m_Position.z += distance;
-
-		calculateWorldMatrix();
-
 		D3DXVECTOR3 parentPos;
 		D3DXVECTOR3 scale;
 		D3DXQUATERNION rot;
 		D3DXMATRIX parentWorldMatrix = m_Parent->getWorldMatrix();
-		
-		D3DXMatrixDecompose(&scale, &rot, &parentPos, &parentWorldMatrix);		
+
+		D3DXMatrixDecompose(&scale, &rot, &parentPos, &parentWorldMatrix);
+
+		float moveAmount = g_Input->getMouseDZ() / 75.0f;
+
+		D3DXVECTOR3 direction = parentPos - m_Position;
+		D3DXVec3Normalize(&direction, &direction);
+		direction *= moveAmount;
+
+		addToPosition(direction.x, direction.y, direction.z);
+
+		calculateWorldMatrix();
 
 		lookAt(m_Position, parentPos, D3DXVECTOR3(0.0f, 1.0f, 0.0f));
 	}

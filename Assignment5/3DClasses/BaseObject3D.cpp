@@ -157,14 +157,6 @@ void BaseObject3D::Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMA
 	HR(gd3dDevice->SetTransform(D3DTS_VIEW, &view));
 	HR(gd3dDevice->SetTransform(D3DTS_PROJECTION, &projection));	
 
-	/*D3DXMATRIX localLight;
-	D3DXVECTOR3 pos;
-	D3DXVECTOR3 scale;
-	D3DXQUATERNION rot;
-	D3DXMatrixTranslation(&localLight, lightVec.x, lightVec.y, lightVec.z);
-	D3DXMatrixMultiply(&localLight, &m_World, &localLight);
-	D3DXMatrixDecompose(&scale, &rot, &pos, &localLight);*/
-
 	if (m_UseMaterial && m_Materials.size() > 0)
 		RenderWithMaterial(gd3dDevice, view, projection, lightVec, viewPos);
 	else
@@ -177,7 +169,7 @@ void BaseObject3D::RenderWithMaterial(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& 
 
 	if (material == NULL)
 	{
-		std::cerr << "Warning: You have no Active Material but are trying to one. Assign a material or disable their use.\n";
+		std::cerr << "Warning: You have no Active Material but are trying to use one. Assign a material or disable their use.\n";
 		RenderWithoutMaterial(gd3dDevice, view, projection, lightVec, viewPos);
 
 		return;

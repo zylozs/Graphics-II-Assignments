@@ -109,8 +109,9 @@ OutputVS_PHONG TexturePhongVS(InputVS input)
     outVS.LightDir = mul(lightDir, TBNinTangent);
 
     // Calculate our eye (view) vector, then transpose
-	float3 eyeVec = gEyePos - input.Position;
-	outVS.EyeT = mul(gEyePos, TBNinTangent);
+    float3 eyePosL = mul(float4(gEyePos, 1.0f), gWorldInvTrans);
+	float3 eyeVec = eyePosL - input.Position;
+	outVS.EyeT = mul(eyeVec, TBNinTangent);
 
     // Transform our vertex into homogenous space
     outVS.Position = mul(float4(input.Position, 1.0f), gWVP);
@@ -121,72 +122,72 @@ OutputVS_PHONG TexturePhongVS(InputVS input)
 
 float4 TexturePhongPS(OutputVS_PHONG input) : COLOR
 {
-	// Renormalize our values just to be safe
-	float3 normal = normalize(input.Normal);
+    // Renormalize our values just to be safe
 	float3 lightVec = normalize(input.LightDir);
     float3 eyeT = normalize(input.EyeT);
+    float3 normalW = normalize(input.Normal);
 
-	// Calculate the reflection vector from the light vector
-	float3 reflectVec = reflect(-lightVec, normal);
+    // Sample our texture's color
+    float4 texColor = tex2D(TextureSampler, input.TexCoord);
+
+    // Normal Map code by Tyler Cifelli
+    // Sample the normal map, Expand from [0, 1] compressed interval
+    // to true [-1, 1] interval, Make it a unit vector.
+    float3 normalT = tex2D(NormalMapSampler, input.TexCoord);
+    normalT = 2.0f * normalT - 1.0f;
+    normalT = normalize(normalT);
+
+    // Calculate the reflection vector from the light vector
+    float3 reflectVec;
+
+    // Make sure to calculate reflection vector based off the proper
+    // set of normals
+    if (gUseNormalMap)
+        reflectVec = reflect(-lightVec, normalT);
+    else
+        reflectVec = reflect(-lightVec, normalW);
+
+    float3 envMapTex;
+
+    // Make sure to calculate the texCoord for the environment
+    // map based off the proper set of normals
+    if (!gUseNormalMap || gNormalMapStr == 0.0f)
+        envMapTex = reflect(-eyeT, normalW);
+    else
+        envMapTex = reflect(-eyeT, normalT);
+
+    float3 envMapColor = texCUBE(EnvMapSampler, envMapTex);
+
+    // Calculate coefficients
+    float t = pow(max(dot(reflectVec, eyeT), 0.0f), gColors.shininess);
+    float s = max(dot(lightVec, normalW), 0.0f);
+
+    // Normal Map code by Tyler Cifelli
+    if (gUseNormalMap)
+    {
+        s *= (1.0f - gNormalMapStr);
+        s += gNormalMapStr * max(dot(lightVec, normalT), 0.0f);
+    }
 
     // Declare our values and initialze them (with blending)
-	float3 specular = 0.0f;
-    float3 diffuse = gColors.diffuse.rgb * gDiffuseBlend;
-    float3 ambient = gColors.ambient.rgb * gAmbientBlend;
+	float3 specular = t * (gColors.specular * gSpecularLight).rgb * gSpecularBlend;
+    float3 diffuse = s * (gColors.diffuse * gDiffuseLight).rgb * gDiffuseBlend;
+    float3 ambient = (gColors.ambient * gAmbientLight).rgb * gAmbientBlend;
     float alpha = gColors.diffuse.a;
 
-	// Calculate coefficients
-    float t = pow(max(dot(reflectVec, eyeT), 0.0f), gColors.shininess);
-    float s = max(dot(lightVec, normal), 0.0f);
-
-	if (gUseTexture)
+    if (gUseTexture)
     {
-        // Sample our texture's color
-		float4 texColor = tex2D(TextureSampler, input.TexCoord);
-
-        // Apply it to the diffuse, ambient and alpha
         diffuse *= texColor.rgb;
         ambient *= texColor.rgb;
         alpha *= texColor.a;
-	}
-
-    // Normal Map code by Tyler Cifelli
-	if(gUseNormalMap)
-	{
-		// Sample the normal map
-		float3 nVec = tex2D(NormalMapSampler, input.TexCoord);
-
-        // Expand from [0, 1] compressed interval to true [-1, 1] interval.
-        nVec = 2.0f * nVec - 1.0f;
-
-        // Make it a unit vector.
-        nVec = normalize(nVec);
-
-		// Apply to diffuse component
-        s *= 1.0f - gNormalMapStr;
-		s += gNormalMapStr * max(dot(lightVec, nVec), 0.0f);
-	}
+    }
 
     // Environment Map code by Vincent Loignon
     if (gUseEnvMap)
     {
-        // Sample the Environment Map
-        float3 envMapTex = reflect(-eyeT, normal);
-        float3 envMapColor = texCUBE(EnvMapSampler, envMapTex);
-
-        // Apply it to the ambient and diffuse
-        diffuse *= (1.0f - gEnvMapStr);
-        ambient *= (1.0f - gEnvMapStr);
-
-        diffuse += gEnvMapStr * envMapColor;
-        ambient += gEnvMapStr * envMapColor;
+        specular *= (1.0f - gEnvMapStr);
+        specular += gEnvMapStr * envMapColor;
     }
-
-    // Finish the calculations for our diffuse, ambient and specular
-    diffuse *= gDiffuseLight.rgb;
-    diffuse *= s;
-    ambient *= gAmbientLight.rgb;
-    specular = t * ((gSpecularBlend * gColors.specular) * gSpecularLight).rgb;
 
     // Return the color
     return float4(ambient + diffuse + specular, alpha);

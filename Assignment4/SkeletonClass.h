@@ -29,6 +29,7 @@
 //=============================================================================
 class BaseObject3D;
 class InputSystem;
+class SkyBox;
 //=============================================================================
 class SkeletonClass : public D3DApp
 {
@@ -88,6 +89,8 @@ private: //variables
 
 	DWORD m_RenderType; // D3DFILL_SOLID, D3DFILL_WIREFRAME
 	bool m_IsWireframe;
+
+	SkyBox* m_SkyBox;
 
 	Delegate* m_KeyUpDelegate; // For Key Up events
 

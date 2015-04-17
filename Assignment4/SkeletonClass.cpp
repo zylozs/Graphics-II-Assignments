@@ -37,6 +37,7 @@
 #include "Sphere.h"
 #include "Teapot.h"
 #include "Torus.h"
+#include "SkyBox.h"
 
 #define STRENGTH_INCREMENT 0.1f
 
@@ -123,6 +124,8 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 	InitAllVertexDeclarations();
 
+	m_SkyBox = New SkyBox(m_EnvMapTexture, 10000);
+
 	// replace or add to the following object creation
 	m_Objects.push_back(New Cube(1.0f, 1.0f, 1.0f));
 	m_Objects.push_back(New Sphere(1.0f, 20));
@@ -190,9 +193,17 @@ SkeletonClass::~SkeletonClass()
 
 	g_Input->removeEventListener(KEY_UP, m_KeyUpDelegate);
 	
-    for ( unsigned int obj=0 ; obj<m_Objects.size() ; obj++ )
-        delete m_Objects[obj];
+	for (unsigned int obj = 0; obj < m_Objects.size(); obj++)
+	{
+		m_Objects[obj]->dispose();
+		delete m_Objects[obj];
+		m_Objects[obj] = NULL;
+	}
     m_Objects.clear();
+
+	m_SkyBox->dispose();
+	delete m_SkyBox;
+	m_SkyBox = NULL;
 
 	DestroyAllVertexDeclarations();
 }
@@ -340,6 +351,8 @@ void SkeletonClass::drawScene()
 	HR(gd3dDevice->Clear(0, 0, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xffffffff, 1.0f, 0));
 
 	HR(gd3dDevice->BeginScene());
+
+	m_SkyBox->draw(gd3dDevice, m_View, m_Proj, m_LightVec, m_ViewPos);
 
     // Set render states for the entire scene here:
 	HR(gd3dDevice->SetRenderState(D3DRS_FILLMODE, m_RenderType));

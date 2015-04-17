@@ -132,17 +132,30 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 	m_SkyBox = New SkyBox(m_EnvMapTexture, 10000.0f);
 	m_Light = New PointLight(0.6f, 0.0f, 0.0f);
 	m_Light->setPosition(0.0f, 0.0f, 0.0f);
+	m_Light->Create(gd3dDevice);
+
+	NoLightTextureMaterial* lightMaterial = New NoLightTextureMaterial("Assets/gold-texture.jpg", m_NormalMap3Texture);
+	lightMaterial->LoadEffectFromFile(gd3dDevice, "FX/NoLightTexture.fx");
+	lightMaterial->setActiveTechnique("NoLightTexture");
+	m_Light->addMaterial("Texture", lightMaterial, true);
 
 	// replace or add to the following object creation
 	//m_Objects.push_back(New Sphere(5.0f, 50));
 	//m_Objects.push_back(New Sphere(2.0f, 50));
 	//m_Objects.push_back(New Sphere(1.0f, 50));
-	m_Objects.push_back(New Planet(New Sphere(5.0f, 50), 0.5f, 0.25f, "Sun"));
+	/*m_Objects.push_back(New Planet(New Sphere(5.0f, 50), 0.5f, 0.25f, "Sun"));
 	m_Objects.push_back(New Planet(New Sphere(2.0f, 50), 0.1f, 1.0f, "Sphere"));
 	m_Objects.push_back(New Planet(New Cube(2.0f, 2.0f, 2.0f), 0.1f, 1.0f, "Cube"));
 	m_Objects.push_back(New Planet(New Cylinder(2.0f, 2.0f, 50), 0.1f, 1.0f, "Cylinder"));
 	m_Objects.push_back(New Planet(New Teapot(), 0.05f, 0.5f, "Teapot"));
-	m_Objects.push_back(New Planet(New Cone(1.0f, 1.0f, 50), 0.05f, 0.5f, "Cone"));
+	m_Objects.push_back(New Planet(New Cone(1.0f, 1.0f, 50), 0.05f, 0.5f, "Cone"));*/
+
+	m_Objects.push_back(New Planet(New Sphere(5.0f, 50), 0.0f, 0.0f, "Sun"));
+	m_Objects.push_back(New Planet(New Sphere(2.0f, 50), 0.0f, 0.0f, "Sphere"));
+	m_Objects.push_back(New Planet(New Cube(2.0f, 2.0f, 2.0f), 0.0f, 0.0f, "Cube"));
+	m_Objects.push_back(New Planet(New Cylinder(2.0f, 2.0f, 50), 0.0f, 0.0f, "Cylinder"));
+	m_Objects.push_back(New Planet(New Teapot(), 0.0f, 0.0f, "Teapot"));
+	m_Objects.push_back(New Planet(New Cone(1.0f, 1.0f, 50), 0.0f, 0.0f, "Cone"));
 
 	for (UINT i = 0; i < m_Objects.size(); i++)
 	{
@@ -153,7 +166,7 @@ SkeletonClass::SkeletonClass(HINSTANCE hInstance, std::string winCaption, D3DDEV
 
 		if (i != 0)
 		{
-			PhongTextureMaterial* textureMaterial = New PhongTextureMaterial(texture, normal, m_Light);
+			PhongTextureMaterial* textureMaterial = New PhongTextureMaterial(m_Texture3, m_NormalMap3Texture, m_Light);
 			textureMaterial->LoadEffectFromFile(gd3dDevice, m_TextureMaterialFX);
 			textureMaterial->setActiveTechnique("PhongPoint");
 			material = textureMaterial;
@@ -314,8 +327,18 @@ void SkeletonClass::updateScene(float dt)
 
 	if (g_Camera->isRoot())
 		g_Camera->Update(dt);
-}
 
+	// Oscillate the light up and down the world z-axis.
+	static float theta = 0.0f;
+	theta += dt;
+
+	// Reset the angle every period so that theta
+	// doesn't get too big.
+	if (theta >= 2.0f*D3DX_PI)
+		theta = 0.0f;
+
+	//m_Light->setPosition(0.0f, 0.0f, 25.0f * sinf(theta));
+}
 
 void SkeletonClass::drawScene()
 {
@@ -342,6 +365,8 @@ void SkeletonClass::drawScene()
 	{
 		m_Objects[i]->Render(gd3dDevice, view, proj, lightPos, cameraPos);
 	}
+
+	m_Light->Render(gd3dDevice, view, proj, lightPos, cameraPos);
 
     // display the render statistics
     GfxStats::GetInstance()->display();

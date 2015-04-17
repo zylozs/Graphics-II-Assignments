@@ -17,7 +17,7 @@
 #include <d3dx9.h>
 
 #include "../d3dUtil.h"
-#include "../Trackable.h"
+#include "../IObject.h"
 #include <vector>
 #include <map>
 //=============================================================================
@@ -27,7 +27,7 @@ struct Vertex;
 class BaseMaterial;
 //=============================================================================
 
-class BaseObject3D : public Trackable
+class BaseObject3D : public IObject
 {
 protected:	
     D3DXMATRIX                  m_World;
@@ -60,6 +60,8 @@ public:
     virtual void Create( IDirect3DDevice9* gd3dDevice ) = 0;
 	virtual void Render(IDirect3DDevice9* gd3dDevice, D3DXMATRIX& view, D3DXMATRIX& projection, D3DXVECTOR3& lightVec, D3DXVECTOR3& viewPos);
 	virtual void Update(float dt) {}
+
+	virtual void dispose();
 
 	const D3DXVECTOR3& getCenterPos() { return m_CenterPos; }
 	void setCenterPos(FLOAT x, FLOAT y, FLOAT z); // Used to move a BaseObject3D to a position in World space by translating its World Matrix
